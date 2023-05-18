@@ -10,6 +10,8 @@ function setupPlanetoid() {
 
 		astro: E(0),
 		aTimes: 0,
+		measure: E(0),
+		qTimes: 0,
 
 		obs: E(0),
 		res: E(0),
@@ -26,7 +28,6 @@ REALMS.planetoid = {
 		if (hasUpgrade('ring', 0)) x = x.mul(2)
 		if (inFormation("sp")) x = x.mul(3)
 		if (inFormation("cm")) x = x.mul(Math.log10(player.planetoid.combo + 10))
-		if (inFormation("hs")) x = x.mul(10)
 		return x
 	},
 	xp() {
@@ -34,6 +35,7 @@ REALMS.planetoid = {
 		x = x.mul(upgEffect('planetarium', 1))
 		x = x.mul(upgEffect('obs', 1))
 		x = x.pow(upgEffect('astro', 1))
+		x = x.mul(upgEffect('measure', 0))
 		if (inFormation("sp")) x = x.mul(3)
 		if (inFormation("gd")) x = player.planetoid.xp.max(1).div(5).min(x.pow(1.1))
 		if (inFormation("cm")) x = x.mul(Math.log10(player.planetoid.combo + 10))
@@ -48,6 +50,7 @@ REALMS.planetoid = {
 
 		let x = E(1.2).pow(cosmic - 10)
 		x = x.mul(upgEffect('planetarium', 2))
+		x = x.mul(upgEffect('measure', 2))
 		x = x.mul(getAstralEff('rg'))
 		return x.floor()
 	}
@@ -232,12 +235,13 @@ function startPlanetoidTrial() {
 }
 function endPlanetoidTrial() {
 	player.planetoid.ring = player.planetoid.ring.add(REALMS.planetoid.ring())
+	player.planetoid.time = 0
 	player.planetoid.started = false
 
-	player.planetoid.astro = E(0)
-	resetUpgrades("astro")
+	player.planetoid.measure = E(0)
+	resetUpgrades("measure")
 
-	RESET.astro.doReset("ring")
+	RESET.quadrant.doReset("ring")
 }
 
 UPGS.ring = {
@@ -419,7 +423,7 @@ plMAIN.form = {
 	},
 	hs: {
 		title: "Headstart",
-		desc: "Gain 10x more Planetarium. <b class='magenta'>Back to basics.</b>",
+		desc: "Habitability starts at 50% maximized. <b class='magenta'>Back to basics.</b>",
 
 		req: _ => player.gal.neg >= 66,
 		reqDesc: `Get 66 Negative Energy.`,
@@ -442,6 +446,7 @@ el.setup.formation = _=>{
 plMAIN.obs = {
 	gain() {
 		let r = E(1)
+		r = r.add(upgEffect('measure', 1, 0))
 		if (inFormation("sp")) r = r.mul(3)
 		return r
 	},
@@ -640,6 +645,7 @@ plMAIN.reset = {
 		let r = E(1.2).pow(player.planetoid.level - 30).mul(10)
 		r = r.mul(upgEffect('obs', 3))
 		r = r.mul(upgEffect('planetarium', 4))
+		r = r.mul(upgEffect('measure', 3))
 		return r.floor()
 	},
 	mGain() {
@@ -729,18 +735,118 @@ UPGS.astro = {
 RESET.quadrant = {
     unl: _=>inPlanetoid() && player.planetoid.aTimes,
 
-    req: _=>player.planetoid.level>=60,
-    reqDesc: `Reach Cosmic 60.`,
+    req: _=>player.planetoid.level>=90,
+    reqDesc: `Reach Cosmic 90.`,
 
-	resetDesc: `<b class="red">Coming soon! Wait until this comes out in RGCI or I got Lethal's permission.</b>`,
-	resetGain: _=>``,
+    resetDesc: `Reset your Planetariums, Cosmic, and Astrolabe.`,
+    resetGain: _=> `
+        <b>+${tmp.plRes.mGain.format(0)}</b> Measure
+        ${player.planetoid.qTimes ? '' : '<br><b class="cyan">Also unlock Checkpoints! (soon)</b>'}
+    `,
 
-	title: `Quadrant`,
-	resetBtn: `...`,
+    title: `Quadrant`,
+    resetBtn: `Use the Quadrant`,
+    hotkey: `P`,
 
-	reset(force=false) {
-		return
-	},
+    reset() {
+        if (!this.req()) return
+		player.planetoid.measure = player.planetoid.measure.add(tmp.plRes.mGain)
+		player.planetoid.qTimes++
+		this.doReset()
+    },
+
+    doReset(order="quadrant") {
+		player.planetoid.astro = E(0)
+		resetUpgrades("astro")
+
+		RESET.astro.doReset(order)
+	}
+}
+UPGS.measure = {
+	title: "Quadrant Upgrades",
+	underDesc: _=>getUpgResTitle('measure'),
+
+    unl: _=>inPlanetoid() && player.planetoid.aTimes,
+	autoUnl: _=>false,
+	noSpend: _=>false,
+
+    req: _=>player.planetoid?.qTimes>0,
+    reqDesc: `Use the Quadrant to unlock.`,
+
+	ctn: [
+		{
+			title: "Quad. Cosmic",
+			tier: 3,
+			desc: `Gain <b class="green">+1x</b> more Cosmic.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+
+			res: "measure",
+			icon: ['Icons/Cosmic'],
+
+			max: Infinity,
+			cost: i => Decimal.pow(1.15,i).mul(5).ceil(),
+			bulk: i => i.div(5).max(1).log(1.15).floor().toNumber()+1,
+
+			effect(i) {
+				let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+
+				return x
+			},
+			effDesc: x => x.format()+"x",
+		}, {
+			title: "Telescope",
+			desc: `Gain <b class="green">+1x</b> more Observatorium.`,
+
+			res: "measure",
+			icon: ['Curr/Observatorium'],
+
+			max: 5,
+			cost: i => Decimal.pow(2,i).mul(15).ceil(),
+			bulk: i => i.div(15).max(1).log(2).floor().toNumber()+1,
+
+			effect(i) {
+				let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+
+				return x
+			},
+			effDesc: x => x.format()+"x",
+		}, {
+			title: "Quad. Rings",
+			tier: 2,
+			desc: `Gain <b class="green">+1x</b> more Rings.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+
+			res: "measure",
+			icon: ['Curr/Ring'],
+			
+			max: Infinity,
+			cost: i => Decimal.pow(1.2,i).mul(30).ceil(),
+			bulk: i => i.div(30).max(1).log(1.2).floor().toNumber()+1,
+
+			effect(i) {
+				let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+
+				return x
+			},
+			effDesc: x => x.format()+"x",
+		}, {
+			title: "Quad. Astro",
+			tier: 2,
+			desc: `Gain <b class="green">+1x</b> more Astrolabe.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+
+			res: "measure",
+			icon: ['Curr/Astrolabe'],
+
+			max: Infinity,
+			cost: i => Decimal.pow(1.15,i).mul(20).ceil(),
+			bulk: i => i.div(20).max(1).log(1.15).floor().toNumber()+1,
+
+			effect(i) {
+				let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+
+				return x
+			},
+			effDesc: x => x.format()+"x",
+		}
+	],
 }
 
 tmp_update.push(_=>{
@@ -756,8 +862,13 @@ tmp_update.push(_=>{
 //HTML
 el.update.planetoid = _=>{
 	let on = inPlanetoid()
-	if (on) tmp.el.level_top_info.setHTML(`Cosmic <b class="magenta">${format(tmp.realm.src.level,0)}</b>`)
-	tmp.el.time_left.setTxt(player.planetoid?.started ? "Time left: " + formatTime(player.planetoid.time) : "")
+	tmp.el.time_left.setDisplay(on)
+	if (on) {
+		tmp.el.level_top_info.setHTML(`Cosmic <b class="magenta">${format(tmp.realm.src.level,0)}</b>`)
+
+		tmp.el.time_left_bar.changeStyle("width",player.planetoid.time/300*100+"%")
+		tmp.el.time_left_info.setHTML(`Time: <b class="red">${formatTime(player.planetoid.time)}</b>`)
+	}
 
 	if (mapID == 'g') {
 		tmp.el.levels_info.setDisplay(!on)
@@ -779,13 +890,14 @@ el.update.planetoid = _=>{
 
 		updateUpgradesHTML('ring')
 		updateUpgradesHTML('obs')
+		updateUpgradesHTML('res')
 	}
 	if (mapID == 'astro') {
 		updateResetHTML('astro')
 		updateResetHTML('quadrant')
 
-		updateUpgradesHTML('res')
 		updateUpgradesHTML('astro')
+		updateUpgradesHTML('measure')
 	}
 }
 

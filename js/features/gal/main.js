@@ -61,7 +61,7 @@ RESET.gal = {
 		player.steel = E(0)
         player.sTime = 0
 		if (!hasGSMilestone(9)) player.bestCharge = E(0)
-		player.decel = 0
+		if (player.decel == 1) player.decel = 0
 		resetAntiRealm()
 
 		if (!hasStarTree("qol", 9)) player.rocket.amount = E(0)

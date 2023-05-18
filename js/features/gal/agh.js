@@ -46,7 +46,7 @@ MILESTONE.agh = {
 			req: 21,
 			desc: `Unlock the Dark Matter Plant reset. Moonstone chance is doubled.`,
 		}, {
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			req: 30,
 			desc: `Unlock the Recelerator upgrade in Fun Machine.`,
 		}, {

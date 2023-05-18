@@ -25,6 +25,7 @@ const UPG_RES = {
     obs: ["Observatorium",_=>[player.planetoid,"obs"],'RingBase'],
     res: ["Reservatorium",_=>[player.planetoid,"res"],'ResBase'],
     astro: ["Astrolabe",_=>[player.planetoid,"astro"],'AstroBase'],
+    measure: ["Measure",_=>[player.planetoid,"measure"],'PlatBase'],
     ring: ["Ring",_=>[player.planetoid,"ring"],'ObsBase'],
 }
 
@@ -46,7 +47,7 @@ const UPGS = {
                 max: Infinity,
 
                 title: "Grass Value",
-                desc: `Increase Grass gain by <b class="green">+0.5</b> per level.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+                desc: `Increase Grass gain by <b class="green">+1</b> per level.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
 
                 res: "grass",
                 icon: ['Curr/Grass'],
@@ -55,7 +56,7 @@ const UPGS = {
                 bulk: i => i.div(10).max(1).log(1.15).floor().toNumber()+1,
 
                 effect(i) {
-                    let x = Decimal.pow(2,Math.floor(i/25)).mul(i/2+1)
+                    let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
 
                     return x
                 },
@@ -188,12 +189,12 @@ const UPGS = {
                 },
                 effDesc: x => format(x,1)+"x",
             },{
-                max: 10,
+                max: 5,
 
                 costOnce: true,
 
                 title: "Cap Perk",
-                desc: `Increase grass cap by <b class="green">10</b> per level.`,
+                desc: `Increase grass cap by <b class="green">=20</b> per level.`,
 
                 res: "perk",
                 icon: ['Icons/MoreGrass'],
@@ -202,7 +203,7 @@ const UPGS = {
                 bulk: i => i,
 
                 effect(i) {
-                    let x = i*10
+                    let x = i*20
 
                     return x
                 },
@@ -849,27 +850,30 @@ function getUpgradeBulk(id, x, amt) {
 }
 
 function updateUpgTemp(id) {
-    let upgs = UPGS[id]
-    let uc = upgs.ctn
-    let tu = tmp.upgs[id]
-    let ul = 0
-    for (let x = 0; x < uc.length; x++) {
-        let upg = uc[x]
-        let amt = player.upgs[id][x]||0
-        let res = tmp.upg_res[upg.res]
-        
-        tu.max[x] = compute(upg.max, 1)
-        if (compute(upg.unl, true)) if (amt < tu.max[x]) ul++
+	let upgs = UPGS[id]
+	if (!compute(upgs.req, true)) return
 
-        tu.cost[x] = upg.cost(amt)
-        tu.bulk[x] = getUpgradeBulk(id, x)
+	let uc = upgs.ctn
+	let tu = tmp.upgs[id]
+	let ul = 0
+	for (let x in uc) {
+		let upg = uc[x]
+		if (!compute(upg.unl, true)) continue
 
-        if (upg.effect) tu.eff[x] = upg.effect(amt)
-    }
-    if (upgs.cannotBuy) tu.cannotBuy = upgs.cannotBuy()
-    if (upgs.noSpend) tu.noSpend = upgs.noSpend()
-    if (upgs.autoUnl) tu.autoUnl = upgs.autoUnl()
-    tu.unlLength = ul
+		let amt = player.upgs[id][x]||0
+		let res = tmp.upg_res[upg.res]
+
+		tu.max[x] = compute(upg.max, 1)
+		tu.cost[x] = upg.cost(amt)
+		tu.bulk[x] = getUpgradeBulk(id, x)
+
+		if (amt < tu.max[x]) ul++
+		if (upg.effect) tu.eff[x] = upg.effect(amt)
+	}
+	if (upgs.cannotBuy) tu.cannotBuy = upgs.cannotBuy()
+	if (upgs.noSpend) tu.noSpend = upgs.noSpend()
+	if (upgs.autoUnl) tu.autoUnl = upgs.autoUnl()
+	tu.unlLength = ul
 }
 
 function switchAutoUpg(id) {

@@ -26,7 +26,7 @@ RESET.pp = {
     resetDesc: `Reset your grass, upgrades, level, and perks.`,
     resetGain: _=> `
         <b>+${tmp.ppGain.format(0)}</b> Prestige Points
-        ${player.pTimes ? '' : '<br><b class="cyan">Also unlock Tiers, which boosts sources on levelling!</b>'}
+        ${player.pTimes ? '' : '<br><b class="cyan">Also unlock Tiers, which boosts value on tier up!</b>'}
     `,
 
     title: `Prestige`,

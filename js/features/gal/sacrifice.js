@@ -65,7 +65,7 @@ UPGS.dm = {
 
 	title: "Dark Matter Manipulator",
 
-	req: _ => player.gal.sacTimes > 0,
+	req: _ => MAIN.sac.did(),
 	reqDesc: _ => `Sacrifice once to unlock.`,
 
 	underDesc: _ => getUpgResTitle('dm'),

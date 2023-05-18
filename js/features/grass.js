@@ -78,12 +78,11 @@ function createGrass() {
 	}
 }
 
-function removeGrass(i,auto=false) {
+function removeGrass(i, auto=false) {
 	let tg = tmp.grasses[i]
 	if (!tg) return
 
-	let v = 1
-	if (tg.habit) v *= tg.habit
+	let v = tg.habit || 1
 
 	let av = v
 	let tv = v

@@ -931,6 +931,26 @@ button * {
     border-color: #bbbb
 }
 
+#time_left {
+    position: relative;
+    width: 400px;
+    border: solid 2px #0003;
+    background-color: #700;
+    height: 35px;
+    font-size: 25px;
+    padding: 0 10px;
+}
+#time_left > div {
+    position: absolute;
+	width: 100%;
+	left: 0
+}
+#time_left_bar {
+    height: 100%;
+    background-color: #b00;
+    transition: width 0.2s;
+}
+
 .cosmic {
     background-color: #307;
 }

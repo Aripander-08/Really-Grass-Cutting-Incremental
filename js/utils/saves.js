@@ -303,6 +303,7 @@ function checkNaN() {
 }
 
 function findNaN(obj, str=false, data=getPlayerData()) {
+	if (!obj) return false
 	if (str ? typeof obj == "string" : false) obj = JSON.parse(atob(obj))
 	for (let x = 0; x < Object.keys(obj).length; x++) {
 		let k = Object.keys(obj)[x]

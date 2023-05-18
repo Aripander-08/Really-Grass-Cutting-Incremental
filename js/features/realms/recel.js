@@ -206,6 +206,7 @@ unMAIN.habit = {
 	},
 	startingMult() {
 		let r = getEffect("uh", "hm")
+		if (inFormation("hs")) r = Math.max(r, tmp.unRes.habit.max / 2)
 		return r
 	},
 
@@ -297,7 +298,7 @@ UPGS.np = {
 
 	title: "Normality Upgrades",
 
-	req: _=>player.unRes.nTimes > 0,
+	req: _=>player.unRes?.nTimes > 0,
 	reqDesc: `Normality once to unlock.`,
 
 	underDesc: _=>getUpgResTitle('np'),

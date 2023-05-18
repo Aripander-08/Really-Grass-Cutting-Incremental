@@ -112,7 +112,7 @@ const STAR_CHART = {
 			branch: 4,
 			icon: ['Icons/Assembler','Icons/StarSpeed'],
 
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			cost: i => E(10).pow(i**1.25+6),
 			bulk: i => E(i).log10().sub(6).root(1.25).floor().toNumber()+1,
 
@@ -129,7 +129,7 @@ const STAR_CHART = {
 			branch: 5,
 			icon: ['Icons/SP','Icons/StarSpeed'],
 
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			cost: i => E(1e18),
 			bulk: i => 1,
 
@@ -146,7 +146,7 @@ const STAR_CHART = {
 			branch: 5,
 			icon: ['Icons/SP','Icons/StarSpeed'],
 
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			cost: i => E(1e12),
 			bulk: i => 1,
 
@@ -164,7 +164,7 @@ const STAR_CHART = {
 			branch: 2,
 			icon: ['Curr/RocketFuel','Icons/StarSpeed'],
 
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			cost: i => E(1e16),
 			bulk: i => 1
 		}, {
@@ -306,7 +306,7 @@ const STAR_CHART = {
 			cost: i => E(1e3),
 			bulk: i => 1
 		}, {
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			max: 1,
 
 			title: "Bulk Skips",
@@ -340,7 +340,7 @@ const STAR_CHART = {
 			cost: i => E(1e6),
 			bulk: i => 1
 		}, {
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			max: 1,
 
 			title: "Why Not Charge Again?",
@@ -352,7 +352,7 @@ const STAR_CHART = {
 			cost: i => E(1e3),
 			bulk: i => 1
 		}, {
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			max: 1,
 
 			title: "Challenging and Beyond",
@@ -364,7 +364,7 @@ const STAR_CHART = {
 			cost: i => E(1e6),
 			bulk: i => 1
 		}, {
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			max: 1,
 
 			title: "Realm Intergation",
@@ -376,7 +376,7 @@ const STAR_CHART = {
 			cost: i => E(1e15),
 			bulk: i => 1
 		}, {
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			max: 1,
 
 			title: "Realm Simulataneous",
@@ -447,7 +447,7 @@ const STAR_CHART = {
 			branch: 0,
 			icon: ['Icons/StarAccumulator','Icons/StarAuto'],
 
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			cost: i => E(1e6),
 			bulk: i => 1,
 		}, {
@@ -502,7 +502,7 @@ const STAR_CHART = {
 			branch: 7,
 			icon: ['Icons/Grasshop','Icons/StarAuto'],
 
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			cost: i => E(1e6),
 			bulk: i => 1,
 		}, {
@@ -514,7 +514,7 @@ const STAR_CHART = {
 			branch: 7,
 			icon: ['Icons/Fundry','Icons/StarAuto'],
 
-			unl: _ => player.gal.sacTimes,
+			unl: _ => MAIN.sac.did(),
 			cost: i => E(1e20),
 			bulk: i => 1,
 		},

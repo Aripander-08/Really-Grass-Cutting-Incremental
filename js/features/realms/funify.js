@@ -70,7 +70,7 @@ UPGS.funMachine = {
 
 	unl: _=> tmp.aRes.gs.shown && (player.aRes.grassskip >= 8 || MAIN.sac.did()),
 
-	req: _ => player.aRes.fTimes > 0,
+	req: _ => player.aRes?.fTimes > 0,
 	reqDesc: `Funify once to unlock.`,
 
 	underDesc: _=>getUpgResTitle('fun'),
