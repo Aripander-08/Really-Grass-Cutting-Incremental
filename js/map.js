@@ -39,7 +39,8 @@ const MAP = {
 	],
 	planetoid: [
 		['opt'],
-		['ring', 'g', 'astro']
+		['ring', 'g', 'astro'],
+		['trial']
 	],
 }
 
@@ -69,6 +70,7 @@ const MAP_UNLS = {
 	//Planetoid
 	ring: _ => true,
 	astro: _ => true,
+	trial: _ => player.planetoid?.aTimes,
 }
 
 const MAP_IDS = (_=>{
@@ -189,6 +191,7 @@ const MAP_COLORS = {
 	//Planetoid
 	ring: "sac",
 	astro: "sac",
+	trial: "sac",
 }
 
 //Locations
@@ -218,6 +221,7 @@ const MAP_CATEGORIES = {
 	//Planetoid
 	ring: "Planetoid",
 	astro: "Planetoid",
+	trial: "Planetoid",
 }
 
 let locTimeout
@@ -259,6 +263,7 @@ const GO_TO_NAMES = {
 	//Planetoid
 	ring: "Ring Chart",
 	astro: "Upgrades",
+	trial: "The Trial",
 }
 
 function openMap() {

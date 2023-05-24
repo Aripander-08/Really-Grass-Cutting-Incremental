@@ -493,6 +493,20 @@ button * {
     background-color: #bf3;
 }
 
+.reset_div.vapor,
+.reset_req.vapor,
+.upg_desc.cloud,
+.upgs_div.cloud {
+    background-color: #eff7ff;
+}
+
+#mil_div_gj,
+#mil_div_gj .milestone_ctns > div,
+.reset_div.gj,
+.reset_req.gj {
+    background-color: #0fe;
+}
+
 .upgs_ctn {
     height: calc(100% - 84px);
     width: calc(100% - 24px);
@@ -963,6 +977,7 @@ button * {
     background-color: #b0f;
 }
 .reset_div.astro,
+.reset_req.astro,
 .upg_desc.astro,
 .upgs_div.astro {
     background-color: #ffb;
@@ -978,6 +993,12 @@ button * {
 .upg_desc.res,
 .upgs_div.res {
     background-color: #7bb;
+}
+.reset_div.quadrant,
+.reset_req.quadrant,
+.upg_desc.meausre,
+.upgs_div.measure {
+    background-color: white;
 }
 
 #planet_bg {

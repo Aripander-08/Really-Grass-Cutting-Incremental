@@ -11,7 +11,14 @@ function calc(dt, skip) {
 	if (player.planetoid?.started) planetoidTick(dt)
 
 	//UNNATURAL REALM
-	if (player.unRes) player.unRes.nTime += dt
+	if (player.unRes) {
+		player.unRes.nTime += dt
+		player.unRes.vTime += dt
+
+		if (RESET.np.req()) player.unRes.np = tmp.unRes.npGain.mul(dt * tmp.unRes.npGainP).add(player.unRes.np)
+		if (RESET.vapor.req() && hasUpgrade('res', 8)) player.unRes.cloudProd = tmp.unRes.clGain.mul(0.001).max(player.unRes.cloudProd.max)
+		player.unRes.cloud = player.unRes.cloudProd.mul(dt).add(player.unRes.cloud)
+	}
 	if (tmp.unRes.habit) unMAIN.habit.tick(dt)
 
 	//ANTI-REALM
@@ -23,10 +30,11 @@ function calc(dt, skip) {
 
 			if (tmp.aRes.apGainP > 0 && player.aRes.level >= 30) player.aRes.ap = player.aRes.ap.add(tmp.aRes.apGain.mul(dt*tmp.aRes.apGainP))
 			if (tmp.aRes.oilGainP > 0 && player.aRes.level >= 100) player.aRes.oil = player.aRes.oil.add(tmp.aRes.oilGain.mul(dt*tmp.aRes.oilGainP))
-			if (hasStarTree('auto',10)) ROCKET.create()
+			if (tmp.aRes.funGainP > 0 && player.aRes.level >= 270) player.aRes.fun = player.aRes.fun.add(tmp.aRes.funGain.mul(dt*tmp.aRes.funGainP))
+			//if (hasStarTree('auto', 10)) ROCKET.create()
 		}
 		if (tmp.m_prod > 0) player.rocket.momentum = player.rocket.momentum.add(ROCKET_PART.m_gain().mul(dt*tmp.m_prod))
-		if (hasUpgrade('funMachine',1)) player.aRes.sfrgt = player.aRes.sfrgt.add(tmp.aRes.SFRGTgain.mul(dt))
+		if (hasUpgrade('funMachine', 1)) player.aRes.sfrgt = player.aRes.sfrgt.add(tmp.aRes.SFRGTgain.mul(dt))
 	}
 
 	//STEELIE
@@ -37,6 +45,7 @@ function calc(dt, skip) {
 		player.chargeRate = player.chargeRate.add(tmp.charge.gain.mul(dt))
 		player.bestCharge = player.bestCharge.max(player.chargeRate)
 	}
+	if (hasUpgrade('res', 0) && ROCKET_PART.can()) RESET.rocket_part.reset()
 
 	//PRESTIGE
 	player.pTime += dt

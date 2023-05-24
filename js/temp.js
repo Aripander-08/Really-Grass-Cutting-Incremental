@@ -43,7 +43,9 @@ function resetTemp() {
 		aRes: {
 			gs: {}
 		},
-		unRes: {},
+		unRes: {
+			gj: {}
+		},
 		plRes: {},
 
 		gSpeed: 1,

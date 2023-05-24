@@ -34,7 +34,7 @@ MAIN.steel = {
 }
 
 RESET.steel = {
-	unl: _ => (player.grasshop >= 10 || galUnlocked()) && !tmp.aRes.gs.shown,
+	unl: _ => (player.grasshop >= 10 || galUnlocked()) && !tmp.aRes.gs.shown && !tmp.unRes.gj.shown,
 
 	req: _ => !inDecel() && player.level>=240,
 	reqDesc: _ => inDecel() ? `You can't Steelie!` : `Reach Level 240.`,
@@ -68,7 +68,7 @@ RESET.steel = {
 UPGS.factory = {
 	title: "The Factory",
 
-	unl: _=>(player.grasshop >= 10 || player.sTimes) && !tmp.aRes.gs.shown,
+	unl: _=>(player.grasshop >= 10 || player.sTimes) && !tmp.aRes.gs.shown && !tmp.unRes.gj.shown,
 	autoUnl: _=>hasStarTree('auto',0),
 	noSpend: _=>hasStarTree('qol', 4),
 

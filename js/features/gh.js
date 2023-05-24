@@ -13,12 +13,12 @@ MAIN.gh = {
 }
 
 MILESTONE.gh = {
-	unl: _ => player.cTimes && !tmp.aRes.gs.shown,
+	unl: _ => player.cTimes && !tmp.aRes.gs.shown && !tmp.unRes.gj.shown,
 	req: _ => grassHopped(),
 	reqDesc: "Grasshop to unlock.",
 
 	res: _ => tmp.gh.eff || player.grasshop,
-	title: x => `You have grasshopped <b>${format(x, 0)}</b> times`,
+	title: x => `You have grasshopped <b class='green'>${format(x, 0)}</b> times`,
 	title_ms: x => x + " Grasshops",
 
 	milestone: [
@@ -90,7 +90,7 @@ MILESTONE.gh = {
 function getGHEffect(x,def=1) { return getMilestoneEff("gh", x, def) }
 
 RESET.gh = {
-	unl: _=> player.cTimes > 0 && !tmp.aRes.gs.shown,
+	unl: _=> player.cTimes > 0 && !tmp.aRes.gs.shown && !tmp.unRes.gj.shown,
 	req: _=> player.level >= 200 && !player.decel && !inChal(9),
 	reqDesc: _=> player.decel ? `You can't Grasshop!` : `Reach Level 200.`,
 

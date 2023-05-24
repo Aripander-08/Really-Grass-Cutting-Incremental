@@ -1,6 +1,6 @@
 const VER = 0.0432
 const EX_COMMIT = 11.07
-const TB_VER = 1.06
+const TB_VER = 1.07
 const TB_SAVE = "rgci_tb_test"
 
 function getPlayerData() {
@@ -154,6 +154,9 @@ function loadPlayer(data) {
 		delete player.chalUnl
 		delete player.aRes?.bestGrass
 		delete player.unRes?.bestGrass
+	}
+	if (player.tb_ver < 1.07) {
+		player.upgs.res = []
 	}
 	player.tb_ver = TB_VER
 }

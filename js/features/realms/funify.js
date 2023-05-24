@@ -6,11 +6,14 @@ aMAIN.fun = {
 		r = r.mul(upgEffect('moonstone', 4))
 		r = r.mul(getGSEffect(8))
 		r = r.mul(upgEffect('funMachine', 0))
-		r = r.mul(upgEffect('fundry', 0))
-		r = r.mul(upgEffect('fundry', 1))
-		r = r.mul(upgEffect('fundry', 2))
-		r = r.mul(upgEffect('fundry', 3))
 		r = r.mul(upgEffect("unGrass", 4))
+
+		let fd = E(1)
+		fd = fd.mul(upgEffect('fundry', 0))
+		fd = fd.mul(upgEffect('fundry', 1))
+		fd = fd.mul(upgEffect('fundry', 2))
+		fd = fd.mul(upgEffect('fundry', 3))
+		r = r.mul(fd.pow(upgEffect('ring', 11)))
 
 		return r
 	},
@@ -61,8 +64,10 @@ tmp_update.push(_=>{
 	let mf = aMAIN.fun
 	
 	tmp.aRes.funShown = player.decel == 1 && player.aRes?.fTimes
-	tmp.aRes.SFRGTgain = mf.SFRGTgain()
 	tmp.aRes.funGain = mf.gain()
+	tmp.aRes.funGainP = starTreeEff("qol", 14, 0)
+
+	tmp.aRes.SFRGTgain = mf.SFRGTgain()
 })
 
 UPGS.funMachine = {
@@ -73,7 +78,7 @@ UPGS.funMachine = {
 	req: _ => player.aRes?.fTimes > 0,
 	reqDesc: `Funify once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('fun'),
+	underDesc: _=>getUpgResTitle('fun')+(tmp.aRes.funGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.fun,tmp.aRes.funGain.mul(tmp.aRes.funGainP))+"</span>" : ""),
 
 	ctn: [
 		{
@@ -229,7 +234,8 @@ UPGS.sfrgt = {
 	title: "Super Fun Real Good Time Generator",
 
 	unl: _ => tmp.aRes.funShown && hasUpgrade('funMachine', 1),
-	autoUnl: _ => hasUpgrade("res", 2),
+	autoUnl: _ => hasStarTree("auto", 11),
+	noSpend: _ => hasStarTree("auto", 11),
 
 	underDesc: _=>getUpgResTitle('sfrgt')+` <span class='smallAmt'>${player.aRes.sfrgt.formatGain(tmp.aRes.SFRGTgain)}</span>`,
 
@@ -316,6 +322,23 @@ UPGS.sfrgt = {
 				return i/10+1
 			},
 			effDesc: x => format(x)+"x",
+		}, {
+			max: 5,
+
+			title: "Funny Grass",
+			desc: `<b class='green'>Double</b> Unnatural Grass.`,
+
+			res: "sfrgt",
+			icon: ["Curr/UnnaturalGrass"],
+
+			unl: _ => hasUpgrade("res", 1),
+			cost: i => E(1/0),
+			bulk: i => 0,
+		
+			effect(i) {
+				return E(2).pow(i)
+			},
+			effDesc: x => format(x,0)+"x",
 		}
 	],
 }

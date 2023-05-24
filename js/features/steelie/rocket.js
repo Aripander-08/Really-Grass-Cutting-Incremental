@@ -773,7 +773,7 @@ UPGS.momentum = {
 			effDesc: x => format(x)+"x",
 		},{
 			title: "No Problem",
-			desc: `<b class="green">Double</b> Normality Points.`,
+			desc: `<b class="green">+1x</b> to Normality Points.`,
 
 			res: "momentum",
 			icon: ['Curr/Normality'],
@@ -784,12 +784,12 @@ UPGS.momentum = {
 			max: Infinity,
 
 			effect(i) {
-				return E(2).pow(i)
+				return i+1
 			},
 			effDesc: x => format(x)+"x",
 		},{
 			title: "It Does Accelerate The Universe",
-			desc: `Raise Dark Matter by <b class='green'>^+0.1</b>.`,
+			desc: `Raise Dark Matter by <b class='green'>^+0.05</b>.`,
 
 			res: "momentum",
 			icon: ['Curr/DarkMatter'],
@@ -797,10 +797,10 @@ UPGS.momentum = {
 			unl: _ => tmp.rocket_upgraded,
 			cost: i => E(10).pow(i).mul(2e5),
 			bulk: i => E(i).div(2e5).log(10).floor().toNumber()+1,
-			max: 10,
+			max: 7,
 
-			effect: i => i/10+1,
-			effDesc: x => "^"+format(x,1),
+			effect: i => i/20+1,
+			effDesc: x => "^"+format(x),
 		}
 	],
 }

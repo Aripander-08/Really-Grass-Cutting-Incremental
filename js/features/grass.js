@@ -27,6 +27,7 @@ MAIN.grass = {
 			let div = 1
 			div += upgEffect("planetarium", 3)
 			div += upgEffect("obs", 3)
+			div *= upgEffect("obs", 5)
 			x /= div
 		}
 		return x
@@ -82,7 +83,7 @@ function removeGrass(i, auto=false) {
 	let tg = tmp.grasses[i]
 	if (!tg) return
 
-	let v = tg.habit || 1
+	let v = auto ? (hasUpgrade("res", 4) ? tmp.unRes.habit.max / 10 : 1) : (tg.habit || 1)
 
 	let av = v
 	let tv = v

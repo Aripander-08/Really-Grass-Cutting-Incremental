@@ -740,7 +740,7 @@ MILESTONE.gs = {
 	reqDesc: "Grass-skip to unlock.",
 
 	res: _ => player.aRes?.grassskip,
-	title: x => `You have grass-skipped <b>${format(x, 0)}</b> times`,
+	title: x => `You have grass-skipped <b class='green'>${format(x, 0)}</b> times`,
 	title_ms: x => x + " Grass-skips",
 
 	milestone: [
@@ -850,8 +850,8 @@ RESET.gs = {
 
 		if (force || player.gal.sacTimes) {
 			this.gainAndReset()
-		} else if (!tmp.aRes.gs.running) {
-			tmp.aRes.gs.running = true
+		} else if (!tmp.gh.running) {
+			tmp.gh.running = true
 			document.body.style.animation = "implode 2s 1"
 			setTimeout(_=>{
 				this.gainAndReset()

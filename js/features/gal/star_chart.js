@@ -10,13 +10,15 @@ const SC_IDS = {
 		[null,0,1,3],
 		[5,6,2,4],
 		[7,8,9,null],
-		[11,10,12,13]
+		[11,10,12,13],
+		[14,15]
 	],
 	auto: [
 		[4,0,1],
 		[2,3,5,6],
 		[7],
-		[8,9]
+		[8,9],
+		[10,11,12]
 	],
 }
 
@@ -124,7 +126,7 @@ const STAR_CHART = {
 			max: 1,
 
 			title: "Hopped Space",
-			desc: `Each Grass-Hop increases Space Power by 20%, starting at 50.`,
+			desc: `Each Grass-Hop increases Space Power by 20%. (starting at 50 and ending at 80)`,
 
 			branch: 5,
 			icon: ['Icons/SP','Icons/StarSpeed'],
@@ -134,7 +136,7 @@ const STAR_CHART = {
 			bulk: i => 1,
 
 			effect(i) {
-				return E(1.2).pow(Math.max(player.grasshop - 49, 0))
+				return E(1.2).pow(Math.max(Math.min(player.grasshop, 80) - 49, 0))
 			},
 			effDesc: x => format(x) + "x"
 		}, {
@@ -387,6 +389,40 @@ const STAR_CHART = {
 
 			cost: i => E(1e30),
 			bulk: i => 1
+		}, {
+			unl: _ => hasAGHMilestone(11),
+			max: 1,
+
+			title: "Stardust Generator",
+			desc: `Produce <b class="green">+0.1%</b> of Star gain.`,
+
+			branch: 12,
+			icon: ['Curr/Star','Icons/StarProgression'],
+
+			cost: i => E(1e30),
+			bulk: i => 1,
+
+			effect(i) {
+				return i/1e3
+			},
+			effDesc: x => "+"+formatPercent(x)+"/s"
+		}, {
+			unl: _ => hasAGHMilestone(11),
+			max: 1,
+
+			title: "Excited!",
+			desc: `Produce <b class="green">+0.1%</b> of Fun gain.`,
+
+			branch: 12,
+			icon: ['Curr/Fun','Icons/StarProgression'],
+
+			cost: i => E(1e30),
+			bulk: i => 1,
+
+			effect(i) {
+				return i/1e3
+			},
+			effDesc: x => "+"+formatPercent(x)+"/s"
 		},
 	],
 	auto: [
@@ -509,12 +545,48 @@ const STAR_CHART = {
 			max: 1,
 
 			title: "Boring as Dry",
-			desc: `Automate Fundry. Fundry don't spend anything.`,
+			desc: `Automate Fundry. They don't spend anything.`,
 
 			branch: 7,
 			icon: ['Icons/Fundry','Icons/StarAuto'],
 
 			unl: _ => MAIN.sac.did(),
+			cost: i => E(1e20),
+			bulk: i => 1,
+		}, {
+			max: 1,
+
+			title: "Beyond The Stars",
+			desc: `Automate Progression Chart.`,
+
+			branch: 9,
+			icon: ['Curr/Star','Icons/StarAuto'],
+
+			unl: _ => hasAGHMilestone(11),
+			cost: i => E(1e20),
+			bulk: i => 1,
+		}, {
+			max: 1,
+
+			title: "Super-Boring Generator Time",
+			desc: `Automate SFRGT. They don't spend anything.`,
+
+			branch: 9,
+			icon: ['Curr/SuperFun','Icons/StarAuto'],
+
+			unl: _ => hasAGHMilestone(11),
+			cost: i => E(1e20),
+			bulk: i => 1,
+		}, {
+			max: 1,
+
+			title: "Dark Matter Synthesizer",
+			desc: `Automate Dark Matter Plant. They don't spend anything.`,
+
+			branch: 9,
+			icon: ['Curr/DarkMatter','Icons/StarAuto'],
+
+			unl: _ => hasAGHMilestone(11),
 			cost: i => E(1e20),
 			bulk: i => 1,
 		},
@@ -740,6 +812,7 @@ function updateStarChart() {
 	let ch = tmp.gal.sc.choosed
 
 	tmp.el.starAmt.setTxt(star.format(0))
+	tmp.el.starProd.setHTML(tmp.gal.star_gain_p > 0 ? " <span class='smallAmt'>"+formatGain(player.gal.stars,tmp.gal.star_gain.mul(tmp.gal.star_gain_p))+"</span>" : "")
 
 	tmp.el.sc_desc_div.setDisplay(ch[0])
 	if (ch[0]) {

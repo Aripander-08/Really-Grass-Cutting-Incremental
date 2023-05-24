@@ -62,6 +62,8 @@ RESET.sac = {
 
 UPGS.dm = {
 	unl: _ => hasAGHMilestone(7),
+	autoUnl: _ => hasStarTree("auto", 12),
+	noSpend: _ => hasStarTree("auto", 12),
 
 	title: "Dark Matter Manipulator",
 
@@ -153,7 +155,7 @@ UPGS.dm = {
 			},
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
+			max: 4,
 
 			title: "Dark Momentum",
 			desc: `<b class="green">Double</b> Momentum.`,
@@ -186,4 +188,5 @@ UPGS.dm = {
 tmp_update.push(_=>{
 	if (!tmp.gal) return
 	tmp.gal.dmGain = MAIN.sac.dmGain()
+	tmp.gal.dmGainP = upgEffect('res', 2, 0)
 })

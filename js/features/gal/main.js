@@ -2,8 +2,6 @@ MAIN.gal = {
 	gain() {
 		let r = E(10)
 
-		r = r.mul(getChargeEff(11))
-
 		r = r.mul(upgEffect('star', 0))
 		r = r.mul(upgEffect('star', 1))
 		r = r.mul(upgEffect('star', 2))
@@ -91,7 +89,7 @@ tmp_update.push(_=>{
 	if (!tmp.gal) tmp.gal = data
 
 	data.star_gain = MAIN.gal.gain()
-	data.star_gain_p = upgEffect("res", 0, 0)
+	data.star_gain_p = starTreeEff("qol", 15, 0)
 
 	updateAstralTemp()
 	updateAGHTemp()
@@ -124,7 +122,9 @@ function galTick(dt) {
 	if (RESET.gal.req()) player.gal.stars = player.gal.stars.add(tmp.gal.star_gain.mul(tmp.gal.star_gain_p*dt))
 	if (RESET.gal.req()) player.gal.neg = Math.max(player.gal.neg, tmp.gal.agh.neg)
 
-	if (hasUpgrade("res", 1)) for (let i = 0; i <= 13; i++) buyMaxSCUpgrade("progress", i)
+	if (hasStarTree("auto", 10)) for (let i = 0; i <= 13; i++) buyMaxSCUpgrade("progress", i)
+
+	if (RESET.sac.req()) player.gal.dm = tmp.gal.dmGain.mul(dt*tmp.gal.dmGainP).add(player.gal.dm)
 }
 
 function galUnlocked() {

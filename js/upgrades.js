@@ -21,6 +21,7 @@ const UPG_RES = {
     dm: ["Dark Matter",_=>[player.gal,"dm"],'DarkMatterBase'],
     unGrass: ["Unnatural Grass",_=>[player.unRes,"grass"],'UnnaturalBase'],
     np: ["NP",_=>[player.unRes,"np"],'NormalityBase'],
+    cloud: ["Clouds",_=>[player.unRes,"cloud"],'CloudBase'],
     planetarium: ["Planetarium",_=>[player.planetoid,"grass"],'PlanetBase'],
     obs: ["Observatorium",_=>[player.planetoid,"obs"],'RingBase'],
     res: ["Reservatorium",_=>[player.planetoid,"res"],'ResBase'],
@@ -1088,6 +1089,7 @@ el.update.upgs = _=>{
 		updateUpgradesHTML('oil')
 
 		updateUpgradesHTML('np')
+		updateUpgradesHTML('cloud')
 	}
 	if (mapID == 'gh') {
         updateUpgradesHTML('factory')

@@ -24,6 +24,7 @@ REALMS.planetoid = {
 		let x = E(1)
 		x = x.mul(upgEffect('planetarium', 0))
 		x = x.mul(upgEffect('obs', 0))
+		x = x.mul(upgEffect('cloud', 2))
 		x = x.pow(upgEffect('astro', 0))
 		if (hasUpgrade('ring', 0)) x = x.mul(2)
 		if (inFormation("sp")) x = x.mul(3)
@@ -48,7 +49,8 @@ REALMS.planetoid = {
 		let cosmic = player.planetoid.level
 		if (cosmic < 10) return E(0)
 
-		let x = E(1.2).pow(cosmic - 10)
+		let x = E(1.1).pow(cosmic - 10)
+		x = x.mul(upgEffect('cloud', 3))
 		x = x.mul(upgEffect('planetarium', 2))
 		x = x.mul(upgEffect('measure', 2))
 		x = x.mul(getAstralEff('rg'))
@@ -105,7 +107,7 @@ UPGS.planetarium = {
 	title: "Planetarium Upgrades",
 
 	unl: _=>inPlanetoid(),
-	autoUnl: _=>hasUpgrade("res",3),
+	autoUnl: _=>hasUpgrade('res', 12),
 
 	ctn: [
 		{
@@ -202,7 +204,8 @@ function planetoidTick(dt) {
 	if (!inFormation("fz")) player.planetoid.time -= dt * (inFormation("sp") ? 3 : 1)
 	player.planetoid.combo /= Math.pow(1.5, dt)
 
-	if (RESET.astro.req()) player.planetoid.astro = player.planetoid.astro.add(tmp.plRes.aGain.mul(tmp.plRes.aGainP*dt))
+	if (RESET.astro.req()) player.planetoid.astro = tmp.plRes.aGain.mul(tmp.plRes.aGainP*dt).add(player.planetoid.astro)
+	if (RESET.quadrant.req()) player.planetoid.measure = tmp.plRes.mGain.mul(tmp.plRes.mGainP*dt).add(player.planetoid.measure)
 
 	if (player.planetoid.time <= 0) endPlanetoidTrial()
 }
@@ -240,6 +243,7 @@ function endPlanetoidTrial() {
 
 	player.planetoid.measure = E(0)
 	resetUpgrades("measure")
+	resetUpgrades("obs")
 
 	RESET.quadrant.doReset("ring")
 }
@@ -354,11 +358,55 @@ UPGS.ring = {
 			res: "ring",
 			icon: ['Curr/Steel', 'Icons/StarProgression'],
 
-			max: 10,
+			max: 15,
 			cost: i => E(10).pow(i/2.5+4.5),
 			bulk: i => E(i).log(10).sub(4.5).mul(2.5).floor().toNumber()+1,
 
 			effect: i => i/5+1,
+			effDesc: x => "^"+format(x,1)
+		}, {
+			title: "Healing Aid",
+			desc: `Unnatural Healing's max levels is <b class='green'>doubled</b>.`,
+
+			res: "ring",
+			icon: ['Icons/Recelerator', 'Icons/StarProgression'],
+
+			cost: i => 1e9,
+			bulk: i => 1
+		}, {
+			title: "Superhealing",
+			desc: `Unnatural Healing greatly boosts <b class='green'>TP</b> in Unnatural Realm.`,
+			unl: _ => player.unRes?.vTimes,
+
+			res: "ring",
+			icon: ['Icons/Recelerator', 'Icons/StarProgression'],
+
+			cost: i => 1e9,
+			bulk: i => 1
+		}, {
+			title: "I feel Cloudy...",
+			desc: `Unnatural Healing boosts <b class='green'>Cloud production</b> gain.`,
+			unl: _ => player.unRes?.vTimes,
+
+			res: "ring",
+			icon: ['Curr/Cloud', 'Icons/StarProgression'],
+
+			cost: i => 1e9,
+			bulk: i => 1
+		}, {
+			max: 10,
+
+			title: "Superfundry",
+			desc: `Raise Fundry multipliers by <b class='green'>+^0.1</b>.`,
+
+			res: "ring",
+			icon: ['Icons/Fundry', 'Icons/StarProgression'],
+
+			max: 10,
+			cost: i => E(10).pow((i*5)**1.25),
+			bulk: i => E(i).log(10).root(1.25).div(5).floor().toNumber()+1,
+
+			effect: i => i/10+1,
 			effDesc: x => "^"+format(x,1)
 		}
 	],
@@ -450,7 +498,7 @@ plMAIN.obs = {
 		if (inFormation("sp")) r = r.mul(3)
 		return r
 	},
-	chance: _ => 0.02+upgEffect("res",6,0),
+	chance: _ => 0.02+upgEffect("res",13,0),
 	canGetRes: _ => player.planetoid?.aTimes > 0,
 }
 UPGS.obs = {
@@ -458,6 +506,9 @@ UPGS.obs = {
 	underDesc: _=>getUpgResTitle('obs')+` (${formatPercent(plMAIN.obs.chance())} grow chance)`,
 
 	unl: _=>inPlanetoid(),
+	autoUnl: _=>hasUpgrade('res', 14),
+	noSpend: _=>hasUpgrade('res', 14),
+
 	ctn: [
 		{
 			title: "Observed Planetarium",
@@ -466,7 +517,7 @@ UPGS.obs = {
 			res: "obs",
 			icon: ['Curr/Planetarium'],
 
-			max: 5,
+			max: 10,
 			costOnce: true,
 			cost: i => 100,
 			bulk: i => Math.floor(i/100),
@@ -484,7 +535,7 @@ UPGS.obs = {
 			res: "obs",
 			icon: ['Icons/Cosmic'],
 
-			max: 2,
+			max: 10,
 			costOnce: true,
 			cost: i => 200,
 			bulk: i => Math.floor(i/200),
@@ -541,8 +592,45 @@ UPGS.obs = {
 
 			max: 5,
 			costOnce: true,
-			cost: i => 1e3,
-			bulk: i => Math.floor(i/1e3),
+			cost: i => 2e3,
+			bulk: i => Math.floor(i/2e3),
+
+			effect(i) {
+				let x = i+1
+
+				return x
+			},
+			effDesc: x => format(x,0)+"x",
+		}, {
+			title: "Observed Grow II",
+			desc: `Grass grows <b class="green">10%</b> faster in Planetoid.`,
+			tier: 2,
+			unl: _ => player.planetoid?.aTimes,
+
+			res: "obs",
+			icon: ['Icons/Speed'],
+
+			max: 10,
+			costOnce: true,
+			cost: i => 1e5,
+			bulk: i => Math.floor(i/1e5),
+
+			effect(i) {
+				return Math.pow(1.1, i)
+			},
+			effDesc: x => format(x,1)+"x",
+		}, {
+			title: "Observed Measure",
+			desc: `Increase Measure gain by <b class="green">+1x</b>.`,
+			unl: _ => player.planetoid?.qTimes,
+
+			res: "obs",
+			icon: ['Curr/Measure'],
+
+			max: 5,
+			costOnce: true,
+			cost: i => 1e6,
+			bulk: i => Math.floor(i/1e6),
 
 			effect(i) {
 				let x = i+1
@@ -555,79 +643,155 @@ UPGS.obs = {
 }
 UPGS.res = {
 	title: "Reservatory",
-	underDesc: _=>getUpgResTitle('res')+"<span class='smallAmt'> (+1 Reservatorium per Observatorium)</span>",
+	underDesc: _=>getUpgResTitle('res')+"<span class='smallAmt'> (+1 / Observatorium)</span>",
 
 	unl: _=>inPlanetoid(),
-    req: _=>plMAIN.obs.canGetRes(),
-    reqDesc: `Use the Astrolabe to unlock.`,
+	req: _=>plMAIN.obs.canGetRes(),
+	reqDesc: `Use the Astrolabe to unlock.`,
 
 	ctn: [
 		{
-			title: "Star Generation",
-			desc: `Passively generate <b class="green">+0.1%</b> of Stars you would earn per second.`,
+			title: "Part Assembler",
+			desc: `Automate <b class='green'>Rocket Part</b>.`,
+			unl: _ => false,
 
 			res: "res",
-			icon: ['Curr/Star','Icons/Plus'],
+			icon: ['Curr/RocketFuel','Icons/Automation'],
 
-			cost: i => E(1e4),
-			bulk: i => 1,
-
-			effect: i => i/100,
-			effDesc: x => format(x*100,0)+"%",
+			cost: i => E(1e100),
+			bulk: i => 1
 		}, {
-			title: "Star Chart Autobuy",
-			desc: `Automate Progression Star Chart.`,
+			title: "Funspansion",
+			desc: `Unlock new <b class='green'>SFRGT</b> upgrades.`,
 
 			res: "res",
-			icon: ['Curr/Star','Icons/Automation'],
+			icon: ['Curr/SuperFun','Icons/StarProgression'],
 
-			cost: i => E(2e4),
-			bulk: i => 1,
+			cost: i => E(1e100),
+			bulk: i => 1
 		}, {
-			title: "SFRGT Autobuy",
-			desc: `Automate SRFGT.`,
+			title: "Dark Matter Generator",
+			desc: `Passively generate <b class='green'>+0.1%</b> Dark Matter per second.`,
+			unl: _ => player.planetoid?.qTimes,
 
 			res: "res",
-			icon: ['Curr/SuperFun','Icons/Automation'],
+			icon: ['Curr/DarkMatter','Icons/Plus'],
 
-			cost: i => E(5e4),
+			cost: i => E(1e100),
 			bulk: i => 1,
+
+			effect(i) {
+				return i/1e3
+			},
+			effDesc: x => "+"+formatPercent(x)+"/s"
 		}, {
-			title: "Planetarium Autobuy",
-			desc: `Automate Planetarium Upgrades.`,
+			title: "Unnatural Automation",
+			desc: `Automate <b class='green'>Unnatural Grass</b> Upgrades. They don't spend anything.`,
+
+			res: "res",
+			icon: ['Curr/UnnaturalGrass','Icons/Automation2'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Automatic Habitability",
+			desc: `Grass is automatically cutted with <b class='green'>+10%</b> maximum value on Habitability.`,
+
+			res: "res",
+			icon: ['Icons/Compaction','Icons/Automation'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Fast Habitability",
+			desc: `Habitability takes at most <b class='green'>0.5s</b> to max.`,
+			unl: _ => player.planetoid?.qTimes,
+
+			res: "res",
+			icon: ['Icons/Compaction','Icons/Plus'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "A Normal Generator",
+			desc: `Passively generate <b class='green'>+0.1%</b> Normality Points per second.`,
+			unl: _ => player.planetoid?.qTimes,
+
+			res: "res",
+			icon: ['Curr/Normality','Icons/Plus'],
+
+			cost: i => E(1e100),
+			bulk: i => 1,
+
+			effect(i) {
+				return i/1e3
+			},
+			effDesc: x => "+"+formatPercent(x)+"/s"
+		}, {
+			title: "A Normal Automation",
+			desc: `Automate <b class='green'>Normality</b> Upgrades. They don't spend anything.`,
+			unl: _ => player.planetoid?.qTimes,
+
+			res: "res",
+			icon: ['Curr/Normality','Icons/Automation2'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Foggy Generator",
+			desc: `Automatically increase Cloud production to <b class='green'>0.1%</b> gain.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Curr/Cloud','Icons/Plus'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Foggy Automation",
+			desc: `Automate <b class='green'>Cloudy</b> Upgrades. They don't spend anything.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Curr/Cloud','Icons/Automation2'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Multi-Grassjump",
+			desc: `You can bulk <b class='green'>Grass-Jump</b>.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Icons/Placeholder','Icons/Multiply'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Auto-Grassjump",
+			desc: `Automate <b class='green'>Grass-Jump</b>.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Icons/Placeholder','Icons/Automation'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Planetarium Automation",
+			desc: `Automate <b class='green'>Planetarium</b> Upgrades.`,
 
 			res: "res",
 			icon: ['Curr/Planetarium','Icons/Automation'],
 
-			cost: i => E(1e5),
-			bulk: i => 1,
-		}, {
-			title: "Astrolabe Generation",
-			desc: `Passively generate <b class="green">+0.1%</b> of Astrolabe you would earn per second.`,
-
-			res: "res",
-			icon: ['Curr/Astrolabe','Icons/Plus'],
-
-			cost: i => E(1e7),
-			bulk: i => 1,
-
-			effect: i => i/100,
-			effDesc: x => format(x*100,0)+"%",
-		}, {
-			title: "Astrolabe Autobuy",
-			desc: `Automate Astrolabe Upgrades.`,
-
-			res: "res",
-			icon: ['Curr/Astrolabe','Icons/Automation'],
-
-			cost: i => E(1e6),
-			bulk: i => 1,
+			cost: i => E(1e100),
+			bulk: i => 1
 		}, {
 			title: "Observatory Luck",
 			desc: `<b class='green'>+1%</b> chance to Observatorium.`,
 
 			res: "res",
-			icon: ['Curr/Observatorium','Icons/StarProgression'],
+			icon: ['Curr/Observatorium','Icons/Multiply'],
 
 			max: 5,
 			cost: i => E(2).pow(i).mul(1e5),
@@ -635,6 +799,86 @@ UPGS.res = {
 
 			effect: i => i/100,
 			effDesc: x => format(x*100,0)+"%",
+		}, {
+			title: "Observatory Automation",
+			desc: `Automate <b class='green'>Observatory</b> Upgrades. They don't spend anything.`,
+			unl: _ => player.planetoid?.qTimes,
+
+			res: "res",
+			icon: ['Curr/Observatorium','Icons/Automation2'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Astro Generator",
+			desc: `Passively generate <b class='green'>+0.1%</b> Astrolabe per second.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Curr/Astrolabe','Icons/Plus'],
+
+			cost: i => E(1e100),
+			bulk: i => 1,
+
+			effect(i) {
+				return i/1e3
+			},
+			effDesc: x => "+"+formatPercent(x)+"/s"
+		}, {
+			title: "Astro Automation",
+			desc: `Automate <b class='green'>Astrolabe</b> Upgrades.`,
+			unl: _ => player.planetoid?.qTimes,
+
+			res: "res",
+			icon: ['Curr/Astrolabe','Icons/Automation'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Astro No-Spend",
+			desc: `<b class='green'>Astrolabe</b> Upgrades don't spend anything.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Curr/Astrolabe','Icons/Automation2'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Quadrant Generator",
+			desc: `Passively generate <b class='green'>+0.1%</b> Measure per second.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Curr/Measure','Icons/Plus'],
+
+			cost: i => E(1e100),
+			bulk: i => 1,
+
+			effect(i) {
+				return i/1e3
+			},
+			effDesc: x => "+"+formatPercent(x)+"/s"
+		}, {
+			title: "Quadrant Automation",
+			desc: `Automate <b class='green'>Quadrant</b> Upgrades.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Curr/Measure','Icons/Automation'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
+		}, {
+			title: "Quadrant No-Spend",
+			desc: `<b class='green'>Quadrant</b> Upgrades don't spend anything.`,
+			unl: _ => false,
+
+			res: "res",
+			icon: ['Curr/Measure','Icons/Automation2'],
+
+			cost: i => E(1e100),
+			bulk: i => 1
 		}
 	],
 }
@@ -642,43 +886,43 @@ UPGS.res = {
 //RESET
 plMAIN.reset = {
 	aGain() {
-		let r = E(1.2).pow(player.planetoid.level - 30).mul(10)
+		let r = E(1.1).pow(player.planetoid.level - 25).mul(10)
 		r = r.mul(upgEffect('obs', 3))
 		r = r.mul(upgEffect('planetarium', 4))
 		r = r.mul(upgEffect('measure', 3))
 		return r.floor()
 	},
 	mGain() {
-		let r = E(1.2).pow(player.planetoid.level - 90).mul(15)
+		let r = E(1.1).pow(player.planetoid.level - 90).mul(15)
 		r = r.mul(upgEffect('obs', 4))
-		r = r.mul(upgEffect('astro', 2))
+		r = r.mul(upgEffect('astro', 3))
 		return r.floor()
 	},
 }
 RESET.astro = {
-    unl: _=>inPlanetoid(),
+	unl: _=>inPlanetoid(),
 
-    req: _=>player.planetoid.level>=30,
-    reqDesc: `Reach Cosmic 30.`,
+	req: _=>player.planetoid.level>=25,
+	reqDesc: `Reach Cosmic 25.`,
 
-    resetDesc: `Reset your Planetariums and Cosmic.`,
-    resetGain: _=> `
-        <b>+${tmp.plRes.aGain.format(0)}</b> Astrolabe
-        ${player.planetoid?.aTimes ? '' : '<br><b class="cyan">Also unlock Reservatory!</b>'}
-    `,
+	resetDesc: `Reset your Planetariums and Cosmic.`,
+	resetGain: _=> `
+		<b>+${tmp.plRes.aGain.format(0)}</b> Astrolabe
+		${player.planetoid?.aTimes ? '' : '<br><b class="cyan">Also unlock Reservatory!</b>'}
+	`,
 
-    title: `Astrolabe`,
-    resetBtn: `Use the Astrolabe`,
-    hotkey: `P`,
+	title: `Astrolabe`,
+	resetBtn: `Use the Astrolabe`,
+	hotkey: `P`,
 
-    reset(force=false) {
-        if (!this.req()) return
+	reset(force=false) {
+		if (!this.req()) return
 		player.planetoid.astro = player.planetoid.astro.add(tmp.plRes.aGain)
 		player.planetoid.aTimes++
 		this.doReset()
-    },
+	},
 
-    doReset(order="astro") {
+	doReset(order="astro") {
 		player.planetoid.grass = E(0)
 		player.planetoid.xp = E(0)
 		player.planetoid.level = 0
@@ -694,10 +938,11 @@ UPGS.astro = {
 	underDesc: _=>getUpgResTitle('astro'),
 
 	unl: _=>inPlanetoid(),
-	autoUnl: _=>hasUpgrade("res",5),
+	autoUnl: _=>hasUpgrade('res', 16),
+	noSpend: _=>hasUpgrade('res', 17),
 
-    req: _=>player.planetoid?.aTimes>0,
-    reqDesc: `Use the Astrolabe to unlock.`,
+	req: _=>player.planetoid?.aTimes>0,
+	reqDesc: `Use the Astrolabe to unlock.`,
 
 	ctn: [
 		{
@@ -709,8 +954,8 @@ UPGS.astro = {
 			icon: ['Curr/Planetarium'],
 
 			max: 20,
-			cost: i => Decimal.pow(3,i**1.25).mul(5).ceil(),
-			bulk: i => i.max(1).div(5).log(3).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(2,i**1.25).mul(3).ceil(),
+			bulk: i => i.max(1).div(3).log(2).root(1.25).floor().toNumber()+1,
 
 			effect: i => i/10+1,
 			effDesc: x => "^"+format(x,1)
@@ -723,39 +968,69 @@ UPGS.astro = {
 			icon: ['Icons/Cosmic'],
 			
 			max: 20,
-			cost: i => Decimal.pow(2,i**1.25).mul(3).ceil(),
-			bulk: i => i.max(1).div(3).log(2).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(1.5,i**1.25).mul(3).ceil(),
+			bulk: i => i.max(1).div(3).log(1.5).root(1.25).floor().toNumber()+1,
 
 			effect: i => i/10+1,
 			effDesc: x => "^"+format(x,1)
+		}, {
+			title: "Astro Habitability",
+			desc: `Raise Habitability by <b class="green">^+0.1</b>.`,
+
+			res: "astro",
+			icon: ['Icons/Compaction'],
+
+			max: 10,
+			cost: i => Decimal.pow(2,i**1.25).mul(2).ceil(),
+			bulk: i => i.max(1).div(2).log(2).root(1.25).floor().toNumber()+1,
+
+			effect: i => i/10+1,
+			effDesc: x => "^"+format(x,1)
+		}, {
+			title: "Measure",
+			desc: `Gain <b class="green">+1x</b> more Measure.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+
+			res: "astro",
+			icon: ['Curr/Measure'],
+			
+			max: Infinity,
+			cost: i => Decimal.pow(1.1,i).mul(1e3).ceil(),
+			bulk: i => i.div(1e3).max(1).log(1.1).floor().toNumber()+1,
+
+			effect(i) {
+				let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+
+				return x
+			},
+			effDesc: x => x.format()+"x",
 		}
 	],
 }
 
 RESET.quadrant = {
-    unl: _=>inPlanetoid() && player.planetoid.aTimes,
+	unl: _=>inPlanetoid() && player.planetoid.aTimes,
 
-    req: _=>player.planetoid.level>=90,
-    reqDesc: `Reach Cosmic 90.`,
+	req: _=>player.planetoid.level>=90,
+	reqDesc: `Reach Cosmic 90.`,
 
-    resetDesc: `Reset your Planetariums, Cosmic, and Astrolabe.`,
-    resetGain: _=> `
-        <b>+${tmp.plRes.mGain.format(0)}</b> Measure
-        ${player.planetoid.qTimes ? '' : '<br><b class="cyan">Also unlock Checkpoints! (soon)</b>'}
-    `,
+	resetDesc: `Reset your Planetariums, Cosmic, and Astrolabe.`,
+	resetGain: _=> `
+		<b>+${tmp.plRes.mGain.format(0)}</b> Measure
+		${player.planetoid.qTimes ? '' : '<br><b class="cyan">Also unlock Checkpoints! (soon)</b>'}
+	`,
 
-    title: `Quadrant`,
-    resetBtn: `Use the Quadrant`,
-    hotkey: `P`,
+	title: `Quadrant`,
+	resetBtn: `Use the Quadrant`,
+	hotkey: `P`,
 
-    reset() {
-        if (!this.req()) return
+	reset() {
+		if (!this.req()) return
 		player.planetoid.measure = player.planetoid.measure.add(tmp.plRes.mGain)
 		player.planetoid.qTimes++
 		this.doReset()
-    },
+	},
 
-    doReset(order="quadrant") {
+	doReset(order="quadrant") {
 		player.planetoid.astro = E(0)
 		resetUpgrades("astro")
 
@@ -766,12 +1041,12 @@ UPGS.measure = {
 	title: "Quadrant Upgrades",
 	underDesc: _=>getUpgResTitle('measure'),
 
-    unl: _=>inPlanetoid() && player.planetoid.aTimes,
-	autoUnl: _=>false,
-	noSpend: _=>false,
+	unl: _=>inPlanetoid() && player.planetoid.aTimes,
+	autoUnl: _=>hasUpgrade('res', 19),
+	noSpend: _=>hasUpgrade('res', 20),
 
-    req: _=>player.planetoid?.qTimes>0,
-    reqDesc: `Use the Quadrant to unlock.`,
+	req: _=>player.planetoid?.qTimes>0,
+	reqDesc: `Use the Quadrant to unlock.`,
 
 	ctn: [
 		{
@@ -799,7 +1074,7 @@ UPGS.measure = {
 			res: "measure",
 			icon: ['Curr/Observatorium'],
 
-			max: 5,
+			max: Infinity,
 			cost: i => Decimal.pow(2,i).mul(15).ceil(),
 			bulk: i => i.div(15).max(1).log(2).floor().toNumber()+1,
 
@@ -816,7 +1091,7 @@ UPGS.measure = {
 
 			res: "measure",
 			icon: ['Curr/Ring'],
-			
+
 			max: Infinity,
 			cost: i => Decimal.pow(1.2,i).mul(30).ceil(),
 			bulk: i => i.div(30).max(1).log(1.2).floor().toNumber()+1,
@@ -854,9 +1129,10 @@ tmp_update.push(_=>{
 
 	let data = tmp.plRes
 	data.aGain = plMAIN.reset.aGain()
-	data.aGainP = upgEffect("res", 4, 0)
+	data.aGainP = upgEffect("res", 15, 0)
+
 	data.mGain = plMAIN.reset.mGain()
-	data.mGainP = 0
+	data.mGainP = upgEffect("res", 18, 0)
 })
 
 //HTML
@@ -883,6 +1159,8 @@ el.update.planetoid = _=>{
 	}
 	if (mapID == 'sac') updateResetHTML('planetoid')
 	if (mapID == 'dc') updateResetHTML('planetoid_earth')
+
+	if (!on) return
 	if (mapID == 'ring') {
 		updateResetHTML('planetoid_exit')
 		updateResetHTML('planetoid_trial')
@@ -898,6 +1176,9 @@ el.update.planetoid = _=>{
 
 		updateUpgradesHTML('astro')
 		updateUpgradesHTML('measure')
+	}
+	if (mapID == 'trial') {
+		tmp.el.trial_req.setDisplay(!player.planetoid.qTimes)
 	}
 }
 
