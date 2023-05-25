@@ -281,7 +281,7 @@ UPGS.sfrgt = {
 			res: "sfrgt",
 			icon: ["Icons/SP"],
 
-			max: Infinity,
+			max: 25,
 			cost: i => Decimal.pow(15,i).mul(500).ceil(),
 			bulk: i => i.div(500).max(1).log(15).floor().toNumber()+1,
 		

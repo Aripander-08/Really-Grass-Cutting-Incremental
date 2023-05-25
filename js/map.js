@@ -63,8 +63,8 @@ const MAP_UNLS = {
 	gal: _ => player.rocket.part > 0 || galUnlocked(),
 
 	//SPACE
-	sc: _ => true,
-	at: _ => true,
+	sc: _ => galUnlocked(),
+	at: _ => galUnlocked(),
 	sac: _ => hasAGHMilestone(0),
 
 	//Planetoid

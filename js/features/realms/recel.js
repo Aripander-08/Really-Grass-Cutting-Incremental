@@ -154,7 +154,7 @@ UPGS.unGrass = {
 }
 
 EFFECT.uh = {
-	unl: _ => player.unRes,
+	unl: _ => hasUpgrade("funMachine", 3),
 	title: r => `<b style="color: #bf7">Unnatural Healing: </b> ${format(r, 0)}<br>
 		<span class="smallAmt">Gain more Unnatural Healing by proceeding outside of Unnatural Realm.</span><br>`,
 
@@ -661,5 +661,5 @@ function resetUnnaturalRealm() {
 	player.unRes.grassjump = 0
 	resetUpgrades("cloud")
 
-	RESET.vapor.doReset(order)
+	RESET.vapor.doReset()
 }

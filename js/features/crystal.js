@@ -139,9 +139,7 @@ UPGS.crystal = {
             bulk: i => i.div(100).max(1).log(20).mul(2.5).floor().toNumber()+1,
         
             effect(i) {
-                let x = i/10+2.25
-        
-                return x
+                return i/10+2.25
             },
             effDesc: x => format(x,2)+"x per Tier ("+format(E(MAIN.tier.base()).pow(player.tier),0)+"x -> "+format(E(MAIN.tier.base()+.1).pow(player.tier),0)+"x)",
         },{

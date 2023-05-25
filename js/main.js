@@ -57,7 +57,7 @@ const MAIN = {
 			return i > 0 ? this.req(i-1) : E(0) 
 		},
 		base(realm = player.decel) {
-			let x = realm ? 2.25 : upgEffect('crystal',3)
+			let x = realm ? 2.25 : upgEffect('crystal', 3, 2.25)
 			if (player.grasshop >= 5) x += 0.1
 			x += getChargeEff(4, 0)
 			return x
