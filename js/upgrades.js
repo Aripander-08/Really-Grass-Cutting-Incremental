@@ -1,24 +1,30 @@
 const U_STEP = [1,25,1/0]
 
 const UPG_RES = {
-    grass: ["Grass",_=>[player,"grass"],'GrassBase'],
-    perk: ["Perk",_=>[tmp,"perkUnspent"],'PerkBase'],
-    pp: ["PP",_=>[player,"pp"],'PrestigeBase'],
-    plat: ["Platinum",_=>[player,"plat"],"PlatBase"],
-    crystal: ["Crystal",_=>[player,"crystal"],"CrystalBase"],
-    steel: ["Steel",_=>[player,"steel"],"GrasshopBase"],
-    aGrass: ["Anti-Grass",_=>[player,"aGrass"],'AntiGrassBase'],
-    ap: ["AP",_=>[player,"ap"],'AnonymityBase'],
-    oil: ["Oil",_=>[player,"oil"],'LiquefyBase'],
-    rf: ["Rocket Fuel",_=>[player.rocket,"amount"],'RocketBase'],
-    momentum: ["Momentum",_=>[player,"momentum"],'RocketBase'],
-    moonstone: ["Moonstone",_=>[player,"moonstone"],'MoonBase'],
-    fun: ["Fun",_=>[player,"fun"],'FunBase'],
-    star: ["Star",_=>[player,"stars"],'SpaceBase'],
-    SFRGT: ["SFRGT",_=>[player,"SFRGT"],'FunBase'],
-    dm: ["Dark Matter",_=>[player,"dm"],'DarkMatterBase'],
-    unGrass: ["Un-Grass",_=>[player,"unGrass"],'UnnaturalBase'],
-    np: ["NP",_=>[player,"np"],'NormalityBase'],
+    grass: ["Grass",_=>[player,"grass"],'GrassBase','Curr/Grass'],
+    perk: ["Perk",_=>[tmp,"perkUnspent"],'PerkBase','Curr/Perks'],
+    pp: ["PP",_=>[player,"pp"],'PrestigeBase','Curr/Prestige'],
+    plat: ["Platinum",_=>[player,"plat"],"PlatBase",'Curr/Platinum'],
+    crystal: ["Crystal",_=>[player,"crystal"],"CrystalBase",'Curr/Crystal'],
+    steel: ["Steel",_=>[player,"steel"],"GrasshopBase",'Curr/Steel2'],
+    aGrass: ["Anti-Grass",_=>[player,"aGrass"],'AntiGrassBase','Curr/AntiGrass'],
+    ap: ["AP",_=>[player,"ap"],'AnonymityBase','Curr/Anonymity'],
+    oil: ["Oil",_=>[player,"oil"],'LiquefyBase','Curr/Oil'],
+    rf: ["Rocket Fuel",_=>[player.rocket,"amount"],'RocketBase','Curr/RocketFuel'],
+    momentum: ["Momentum",_=>[player,"momentum"],'RocketBase',"Curr/Momentum"],
+    moonstone: ["Moonstone",_=>[player,"moonstone"],'MoonBase','Curr/Moonstone'],
+    fun: ["Fun",_=>[player,"fun"],'FunBase','Curr/Fun'],
+    star: ["Star",_=>[player,"stars"],'SpaceBase','Curr/Star'],
+    SFRGT: ["SFRGT",_=>[player,"SFRGT"],'FunBase','Curr/SuperFun'],
+    dm: ["Dark Matter",_=>[player,"dm"],'DarkMatterBase','Curr/DarkMatter'],
+    unGrass: ["Un-Grass",_=>[player,"unGrass"],'UnnaturalBase','Curr/UGrass'],
+    np: ["NP",_=>[player,"np"],'NormalityBase','Curr/Normality'],
+    pm: ["Planetarium",_=>[player.planetoid,"pm"],'PlanetBase','Curr/Planetoid'],
+    observ: ["Observatorium",_=>[player.planetoid,"observ"],'ObsBase','Curr/Observatorium'],
+    astro: ["Astro",_=>[player.planetoid,"astro"],'AstroBase','Curr/Astrolabe'],
+    measure: ["Measure",_=>[player.planetoid,"measure"],'MeasureBase','Curr/Measure'],
+    cloud: ["Cloud",_=>[player,"cloud"],'CloudBase','Curr/Cloud'],
+    planet: ["Planet",_=>[player.planetoid,"planet"],'PlanetaryBase','Curr/Planet'],
 }
 
 const isResNumber = ['perk','plat','rf','momentum','moonstone']
@@ -45,8 +51,8 @@ const UPGS = {
                 res: "grass",
                 icon: ['Curr/Grass'],
                 
-                cost: i => Decimal.pow(1.2,i).mul(10).ceil(),
-                bulk: i => i.div(10).max(1).log(1.2).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.2,scale(E(i),1e6,2,0)).mul(10).ceil(),
+                bulk: i => i.div(10).max(1).log(1.2).scale(1e6,2,0,true).floor().toNumber()+1,
 
                 effect(i) {
                     let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
@@ -99,8 +105,8 @@ const UPGS = {
                 res: "grass",
                 icon: ['Icons/XP'],
                 
-                cost: i => Decimal.pow(1.3,i).mul(1e3).ceil(),
-                bulk: i => i.div(1e3).max(1).log(1.3).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.3,scale(E(i),1e6,2,0)).mul(1e3).ceil(),
+                bulk: i => i.div(1e3).max(1).log(1.3).scale(1e6,2,0,true).floor().toNumber()+1,
 
                 effect(i) {
                     let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
@@ -132,6 +138,8 @@ const UPGS = {
     perk: {
         title: "Perk Upgrades",
         btns: `<button id="losePerksBtn" class="buyAllUpg" onclick='toggleOption("losePerks")'>Keep on reset: <span id="losePerks"></span></button>`,
+
+        unl:_=>!player.planetoid.active,
 
         req: _=>player.level >= 1 || player.pTimes > 0,
         reqDesc: _=>`Reach Level 1 to unlock.`,
@@ -615,7 +623,7 @@ const UPGS = {
     plat: {
         title: "Platinum Upgrades",
 
-        unl: _=>player.pTimes>0,
+        unl: _=>player.pTimes>0&&!player.planetoid.active,
 
         req: _=>player.tier >= 3||player.cTimes > 0,
         reqDesc: _=>`Reach Tier 3 to unlock.`,
@@ -984,6 +992,16 @@ function updateUpgTemp(id) {
             else if (hasUpgrade('assembler',10) && (x == 5)) tu.max[x] = Infinity
         } else if (id == "oil") {
             if (hasUpgrade('assembler',11)) tu.max[x] = Infinity
+        } else if (id == "gen") {
+            if (hasStarTree('reserv',16) && (x==2 || x==3)) tu.max[x] = 1000 + starTreeEff('reserv',16)
+        } else if (id == "unGrass") {
+            if (hasStarTree('reserv',25) && x < 5) tu.max[x] = Infinity
+        } else if (id == "foundry") {
+            if (hasStarTree('reserv',28)) tu.max[x] = Infinity
+        } else if (id == "sfrgt") {
+            if (hasStarTree('reserv',30) && x == 0) tu.max[x] = Infinity
+        } else if (id == "np") {
+            if (hasStarTree('reserv',33)) tu.max[x] = Infinity
         }
 
         if (upg.unl?upg.unl():true) if (amt < tu.max[x]) ul++
@@ -1034,26 +1052,23 @@ function setupUpgradesHTML(id) {
 		table.setHTML(html)
 
 		html = ""
+        for (let x in UPGS[id].ctn) {
+            let upg = UPGS[id].ctn[x]
+            let icon = [id=='auto'&&x==0?'Bases/AutoBase':'Bases/'+UPG_RES[upg.res][2]]
+            if (upg.icon) icon.push(...upg.icon)
+            else icon.push('Icons/Placeholder')
 
-		for (let x in UPGS[id].ctn) {
-			let upg = UPGS[id].ctn[x]
-			let icon = [id=='auto'&&x==0?'Bases/AutoBase':'Bases/'+UPG_RES[upg.res][2]]
-			if (upg.icon) for (i in upg.icon) icon.push(upg.icon[i])
-			else icon.push('Icons/Placeholder')
-
-			html += `
-				<div class="upg_ctn" id="upg_ctn_${id}${x}" onclick="clickUpgrade('${id}', ${x})">`
-			for (i in icon) html +=
-				`<img draggable="false" src="${"images/"+icon[i]+".png"}">`
-			html += `
-				<img id="upg_ctn_${id}${x}_max_base"  draggable="false" src="${"images/max.png"}">
-				<div id="upg_ctn_${id}${x}_cost" class="upg_cost"></div>
-				<div class="upg_tier">${upg.tier ? upg.tier : ""}</div>
-				<div id="upg_ctn_${id}${x}_amt" class="upg_amt">argh</div>
+            html += `
+            <div class="upg_ctn" id="upg_ctn_${id}${x}" onclick="tmp.upg_ch.${id} = ${x}">`
+            for (i in icon) html +=
+                `<img class="img_desc" draggable="false" src="${"images/"+icon[i]+".png"}">`
+            html += `<img class='img_desc' id="upg_ctn_${id}${x}_max_base" draggable="false" src="images/max.png">
+                <img class="img_res" draggable="false" src="${"images/Bases/"+UPG_RES[upg.res][2]+".png"}"><img class="img_res" draggable="false" src="${"images/"+UPG_RES[upg.res][3]+".png"}">
+                <div id="upg_ctn_${id}${x}_cost" class="upg_cost"></div>
+                <div id="upg_ctn_${id}${x}_amt" class="upg_amt">argh</div>
 				<div class="upg_max" id="upg_ctn_${id}${x}_max" class="upg_max">Maxed!</div>
-			</div>
-			`
-		}
+            </div>`
+        }
 
 		new Element(`upgs_ctn_${id}`).setHTML(html)
 	}
@@ -1137,7 +1152,7 @@ function updateUpgradesHTML(id) {
                     tmp.el[div_id].changeStyle("width",height+"px")
                     tmp.el[div_id].changeStyle("height",height+"px")
 
-                    tmp.el[div_id+"_cost"].setTxt(amt < tu.max[x] ? format(tu.cost[x],0)+" "+UPG_RES[upg.res][0] : "")
+                    tmp.el[div_id+"_cost"].setTxt(amt < tu.max[x] ? format(tu.cost[x],0) : "")
                     tmp.el[div_id+"_cost"].setClasses({upg_cost: true, locked: Decimal.lt(res,tu.cost[x]) && amt < tu.max[x]})
 
                     tmp.el[div_id+"_amt"].setTxt(amt < tu.max[x] ? format(amt,0) : "")
@@ -1177,10 +1192,12 @@ el.update.upgs = _=>{
 		updateUpgradesHTML('grass')
 		updateUpgradesHTML('aGrass')
 		updateUpgradesHTML('unGrass')
+        updateUpgradesHTML('planetarium')
 	}
 	if (mapID == 'p') {
-		updateUpgradesHTML('perk')
-		updateUpgradesHTML('plat')
+        updateUpgradesHTML('perk')
+        updateUpgradesHTML('plat')
+        updateUpgradesHTML('observ')
 		tmp.el.losePerksBtn.setDisplay(hasUpgrade('auto', 4))
 		tmp.el.losePerks.setTxt(player.options.losePerks ? "OFF" : "ON")
 	}
@@ -1192,11 +1209,16 @@ el.update.upgs = _=>{
 		updateUpgradesHTML('ap')
 		updateUpgradesHTML('oil')
 
-		updateUpgradesHTML('np')
+        updateUpgradesHTML('np')
+        updateUpgradesHTML('cloud')
+
+        updateUpgradesHTML('astro')
+        updateUpgradesHTML('measure')
 	}
 	if (mapID == 'gh') {
         updateUpgradesHTML('factory')
         updateUpgradesHTML('funnyMachine')
+        updateUpgradesHTML('planet')
     }
 	if (mapID == 'fd') {
 		updateUpgradesHTML('foundry')

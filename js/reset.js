@@ -63,22 +63,29 @@ el.update.reset = _=> {
         updateResetHTML('oil')
 
         updateResetHTML('np')
-    }
-    if (mapID == 'gh') {
+        updateResetHTML('cloud')
+
+        updateResetHTML('astro')
+        updateResetHTML('quadrant')
+    } else if (mapID == 'gh') {
         updateResetHTML('gh')
         updateResetHTML('steel')
+
         updateResetHTML('gs')
         updateResetHTML('fun')
-    }
-    if (mapID == 'as') {
+
+        updateResetHTML('gj')
+        updateResetHTML('planetary')
+    } else if (mapID == 'as') {
         updateResetHTML('decel')
-    }
-    if (mapID == 'rp') {
+    } else if (mapID == 'rp') {
         updateResetHTML('rocket_part')
         updateResetHTML('gal')
         updateResetHTML('recel')
-    }
-    if (mapID == 'sac') {
+    } else if (mapID == 'sac') {
         updateResetHTML('sac')
+        updateResetHTML('enterPlanetoid')
+    } else if (mapID == 'auto') {
+        updateResetHTML('formRing')
     }
 }

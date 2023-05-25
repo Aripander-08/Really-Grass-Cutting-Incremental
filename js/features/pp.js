@@ -102,8 +102,8 @@ UPGS.pp = {
             res: "pp",
             icon: ["Curr/Grass"],
                         
-            cost: i => Decimal.pow(1.25,i).mul(1).ceil(),
-            bulk: i => i.div(1).max(1).log(1.25).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.25,scale(E(i),1e6,2,0)).mul(1).ceil(),
+            bulk: i => i.div(1).max(1).log(1.25).scale(1e6,2,0,true).floor().toNumber()+1,
         
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -121,8 +121,8 @@ UPGS.pp = {
             res: "pp",
             icon: ["Icons/XP"],
                         
-            cost: i => Decimal.pow(1.3,i).mul(3).ceil(),
-            bulk: i => i.div(3).max(1).log(1.3).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.3,scale(E(i),1e6,2,0)).mul(3).ceil(),
+            bulk: i => i.div(3).max(1).log(1.3).scale(1e6,2,0,true).floor().toNumber()+1,
         
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -139,8 +139,8 @@ UPGS.pp = {
             res: "pp",
             icon: ["Icons/TP"],
                         
-            cost: i => Decimal.pow(1.5,i).mul(50).ceil(),
-            bulk: i => i.div(50).max(1).log(1.5).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.5,scale(E(i),1e6,2,0)).mul(50).ceil(),
+            bulk: i => i.div(50).max(1).log(1.5).scale(1e6,2,0,true).floor().toNumber()+1,
         
             effect(i) {
                 let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
@@ -240,8 +240,8 @@ UPGS.ap = {
             res: "ap",
             icon: ["Curr/Grass"],
                         
-            cost: i => Decimal.pow(1.2,i).mul(2).ceil(),
-            bulk: i => i.div(2).max(1).log(1.2).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.2,scale(E(i),1e5,2,0)).mul(2).ceil(),
+            bulk: i => i.div(2).max(1).log(1.2).scale(1e5,2,0,true).floor().toNumber()+1,
         
             effect(i) {
                 let x = Decimal.pow(1.25,Math.floor(i/25)).mul(i/4+1)
@@ -259,8 +259,8 @@ UPGS.ap = {
             res: "ap",
             icon: ['Curr/Charge'],
             
-            cost: i => Decimal.pow(1.2,i).mul(3).ceil(),
-            bulk: i => i.div(3).max(1).log(1.2).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.2,scale(E(i),1e5,2,0)).mul(3).ceil(),
+            bulk: i => i.div(3).max(1).log(1.2).scale(1e5,2,0,true).floor().toNumber()+1,
 
             effect(i) {
                 let x = Decimal.pow(1.25,Math.floor(i/25)).mul(i/10+1).softcap(1e12,0.25,0)
@@ -278,8 +278,8 @@ UPGS.ap = {
             res: "ap",
             icon: ['Icons/XP'],
             
-            cost: i => Decimal.pow(1.25,i).mul(5).ceil(),
-            bulk: i => i.div(5).max(1).log(1.25).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.25,scale(E(i),1e5,2,0)).mul(5).ceil(),
+            bulk: i => i.div(5).max(1).log(1.25).scale(1e5,2,0,true).floor().toNumber()+1,
 
             effect(i) {
                 let x = Decimal.pow(1.25,Math.floor(i/25)).mul(i/4+1)
@@ -297,8 +297,8 @@ UPGS.ap = {
             res: "ap",
             icon: ['Icons/TP'],
             
-            cost: i => Decimal.pow(1.35,i).mul(10).ceil(),
-            bulk: i => i.div(10).max(1).log(1.35).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.35,scale(E(i),1e5,2,0)).mul(10).ceil(),
+            bulk: i => i.div(10).max(1).log(1.35).scale(1e5,2,0,true).floor().toNumber()+1,
 
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -357,7 +357,7 @@ MAIN.np = {
 
         tmp.npGainBase = x
 
-        x = x.mul(upgEffect('dm',6))
+        x = x.mul(upgEffect('dm',6)).mul(upgEffect('sfrgt',5)).mul(upgEffect('cloud',3))
 
         return x.floor()
     },
@@ -416,10 +416,10 @@ UPGS.np = {
     req: _=>player.nTimes > 0,
     reqDesc: _=>`Normality once to unlock.`,
 
-    underDesc: _=>`You have ${format(player.np,0)} Normality Points`,
+    underDesc: _=>`You have ${format(player.np,0)} Normality Points`+(tmp.npGen>0 ? " <span class='smallAmt'>"+formatGain(player.np,player.bestNP2.mul(tmp.npGen))+"</span>" : ""),
 
-    autoUnl: _=>false,
-    noSpend: _=>false,
+    autoUnl: _=>hasStarTree('reserv',8),
+    noSpend: _=>hasStarTree('reserv',8),
 
     ctn: [
         {

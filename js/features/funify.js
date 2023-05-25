@@ -21,7 +21,7 @@ MAIN.fun = {
         let x = E(1)
 
         x = x.mul(upgEffect('funnyMachine',1))
-        x = x.mul(upgEffect('sfrgt',0))
+        x = x.mul(upgEffect('sfrgt',0)).mul(upgEffect('sfrgt',4))
         x = x.mul(upgEffect('moonstone',5))
 
         if (player.lowGH <= 8) x = x.mul(getAGHEffect(5))
@@ -81,6 +81,9 @@ UPGS.funnyMachine = {
     unl: _=>player.fTimes > 0&&player.decel,
 
     underDesc: _=>`You have ${format(player.fun,0)} Fun`,
+
+    autoUnl: _=>hasStarTree('reserv',20),
+    noSpend: _=>hasStarTree('reserv',20),
 
     ctn: [
         {
@@ -184,6 +187,9 @@ UPGS.fundry = {
 
     unl: _=>hasUpgrade('funnyMachine',0)&&player.decel,
 
+    autoUnl: _=>hasStarTree('reserv',20),
+    noSpend: _=>hasStarTree('reserv',20),
+
     ctn: [
         {
             max: 1000,
@@ -268,6 +274,9 @@ UPGS.sfrgt = {
 
     underDesc: _=>`You have ${format(player.SFRGT,0)} SFRGT <span class='smallAmt'>${player.SFRGT.formatGain(tmp.SFRGTgain)}</span>`,
 
+    autoUnl: _=>hasStarTree('reserv',20),
+    noSpend: _=>hasStarTree('reserv',20),
+
     ctn: [
         {
             max: 100,
@@ -294,7 +303,7 @@ UPGS.sfrgt = {
             desc: `Increase SP gain by <b class="green">+10%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "SFRGT",
-            icon: ["Curr/SP"],
+            icon: ["Icons/SP"],
                         
             cost: i => Decimal.pow(1.25,i).mul(50).ceil(),
             bulk: i => i.div(50).max(1).log(1.25).floor().toNumber()+1,
@@ -341,6 +350,66 @@ UPGS.sfrgt = {
                 return x
             },
             effDesc: x => "+"+format(x,0)+" OoMs later",
+        },{
+            max: 1000,
+
+            unl: _=>hasStarTree('reserv',14),
+
+            title: "SFRGT Generation II",
+            desc: `<b class="green">Double</b> SFRGT gain per level.`,
+        
+            res: "SFRGT",
+            icon: ["Curr/SuperFun"],
+                        
+            cost: i => Decimal.pow(10,i).mul(1e54).ceil(),
+            bulk: i => i.div(1e54).max(1).log(10).floor().toNumber()+1,
+        
+            effect(i) {
+                let x = Decimal.pow(2,i)
+        
+                return x
+            },
+            effDesc: x => format(x,0)+"x",
+        },{
+            max: 10000,
+
+            unl: _=>hasStarTree('reserv',14),
+
+            title: "SFRGT NP",
+            desc: `Increase NP gain by <b class="green">1%</b> every level.`,
+        
+            res: "SFRGT",
+            icon: ["Curr/Normality"],
+                        
+            cost: i => Decimal.pow(1.15,i).mul(1e63).ceil(),
+            bulk: i => i.div(1e63).max(1).log(1.15).floor().toNumber()+1,
+        
+            effect(i) {
+                let x = Decimal.pow(1.01,i)
+        
+                return x
+            },
+            effDesc: x => format(x)+"x",
+        },{
+            max: 10000,
+
+            unl: _=>hasStarTree('reserv',14),
+
+            title: "SFRGT SP II",
+            desc: `Increase SP gain by <b class="green">1%</b> every level.`,
+        
+            res: "SFRGT",
+            icon: ["Icons/SP"],
+                        
+            cost: i => Decimal.pow(1.15,i).mul(1e63).ceil(),
+            bulk: i => i.div(1e63).max(1).log(1.15).floor().toNumber()+1,
+        
+            effect(i) {
+                let x = Decimal.pow(1.01,i)
+        
+                return x
+            },
+            effDesc: x => format(x)+"x",
         },
     ],
 }

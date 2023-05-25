@@ -19,6 +19,8 @@ MAIN.gal = {
 
         x = x.mul(upgEffect('dm',4))
 
+        x = x.mul(starTreeEff('ring',10)).mul(starTreeEff('ring',22))
+
         return x.floor()
     },
 }
@@ -43,7 +45,7 @@ RESET.gal = {
                 player.gTimes++
 
                 if (player.lowGH <= 0 && player.grasshop <= 0) player.lowGH = Math.min(player.lowGH,-player.grassskip)
-                else player.lowGH = Math.min(player.lowGH,player.grasshop)
+                else player.lowGH = Math.max(Math.min(player.lowGH,player.grasshop),-60)
 
                 mapPos.earth = [3, 3]
                 goToSpace()
@@ -83,8 +85,10 @@ RESET.gal = {
         player.bestAP = E(0)
         player.aGrass = E(0)
         player.aBestGrass = E(0)
-        player.bestOil2 = E(0)
-        player.bestAP2 = E(0)
+        if (!hasStarTree('reserv',12)) {
+            player.bestOil2 = E(0)
+            player.bestAP2 = E(0)
+        }
         player.aRes.level = 0
         player.aRes.tier = 0
         player.aRes.xp = E(0)
@@ -93,8 +97,12 @@ RESET.gal = {
         player.steel = E(0)
         player.chargeRate = E(0)
         player.bestCharge = E(0)
-        player.grasshop = 0
-        player.grassskip = 0
+
+        if (player.lowGH > -60) {
+            player.grasshop = 0
+            player.grassskip = 0
+        }
+
         if (player.lowGH > -12 || order=='sac') player.plat = 0
 
         if (player.lowGH > 28) player.chal.comp = []
@@ -111,13 +119,16 @@ RESET.gal = {
 
 const ASTRAL = {
     eff() {
-        let a = player.astral
+        let a = tmp.total_astral
         let x = {}
 
         x.pp = a/100
         x.crystal = a/25
         x.plat = a+1
         x.steel = 1.1**a*a+1
+
+        if (player.astralPrestige>0) x.dm = getAPEff(0)
+        if (player.astralPrestige>1) x.ring = getAPEff(1)
 
         return x
     },
@@ -129,11 +140,15 @@ const ASTRAL = {
         Increase Steel gain by <b class="green">${formatMult(e.steel,1)}</b><br>
         `
 
+        if (e.dm) x += `Increase Dark Matter gain by <b class="green">${formatMult(e.dm,0)}</b><br>`
+        if (e.ring) x += `Increase Rings gain by <b class="green">${formatMult(e.ring,0)}</b><br>`
+
         return x
     },
 }
 
 function getASEff(id,def=1) { return tmp.astral_eff[id]||def }
+function getAPEff(id) { return Decimal.pow(AP_BONUS_BASE[id],player.astralPrestige-id) }
 
 UPGS.moonstone = {
     title: "Moonstone Upgrades",
@@ -324,9 +339,10 @@ el.update.space = _=>{
 		updateStarChart()
 		if (tree_canvas.width == 0 || tree_canvas.height == 0) resizeCanvas2()
 		drawTree()
-	}
-	if (mapID == 'at') {
-		tmp.el.astral2.setTxt(format(player.astral,0))
+	} else if (mapID == 'at') {
+		tmp.el.astral2.setTxt((player.astralPrestige>0?format(player.astralPrestige,0)+"-":"")+format(player.astral,0))
 		tmp.el.astral_eff.setHTML(ASTRAL.effDesc(tmp.astral_eff))
-	}
+	} else if (mapID == 'ap') {
+        updateResetHTML('astralPrestige')
+    }
 }

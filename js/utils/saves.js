@@ -95,6 +95,8 @@ function getPlayerData() {
 			auto: [],
 			speed: [],
 			progress: [],
+			ring: [],
+			reserv: [],
 		},
 
 		fTimes: 0,
@@ -121,6 +123,21 @@ function getPlayerData() {
         bestNP2: E(0),
         nTimes: 0,
 
+        cloud: E(0),
+        bestCloud: E(0),
+        bestCloud2: E(0),
+        cloudUnl: false,
+
+        grassjump: 0,
+
+        planetoid: getPlanetoidSave(),
+
+        lunar: {
+            active: [],
+            level: new Array(LUNAR_OB.length).fill(0),
+            lp: new Array(LUNAR_OB.length).fill(E(0)),
+        },
+
 		time: 0,
 		map_notify: {},
 		version: VER,
@@ -144,8 +161,8 @@ function safecheckSave(data) {
 	return true
 }
 
-const VER = 0.0432
-const EX_COMMIT = 11.07
+const VER = 0.0404
+const EX_COMMIT = 11.08
 function loadPlayer(data) {
 	player = deepUndefinedAndDecimal(data, getPlayerData())
 	convertStringToDecimal()
@@ -177,6 +194,55 @@ function loadPlayer(data) {
 	}
     if (player.version < 0.401) {
         player.bestGS = Math.max(player.bestGS, player.grassskip)
+    }
+    if (player.version < 0.0404 && player.grassjump>=5) {
+        player.lunar = DATA.lunar
+
+        player.astralPrestige = 0
+
+        player.grasshop = 0
+        if (player.grassskip>60) player.grassskip = 60
+
+        RESET.formRing.doReset()
+
+        player.cloud = E(0)
+        player.bestCloud = E(0)
+        player.bestCloud2 = E(0)
+
+        player.np = E(0)
+        player.bestNP = E(0)
+        player.bestNP2 = E(0)
+
+        player.unGrass = E(0)
+        player.unBestGrass = E(0)
+        player.unRes.level = 0
+        player.unRes.tier = 0
+        player.unRes.xp = E(0)
+        player.unRes.tp = E(0)
+
+        if (player.grassjump>5) player.grassjump = 5
+
+        RESET.sac.doReset()
+
+        resetUpgrades('unGrass')
+        resetUpgrades('np')
+        resetUpgrades('cloud')
+
+        if (player.planetoid.planetTier>10) player.planetoid.planetTier = 10
+
+        resetUpgrades('planet')
+        player.planetoid.planet = E(0)
+
+        player.momentum = 0
+        resetUpgrades('momentum')
+
+        player.sfgrt = E(0)
+        resetUpgrades('sfrgt')
+
+        player.dm = E(0)
+        resetUpgrades('dm')
+
+        console.log('guh? ^2')
     }
 	player.version = VER
 }

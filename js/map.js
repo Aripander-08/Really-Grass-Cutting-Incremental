@@ -35,7 +35,7 @@ const MAP = {
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
 		[null,null,'stats','opt','time',null,null],
-		[null,null,'sac','sc','at',null,null],
+		[null,null,'sac','sc','at','ap',null],
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
@@ -58,6 +58,7 @@ const MAP_UNLS = {
 	sac: _ => player.lowGH <= -24,
 	sc: _ => true,
 	at: _ => true,
+	ap: _ => player.lowGH<=-48,
 }
 
 const MAP_IDS = (_=>{
@@ -94,10 +95,9 @@ function switchMapId(id) {
 }
 
 el.update.map = _=>{
-	for (x in MAP_IDS) {
-		let id = MAP_IDS[x]
-		let m_div = tmp.el["map_div_"+id]
-
+    for (x in MAP_IDS) {
+        let id = MAP_IDS[x]
+        let m_div = tmp.el["map_div_"+id]
 		if (m_div) m_div.setDisplay(id == mapID)
 	}
 
@@ -140,7 +140,8 @@ const MAP_COLORS = {
 	rp: "gh",
 	sc: "gal",
 	at: "gal",
-	sac: "gal"
+	sac: "gal",
+	ap: "gal"
 }
 
 el.update.map_ext = _ => {
@@ -186,6 +187,7 @@ const MAP_LOCS = {
 	sc: "Space",
 	at: "Space",
 	sac: "Space",
+	ap: "Space",
 }
 
 let locTimeout
@@ -197,7 +199,7 @@ function showLoc(x) {
 	tmp.el.loc.setOpacity(1)
 
 	clearTimeout(locTimeout)
-	locTimeout = setTimeout(() => tmp.el.loc.setOpacity(0), 3000)
+	locTimeout = setTimeout(_ => tmp.el.loc.setOpacity(0), 3000)
 }
 
 //Map
@@ -218,6 +220,7 @@ const GO_TO_NAMES = {
 	sc: "Star Chart",
 	at: "Galactic",
 	sac: "Sacrifice",
+	ap: "Obelisks",
 }
 
 let go_to = false
@@ -267,6 +270,7 @@ const MAP_NOTIFY = {
 		0,
 	rp: _ => hasUpgrade("factory", 6) ? 1 : 0,
 	sac: _ => player.stars.gte(1e18) || player.sacTimes ? 1 : 0,
+	ap: _ => player.grassjump>=5 ? 1 : player.lowGH<=-48 ? 1 : 0,
 }
 
 tmp_update.push(_=>{

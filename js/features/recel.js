@@ -14,6 +14,8 @@ RESET.recel = {
     resetBtn: `Recelerate`,
 
     reset(force=false) {
+        if (player.planetoid.active) return;
+
         if (true) {
             let aa = player.aRes
 
@@ -59,9 +61,9 @@ UPGS.unGrass = {
 
     title: "Unnatural Grass Upgrades",
 
-    autoUnl: _=>false,
+    autoUnl: _=>hasStarTree('reserv',1),
 
-    noSpend: _=>false,
+    noSpend: _=>hasStarTree('reserv',1),
 
     ctn: [
         {

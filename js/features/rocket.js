@@ -321,7 +321,7 @@ UPGS.momentum = {
 
     unl: _=>player.rocket.part>0,
 
-    underDesc: _=>`You have ${format(player.momentum,0)} Momentum`,
+    underDesc: _=>`You have ${format(player.momentum,0)} Momentum`+gainHTML(E(player.momentum),tmp.momentumGain,tmp.momentumGen),
 
     autoUnl: _=>hasStarTree('auto',11),
     noSpend: _=>hasStarTree('auto',11),
@@ -593,7 +593,7 @@ el.update.rocket = _=>{
 }
 
 function updateRocketTemp() {
-    let cheap = 1 * starTreeEff('progress',9,1) * starTreeEff('progress',11,1)
+    let cheap = 1 * starTreeEff('progress',9,1) * starTreeEff('progress',11,1) * getLEffect(5)
     
     let rf = player.rocket.total_fp
     tmp.rf_base = RF_COST_POW ** (1/cheap)
@@ -618,6 +618,10 @@ tmp_update.push(_=>{
     if (player.lowGH <= -28) m += getAGHEffect(14)
 
     m *= upgEffect('np',3) * upgEffect('dm',7)
+
+    if (player.lowGH <= -44) m *= getAGHEffect(18)
+
+    if (player.grassjump>=2) m *= getGJEffect(1)
 
     tmp.momentumGain = Math.ceil(m)
 })

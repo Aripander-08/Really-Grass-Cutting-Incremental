@@ -56,7 +56,7 @@ MAIN.steel = {
 
             if (x.lt(1)) return x
 
-            x = x.pow(upgEffect('moonstone',7))
+            x = x.pow(upgEffect('moonstone',7)).pow(getLEffect(4))
 
             if (player.recel) x = x.root(2)
 
@@ -203,7 +203,7 @@ MAIN.steel = {
                 unl: _=>hasUpgrade('funnyMachine',2),
                 req: E(1e33),
                 eff(c) {
-                    if (player.bestCharge.lt(this.req) || !player.decel) return E(1)
+                    if (player.bestCharge.lt(this.req) || (!player.decel && !hasStarTree('reserv',30))) return E(1)
 
                     let s = c.div(this.req).max(1)
 
@@ -237,6 +237,8 @@ RESET.steel = {
                 player.sTimes++
             }
 
+            tmp.pass = 2
+
             updateTemp()
 
             this.doReset()
@@ -256,7 +258,7 @@ UPGS.factory = {
 
     unl: _=>player.sTimes > 0&&!tmp.outsideNormal,
 
-    underDesc: _=>`You have ${format(player.steel,0)} Steel`+(tmp.steelPass>0?" <span class='smallAmt'>"+player.steel.formatGain(tmp.steelGain.mul(tmp.steelPass))+"</span>":""),
+    underDesc: _=>`You have ${format(player.steel,0)} Steel`+gainHTML(player.steel, tmp.steelGain, tmp.steelPass),
 
     autoUnl: _=>hasStarTree('auto',2),
 

@@ -1,12 +1,16 @@
 MAIN.sac = {
     dmGain() {
-        let a = Math.max(1,player.astral-44)
+        let a = Math.max(1,tmp.total_astral-44)
 
         let x = player.stars.div(1e18).max(1).root(2).mul(Decimal.pow(1.1,a-1).mul(a))
 
         tmp.dmGainBase = x
 
-        x = x.mul(upgEffect('np',2))
+        x = x.mul(upgEffect('np',2)).mul(upgEffect('cloud',0))
+
+        x = x.mul(getASEff('dm'))
+
+        if (player.grassjump>=1) x = x.mul(getGJEffect(0))
 
         return x.floor()
     },
@@ -41,8 +45,10 @@ RESET.sac = {
     doReset(order="sac") {
         player.sacTime = 0
 
-        resetUpgrades('fundry')
-        resetUpgrades('sfrgt')
+        if (!hasStarTree('reserv',14)) {
+            resetUpgrades('fundry')
+            resetUpgrades('sfrgt')
+        }
 
         player.sp = E(0)
         player.astral = 0
@@ -62,7 +68,10 @@ UPGS.dm = {
     req: _=>player.sacTimes > 0,
     reqDesc: _=>`Sacrifice once to unlock.`,
 
-    underDesc: _=>`You have ${format(player.dm,0)} Dark Matters`,
+    underDesc: _=>`You have ${format(player.dm,0)} Dark Matters`+gainHTML(player.dm,tmp.dmGain,tmp.dmGen),
+
+    autoUnl: _=>hasStarTree('reserv',23),
+    noSpend: _=>hasStarTree('reserv',23),
 
     ctn: [
         {
@@ -176,7 +185,7 @@ UPGS.dm = {
         },{
             max: 1000,
 
-            unl: ()=>player.lowGH<=-32,
+            unl: _=>player.lowGH<=-32,
 
             title: "Dark NP",
             desc: `Increase NP gain by <b class="green">+25%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
@@ -196,7 +205,7 @@ UPGS.dm = {
         },{
             max: 500,
 
-            unl: ()=>player.lowGH<=-32,
+            unl: _=>player.lowGH<=-32,
 
             title: "Dark Momentum",
             desc: `Increase momentum gain by <b class="green">+25%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
