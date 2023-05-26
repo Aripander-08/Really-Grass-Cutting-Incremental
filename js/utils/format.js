@@ -62,6 +62,10 @@ function format(ex, acc=2, type) {
 	return neg+FORMATS[type](ex, acc)
 }
 
+function gainHTML(amt, gain, pass=0) {
+    return pass>0?" <span class='smallAmt'>"+formatGain(amt,Decimal.mul(gain,pass))+"</span>":''
+}
+
 function formatGain(amt, gain) {
 	let next = amt.add(gain)
 	let rate

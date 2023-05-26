@@ -48,10 +48,18 @@ function resetTemp() {
 
 		gSpeed: 1,
 		gJump: 0,
+
+        /*total_astral: 0,
+        cosmicLevel: {
+
+        },
+
+        lunar_eff: [],
+        lunar_next: [],
+        lunar_max_active: 3,*/
 	}
 
 	for (let x in UPG_RES) tmp.upg_res[x] = E(0)
-
 	for (let x in UPGS) {
 		tmp.upgs[x] = {
 			unlLength: 0,
@@ -65,5 +73,8 @@ function resetTemp() {
 
 function updateTemp() {
 	updateRealmTemp()
+    //tmp.lunarUnl = player.grassjump>=5
+    //tmp.total_astral = player.astral+100*player.astralPrestige
+
 	for (let x = 0; x < tmp_update.length; x++) tmp_update[x]()
 }

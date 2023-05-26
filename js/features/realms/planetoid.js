@@ -1135,6 +1135,24 @@ tmp_update.push(_=>{
 	data.mGainP = upgEffect("res", 18, 0)
 })
 
+//Planetary Milestones
+MILESTONE.pt = {
+	unl: _ => inPlanetoid(),
+	req: _ => player.planetoid?.qTimes,
+	reqDesc: "???",
+
+	res: _ => 0,
+	title: x => `You have got <b class='green'>${format(x, 0)}</b> Planetary Levels`,
+	title_ms: x => x,
+
+	milestone: [
+		{
+			req: 1,
+			desc: `...`
+		}, 
+	],
+}
+
 //HTML
 el.update.planetoid = _=>{
 	let on = inPlanetoid()
@@ -1179,6 +1197,9 @@ el.update.planetoid = _=>{
 	}
 	if (mapID == 'trial') {
 		tmp.el.trial_req.setDisplay(!player.planetoid.qTimes)
+		tmp.el.mil_div_pt.setDisplay(player.planetoid.qTimes)
+
+		updateMilestoneHTML('pt')
 	}
 }
 

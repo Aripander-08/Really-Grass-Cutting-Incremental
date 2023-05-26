@@ -1,5 +1,5 @@
-const VER = 0.0432
-const EX_COMMIT = 11.07
+const VER = 0.0404
+const EX_COMMIT = 11.08
 const TB_VER = 1.071
 const TB_SAVE = "rgci_tb_test"
 
@@ -66,6 +66,20 @@ function getPlayerData() {
 			part: 0,
 			momentum: E(0),
 		},
+
+        /*lunar: {
+            active: [],
+            level: new Array(LUNAR_OB.length).fill(0),
+            lp: new Array(LUNAR_OB.length).fill(E(0)),
+        },*/
+
+		time: 0,
+		map_notify: {},
+		version: VER,
+	}
+	for (let x in UPGS) {
+		s.upgs[x] = []
+		s.autoUpg[x] = false
 	}
 	for (let x in UPGS) s.upgs[x] = []
 	return s
@@ -159,7 +173,7 @@ function loadPlayer(data) {
 		player.gal.dm = E(10)
 		resetUpgrades("dm")
 		resetUpgrades("res")
-		RESET.sac.doReset(true)
+		//RESET.sac.doReset(true)
 	}
 	player.tb_ver = TB_VER
 }

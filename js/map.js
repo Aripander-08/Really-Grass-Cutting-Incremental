@@ -28,12 +28,12 @@ const MAP = {
 	earth: [
 		['time','opt',   null,  'fd','rf' ],
 		['upg', 'g',	 'pc',  'gh','gal'],
-		['auto','chrono','chal','dc',null ],
+		['auto','chrono','chal','dc'],
 	],
 	space: [
-		['time','opt',null ,null ],
-		['gal', 'sc',  'at'  ,'sac'],
-		[null , null, 'chal',null ]
+		['time', 'opt'],
+		['gal',  'sc', 'at'  ,'sac','ap'],
+		[null ,  null, 'chal']
 	],
 	planetoid: [
 		['opt'],
@@ -64,6 +64,7 @@ const MAP_UNLS = {
 	sc: _ => galUnlocked(),
 	at: _ => galUnlocked(),
 	sac: _ => hasAGHMilestone(0),
+	ap: _ => false,
 
 	//Planetoid
 	ring: _ => true,
@@ -111,10 +112,9 @@ function switchMapPos(mx,my,dim) {
 }
 
 el.update.map = _=>{
-	for (x in MAP_IDS) {
-		let id = MAP_IDS[x]
-		let m_div = tmp.el["map_div_"+id]
-
+    for (x in MAP_IDS) {
+        let id = MAP_IDS[x]
+        let m_div = tmp.el["map_div_"+id]
 		if (m_div) m_div.setDisplay(id == mapID)
 	}
 
@@ -185,6 +185,7 @@ const MAP_COLORS = {
 	sc: "gal",
 	at: "gal",
 	sac: "sac",
+	ap: "sac",
 
 	//Planetoid
 	ring: "sac",
@@ -215,6 +216,7 @@ const MAP_CATEGORIES = {
 	sc: "Space",
 	at: "Space",
 	sac: "Space",
+	ap: "Space",
 
 	//Planetoid
 	ring: "Planetoid",
@@ -256,6 +258,7 @@ const GO_TO_NAMES = {
 	sc: "Star Chart",
 	at: "Star Platform",
 	sac: "Dark Forest",
+	ap: "Light Forest",
 
 	//Planetoid
 	ring: "Ring Chart",
