@@ -7,11 +7,11 @@ MAIN.gal = {
 		r = r.mul(upgEffect('star', 2))
 		r = r.mul(upgEffect('star', 3))
 
-        if (hasGSMilestone(2)) r = r.mul(getGSEffect(2))
+		if (hasGSMilestone(2)) r = r.mul(getGSEffect(2))
 		r = r.mul(getAstralEff("st"))
 		r = r.mul(upgEffect('moonstone', 3))
 		r = r.mul(upgEffect('sfrgt', 1))
-		r = r.mul(upgEffect('dm', 5))
+		r = r.mul(upgEffect('dm', 3))
 
 		return r
 	}
@@ -20,12 +20,12 @@ MAIN.gal = {
 RESET.gal = {
 	unl: _=>true,
 
-	part_req: _=>ROCKET_PART.upgraded()?1:10,
+	part_req: _=>tmp.rocket_upgraded?1:10,
 	req: _=>player.rocket.part>=RESET.gal.part_req(),
 	reqDesc: _=>`Get ${RESET.gal.part_req()} Rocket Parts to unlock.`,
 
 	resetDesc: `Reset <b class="red">EVERYTHING prior</b> except Refinery and Chronology! Last chance before blast-off...`,
-    resetGain: _=> galUnlocked() ? `<b>+${tmp.gal.star_gain.format(0)}</b> Stars<br><b class='red'>Max Star Accumulator first!</b>` : `<b class='cyan'>Also unlock Grass-Skips, Star Accumulator upgrade, and Astral!</b>`,
+	resetGain: _=> galUnlocked() ? `<b>+${tmp.gal.star_gain.format(0)}</b> Stars<br><b class='red'>Max Star Accumulator first!</b>` : `<b class='cyan'>Also unlock Grass-Skips, Star Accumulator upgrade, and Astral!</b>`,
 
 	title: `Galactic`,
 	resetBtn: `Galactic!`,
@@ -57,14 +57,15 @@ RESET.gal = {
 		}
 		player.grasshop = 0
 		player.steel = E(0)
-        player.sTime = 0
-		if (!hasGSMilestone(9)) player.bestCharge = E(0)
+		player.sTime = 0
 		if (player.decel == 1) player.decel = 0
 		resetAntiRealm()
 
 		if (!hasStarTree("qol", 9)) player.rocket.amount = E(0)
-		if (!tmp.rocket_upgraded) player.rocket.momentum = E(0)
-		if (!tmp.rocket_upgraded) player.rocket.part = 0
+		if (!tmp.rocket_upgraded) {
+			player.rocket.momentum = E(0)
+			player.rocket.part = 0
+		}
 		player.rocket.total_fp = E(0)
 
 		if (!hasStarTree("qol", 0)) resetUpgrades("auto")
@@ -89,7 +90,7 @@ tmp_update.push(_=>{
 	if (!tmp.gal) tmp.gal = data
 
 	data.star_gain = MAIN.gal.gain()
-	data.star_gain_p = starTreeEff("qol", 15, 0)
+	data.star_gain_p = starTreeEff("qol", 14, 0)
 
 	updateAstralTemp()
 	updateAGHTemp()
@@ -101,7 +102,7 @@ tmp_update.push(_=>{
 	if (hasGSMilestone(12)) data.ms.chance *= 2
 	if (hasAGHMilestone(7)) data.ms.chance *= 2
 	data.ms.gain = 1
-	data.ms.gain += upgEffect('dm', 3)
+	data.ms.gain += upgEffect('dm', 5)
 	data.ms.gain *= tmp.cutAmt
 
 	//updateChronoTemp()
@@ -196,7 +197,7 @@ UPGS.moonstone = {
 
 	ctn: [
 		{
-			max: 20,
+			max: 100,
 
 			costOnce: true,
 
@@ -332,8 +333,8 @@ UPGS.moonstone = {
 			icon: ["Curr/DarkMatter"],
 
 			max: 5,
-			cost: i => 1e3,
-			bulk: i => Math.floor(i/1e3),
+			cost: i => 100,
+			bulk: i => Math.floor(i/100),
 
 			effect(i) {
 				return i+1
@@ -349,8 +350,8 @@ UPGS.moonstone = {
 			icon: ["Curr/Platinum"],
 			
 			max: 500,
-			cost: i => E(2).pow(i).mul(1e4),
-			bulk: i => E(i).div(1e4).log(2).floor().toNumber()+1,
+			cost: i => E(2).pow(i).mul(1e3),
+			bulk: i => E(i).div(1e3).log(2).floor().toNumber()+1,
 
 			effect(i) {
 				return 2**i
@@ -362,10 +363,10 @@ UPGS.moonstone = {
 
 //STAR ACCUMULATOR
 UPGS.star = {
-    title: "Star Accumulator",
+	title: "Star Accumulator",
 
-    unl: _=>hasUpgrade("factory", 7),
-    autoUnl: _=>hasStarTree('auto', 4),
+	unl: _=>hasUpgrade("factory", 7),
+	autoUnl: _=>hasStarTree('auto', 4),
 
 	ctn: [
 		{
@@ -385,7 +386,7 @@ UPGS.star = {
 			},
 			effDesc: x => format(x)+"x",
 		},{
-			max: 80,
+			max: Infinity,
 
 			title: "Industrial Stars",
 			desc: `Increase star gain by <b class="green">20%</b> compounding per level.`,
@@ -401,7 +402,7 @@ UPGS.star = {
 			},
 			effDesc: x => format(x)+"x",
 		},{
-			max: 25,
+			max: Infinity,
 
 			title: "Launch Stars",
 			desc: `Increase star gain by <b class="green">20%</b> compounding per level.`,

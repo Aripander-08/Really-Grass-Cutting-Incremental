@@ -7,7 +7,7 @@ function inDecel() {
 }
 
 function keepAccelOnDecel() {
-	return hasStarTree('qol', 12)
+	return hasStarTree("qol", 12)
 }
 
 function setupDecel() {
@@ -70,7 +70,7 @@ MAIN.decel = aMAIN = {
 		x = x.mul(upgEffect('aGrass', 0))
 		x = x.mul(upgEffect('ap', 1))
 		x = x.mul(upgEffect('oil', 5))
-		if (player.decel == 1 && !hasUpgrade('dm', 6)) x = x.div(1e3)
+		if (player.decel == 1 && !hasUpgrade('dm', 1)) x = x.div(1e3)
 		return x
 	},
 }
@@ -130,7 +130,7 @@ UPGS.aGrass = {
 	underDesc: _=>`Some upgrades affect the Normal Realm.`,
 
 	autoUnl: _=>hasUpgrade('aAuto', 1),
-	noSpend: _=>hasStarTree('qol', 3),
+	noSpend: _=>hasStarTree("qol", 3),
 
 	ctn: [
 		{
@@ -367,7 +367,7 @@ aMAIN.ap = {
 		x = x.mul(upgEffect('rocket',7))
 		x = x.mul(upgEffect('rocket',14))
 		x = x.mul(upgEffect('rocket',17))
-		x = x.mul(upgEffect('momentum',8))
+		if (hasUpgrade('momentum', 8)) x = x.mul(3)
 
 		return x.floor()
 	},
@@ -425,7 +425,7 @@ UPGS.ap = {
 	underDesc: _=>getUpgResTitle('ap')+(tmp.aRes.apGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.ap,tmp.aRes.apGain.mul(tmp.aRes.apGainP))+"</span>" : ""),
 
 	autoUnl: _=>hasUpgrade('aAuto',2),
-	noSpend: _=>hasStarTree('qol', 3),
+	noSpend: _=>hasStarTree("qol", 3),
 
 	ctn: [
 		{
@@ -539,9 +539,7 @@ aMAIN.oil = {
 		x = x.mul(getChargeEff(6))
 		x = x.mul(upgEffect('rocket',8))
 		x = x.mul(upgEffect('rocket',15))
-		x = x.mul(upgEffect('momentum',9))
-
-		x = x.mul(upgEffect('dm',1))
+		if (hasUpgrade('momentum', 9)) x = x.mul(3)
 
 		return x.floor()
 	},
@@ -596,7 +594,7 @@ UPGS.oil = {
 	underDesc: _=>getUpgResTitle('oil')+(tmp.aRes.oilGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.oil,tmp.aRes.oilGain.mul(tmp.aRes.oilGainP))+"</span>" : ""),
 
 	autoUnl: _=>hasUpgrade('aAuto',3),
-	noSpend: _=>hasStarTree('qol', 3),
+	noSpend: _=>hasStarTree("qol", 3),
 
 	ctn: [
 		{
@@ -750,14 +748,14 @@ MILESTONE.gs = {
 		},
 		{
 			req: 2,
-			desc: `<b class="green">1.5x</b> Space Power per Grass-Skip.`,
-			eff: x => E(1.5).pow(x),
+			desc: `<b class="green">1.2x</b> Space Power per Grass-Skip.`,
+			eff: x => E(1.2).pow(x),
 			effDesc: x => format(x) + "x"
 		},
 		{
 			req: 3,
-			desc: `<b class="green">1.3x</b> Stars per Grass-Skip.`,
-			eff: x => E(1.3).pow(x),
+			desc: `<b class="green">1.4x</b> Stars per Grass-Skip.`,
+			eff: x => E(1.4).pow(x),
 			effDesc: x => format(x) + "x"
 		},
 		{
@@ -794,27 +792,25 @@ MILESTONE.gs = {
 		{
 			unl: _ => player.aRes.fTimes,
 			req: 10,
-			desc: `Keep Charger on Galactic. <b class="green">4x</b> Charge per Grass-Skip. (starting at 10 and ending at 25)`,
-			eff: x => E(4).pow(Math.max(Math.min(x, 25) - 9, 0)),
-			effDesc: x => format(x, 0) + "x"
+			desc: `12 GH Milestone is uncapped.`
 		},
 		{
 			unl: _ => player.aRes.fTimes,
 			req: 12,
 			desc: `<b class="green">+1x</b> SRFGT per Grass-Skip. (starting at 12)`,
-			eff: x => Math.max(x - 11, 0) + 1,
+			eff: x => Math.max(x - 10, 1),
 			effDesc: x => format(x, 0) + "x"
 		},
 		{
-			unl: _ => hasAGHMilestone(8),
-			req: 14,
-			desc: `<b class="green">+1</b> to Unnatural Healing per Grass-Skip. (starting at 14)`,
-			eff: x => Math.max(x - 13, 0),
+			unl: _ => player.unRes,
+			req: 13,
+			desc: `<b class="green">+1</b> to Unnatural Healing per Grass-Skip. (starting at 13)`,
+			eff: x => Math.max(x - 12, 0),
 			effDesc: x => "+" + format(x, 0)
 		},
 		{
-			unl: _ => hasAGHMilestone(8),
-			req: 15,
+			unl: _ => player.unRes,
+			req: 14,
 			desc: `<b class="green">Double</b> Moonstone chance.`
 		},
 	],

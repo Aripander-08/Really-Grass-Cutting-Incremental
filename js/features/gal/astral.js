@@ -29,8 +29,9 @@ const ASTRAL = {
 		if (hasStarTree("progress", 8)) r = r.mul(starTreeEff("progress", 8))
 		if (hasStarTree("progress", 9)) r = r.mul(starTreeEff("progress", 9))
 		r = r.mul(upgEffect('moonstone', 2))
-        r = r.mul(getGSEffect(1))
+		r = r.mul(getGSEffect(1))
 		r = r.mul(upgEffect('sfrgt', 2))
+		r = r.mul(upgEffect('dm', 4))
 		r = r.mul(upgEffect("unGrass", 3))
 
 		return r
@@ -53,59 +54,64 @@ EFFECT.astral = {
 	title: r => `Astral <b class="magenta">${format(r, 0)}</b>`,
 	res: _ => player.gal.astral,
 	effs: {
+		gr: {
+			unl: _ => hasAGHMilestone(9),
+			eff: a => E(1.2).pow(a - 40).max(1),
+			desc: x => `<b class="magenta">${format(x)}x</b> to Grass`
+		},
+		xp: {
+			unl: _ => hasAGHMilestone(4),
+			eff: a => E(1.3).pow((a - 10) * upgEffect('ring', 1)).max(1),
+			desc: x => `<b class="magenta">${format(x)}x</b> to XP`
+		},
 		tp: {
 			unl: _ => true,
-			eff: a => hasUpgrade('ring',6) ? E(1.3).pow((a+1)**0.8) : a+1,
+			eff: a => hasUpgrade('ring',6) ? E(1.3).pow((a + 1) ** 0.8) : a + 1,
 			desc: x => `<b class="magenta">${format(x)}x</b> to TP`
 		},
 		fd: {
 			unl: _ => true,
-			eff: a => (a/50+1)*upgEffect('ring',3),
+			eff: a => (a / 50 + 1) * upgEffect('ring',3),
 			desc: x => `<b class="magenta">^${format(x)}</b> to Foundry effect`
-		},
-		st: {
-			unl: _ => hasAGHMilestone(1),
-			eff: a => E(2).pow(a/4),
-			desc: x => `<b class="magenta">${format(x)}x</b> to Stars`
-		},
-		rf: {
-			unl: _ => hasAGHMilestone(2),
-			eff: a => a/20,
-			desc: x => `<b class="magenta">+${format(x)}x</b> to Rocket Fuel`
 		},
 		ch: {
 			unl: _ => hasAGHMilestone(3),
-			eff: a => E(2).pow((a/3-3)*upgEffect('ring',2)).max(1),
+			eff: a => E(2).pow((a / 3 - 3)*upgEffect('ring', 2)).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Charge`
 		},
-		xp: {
-			unl: _ => hasAGHMilestone(4),
-			eff: a => E(1.25).pow((a/2-5)*upgEffect('ring',1)).max(1),
-			desc: x => `<b class="magenta">${format(x)}x</b> to XP`
+		ap: {
+			unl: _ => hasAGHMilestone(10),
+			eff: a => 1+Math.min(a / 500, .25),
+			desc: x => `<b class="magenta">${format(x)}x</b> to AP per-25 multipliers`
+		},
+		rf: {
+			unl: _ => hasAGHMilestone(2),
+			eff: a => a / 20,
+			desc: x => `<b class="magenta">+${format(x)}x</b> to Rocket Fuel`
+		},
+		st: {
+			unl: _ => hasAGHMilestone(1),
+			eff: a => E(2).pow(a / 5),
+			desc: x => `<b class="magenta">${format(x)}x</b> to Stars`
 		},
 		fu: {
 			unl: _ => hasAGHMilestone(5),
-			eff: a => E(2).pow(a/2-10).max(1),
+			eff: a => E(1.3).pow(a - 16).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Fun`
 		},
 		sf: {
 			unl: _ => hasAGHMilestone(6),
-			eff: a => E(2).pow(a/2-10).max(1),
+			eff: a => E(1.2).pow(a - 12).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to SFRGT`
 		},
 		uh: {
-			unl: _ => hasAGHMilestone(9),
-			eff: a => Math.floor(Math.max(a/5-5,0)),
+			unl: _ => hasAGHMilestone(8),
+			eff: a => Math.floor(Math.max(a / 5 - 5,0)),
 			desc: x => `<b class="magenta">+${format(x,0)}</b> to Unnatural Healing`
 		},
-		ap: {
-			unl: _ => hasAGHMilestone(10),
-			eff: a => 1+Math.min(a/500,.25),
-			desc: x => `<b class="magenta">${format(x)}x</b> to AP per-25 multipliers`
-		},
 		rg: {
-			unl: _ => hasAGHMilestone(12),
-			eff: a => E(3).pow(a/10-5).max(1),
+			unl: _ => hasAGHMilestone(11),
+			eff: a => Math.max(a / 5 - 10, 1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Rings`
 		},
 	},

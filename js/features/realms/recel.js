@@ -32,10 +32,10 @@ REALMS.recelOnly = {
 MAIN.recel = unMAIN = {}
 
 RESET.recel = {
-	unl: _=>hasAGHMilestone(7),
+	unl: _=>MAIN.sac.did(),
 
 	req: _=>hasUpgrade("funMachine", 3),
-	reqDesc: _=>"Get 33 Negative Energy and a new Upgrade in SFRGT.",
+	reqDesc: _=>"Get 'Recelerator' upgrade in Fun Machine.",
 
 	resetDesc: `Nullify boosts that Funify resets until you Accelerate.`,
 	resetGain: _ => keepAccelOnDecel() ? `Progress will be saved.` : `This will force a Steelie.`,
@@ -73,23 +73,23 @@ UPGS.unGrass = {
 			max: Infinity,
 
 			title: "Habitability",
-			desc: `Touching protects cutting and gives a passive growth to their values. Left-click to cut immediately!`,
+			desc: `Touching instead gives a temporal boost to grass value. Left-click to cut some touched grasses.`,
 
 			res: "unGrass",
 			icon: ['Icons/Compaction'],
 			
-			cost: i => Decimal.pow(4,i).mul(1e3),
-			bulk: i => i.div(1e3).max(1).log(4).floor().toNumber()+1,
+			cost: i => Decimal.pow(4,i).mul(20),
+			bulk: i => i.div(20).max(1).log(4).floor().toNumber()+1,
 
 			effect(i) {
 				return i+1
 			},
-			effDesc: x => format(x,1)+"x value cap",
+			effDesc: x => format(x,1)+"x value",
 		}, {
 			max: 50,
 
 			title: "Naturalness",
-			desc: `<b>Raise</b> Astral's XP effect in Normal Realm.`,
+			desc: `<b class='green'>Raise</b> Astral XP boost to Normal Realm.`,
 
 			res: "unGrass",
 			icon: ['Icons/XP'],
@@ -173,17 +173,17 @@ EFFECT.uh = {
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Habitability growth speed`,
 		},
 		hm: {
-			unl: _ => player.unRes.nTimes,
+			unl: _ => player.unRes?.nTimes,
 			eff: x => Math.sqrt(x / 2 + 1),
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Habitability starting value`,
 		},
 		tp: {
-			unl: _ => player.unRes.nTimes,
+			unl: _ => player.unRes?.nTimes,
 			eff: x => hasUpgrade("ring", 9) ? E(1.3).pow((x + 1) ** 0.8 - 1) : x/2+1,
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Tier Points in Unnatural Realm`,
 		},
 		np: {
-			unl: _ => player.unRes.nTimes,
+			unl: _ => player.unRes?.nTimes,
 			eff: x => E(3).pow(x/10),
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Normality Points`,
 		},
@@ -211,7 +211,7 @@ unMAIN.habit = {
 		r *= upgEffect("obs", 2)
 		if (inFormation("dr")) r *= 4
 		if (inFormation("sc")) r /= 4
-		if (hasUpgrade("res", 5)) r = Math.max(r, tmp.unRes.habit.max * 2)
+		if (hasUpgrade('res', 5)) r = Math.max(r, tmp.unRes.habit.max * 2)
 		return r
 	},
 	startingMult() {
@@ -375,7 +375,7 @@ UPGS.np = {
 			title: "NP Momentum",
 			desc: `<b class="green">Double</b> Momentum.`,
 
-			unl: _ => ROCKET_PART.upgraded(),
+			unl: _ => tmp.rocket_upgraded,
 			res: "np",
 			icon: ["Curr/Momentum"],
 			

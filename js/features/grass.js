@@ -19,7 +19,7 @@ MAIN.grass = {
 		}
 		if (inDecel()) x /= upgEffect('aGrass',1,1)
 		if (inRecel()) x = 1/10
-		x /= upgEffect('momentum',1)
+		if (hasUpgrade('momentum', 1)) x /= 3
 		if (hasUpgrade('rocket',16)) x = 1 / (1 / x + upgEffect('rocket', 16))
 		if (inPlanetoid()) {
 			x = (player.planetoid.started && !inFormation("fz") ? 3 : 1/0)
@@ -83,7 +83,7 @@ function removeGrass(i, auto=false) {
 	let tg = tmp.grasses[i]
 	if (!tg) return
 
-	let v = auto ? (hasUpgrade("res", 4) ? tmp.unRes.habit.max / 10 : 1) : (tg.habit || 1)
+	let v = auto ? (hasUpgrade('res', 4) ? tmp.unRes.habit.max / 10 : 1) : (tg.habit || 1)
 
 	let av = v
 	let tv = v

@@ -4,8 +4,8 @@ var mapLoc = "Grass Field"
 var mapPos
 function resetMap() {
 	mapPos = {
-		earth: [1,2],
-		space: [1,2],
+		earth: [1,1],
+		space: [1,1],
 		planetoid: [0,1]
 	}
 
@@ -26,13 +26,11 @@ window.addEventListener('keydown', e=>{
 
 const MAP = {
 	earth: [
-		['stats'],
 		['time','opt',   null,  'fd','rf' ],
-		['upg', 'g',     'pc',  'gh','gal'],
+		['upg', 'g',	 'pc',  'gh','gal'],
 		['auto','chrono','chal','dc',null ],
 	],
 	space: [
-		['stats'],
 		['time','opt',null ,null ],
 		['gal', 'sc',  'at'  ,'sac'],
 		[null , null, 'chal',null ]
@@ -239,7 +237,6 @@ function showLoc(x) {
 //Map
 const GO_TO_NAMES = {
 	opt: "Options",
-	stats: "Multipliers",
 	time: "Stats",
 	chrono: "Chronology",
 
@@ -320,7 +317,6 @@ el.update.go_to = _ => {
 //Notifications
 const MAP_NOTIFY = {
 	opt: _ => 0,
-	stats: _ => player.pTimes > 0 ? 1 : 0,
 	time: _ => player.pTimes > 0 ? 1 : 0,
 	chrono: _ => galUnlocked() ? 2 : player.sTimes ? 1 : 0,
 

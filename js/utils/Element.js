@@ -154,7 +154,7 @@ var el = {
 function setupHTML() {
 	for (let x in el.setup) el.setup[x]()
 	
-    tmp.el = {}
+	tmp.el = {}
 	let all = document.getElementsByTagName("*")
 	for (let i=0;i<all.length;i++) {
 		let x = all[i]
@@ -163,5 +163,5 @@ function setupHTML() {
 }
 
 function updateHTML() {
-    for (let x in el.update) el.update[x]()
+	for (let x in el.update) el.update[x]()
 }

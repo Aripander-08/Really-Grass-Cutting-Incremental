@@ -8,6 +8,7 @@ let REALMS = {
 			x = x.mul(upgEffect('pp',0))
 			x = x.mul(upgEffect('crystal',0))
 			x = x.mul(upgEffect('plat',2))
+			x = x.mul(getAstralEff("gr"))
 			return x
 		},
 		xp() {
@@ -47,7 +48,7 @@ let REALMS = {
 			x = x.mul(getChargeEff(9))
 			x = x.mul(upgEffect('rocket',0))
 			x = x.mul(upgEffect('rocket',17))
-			x = x.mul(upgEffect('momentum',0))
+			if (hasUpgrade('momentum', 0)) x = x.mul(3)
 			return x
 		},
 		xp() {
@@ -56,7 +57,7 @@ let REALMS = {
 			x = x.mul(chalEff(1))
 			x = x.mul(upgEffect('rocket',1))
 			x = x.mul(upgEffect('rocket',10))
-			x = x.mul(upgEffect('momentum',2))
+			if (hasUpgrade('momentum', 2)) x = x.mul(3)
 			x = x.mul(getAstralEff('xp'))
 			return x
 		},
@@ -68,8 +69,9 @@ let REALMS = {
 			if (player.grasshop >= 1) x = x.mul(2)
 			x = x.mul(chalEff(2))
 			x = x.mul(upgEffect('rocket',2))
-			x = x.mul(upgEffect('momentum',3))
+			if (hasUpgrade('momentum', 3)) x = x.mul(3)
 			x = x.mul(getAstralEff('tp'))
+			x = x.mul(upgEffect('dm',0))
 			return x
 		}
 	},

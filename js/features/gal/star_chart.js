@@ -43,7 +43,7 @@ const STAR_CHART = {
 			branch: 0,
 			icon: ['Curr/RocketFuel','Icons/StarSpeed'],
 
-			cost: i => E(5e4),
+			cost: i => E(1e5),
 			bulk: i => 1
 		}, {
 			max: 1,
@@ -126,30 +126,30 @@ const STAR_CHART = {
 			max: 1,
 
 			title: "Hopped Space",
-			desc: `Each Grass-Hop increases Space Power by 20%. (starting at 50 and ending at 80)`,
+			desc: `Each Grass-Hop increases Space Power by 10%. (starting at 50)`,
 
 			branch: 5,
 			icon: ['Icons/SP','Icons/StarSpeed'],
 
 			unl: _ => MAIN.sac.did(),
-			cost: i => E(1e18),
+			cost: i => E(1e10),
 			bulk: i => 1,
 
 			effect(i) {
-				return E(1.2).pow(Math.max(Math.min(player.grasshop, 80) - 49, 0))
+				return E(1.1).pow(Math.max(player.grasshop - 49, 0))
 			},
 			effDesc: x => format(x) + "x"
 		}, {
 			max: 1,
 
 			title: "Tiered Space",
-			desc: `Every 5 tiers, gain more Space Power by <b class="green">same tier multiplier</b>. (starting at 50)`,
+			desc: `Every 5 tiers, gain more Space Power by <b class="green">tier base</b>. (starting at 50)`,
 
 			branch: 5,
 			icon: ['Icons/SP','Icons/StarSpeed'],
 
 			unl: _ => MAIN.sac.did(),
-			cost: i => E(1e12),
+			cost: i => E(1e11),
 			bulk: i => 1,
 
 			effect(i) {
@@ -161,7 +161,7 @@ const STAR_CHART = {
 			max: 1,
 
 			title: "Overpowerful Fuels",
-			desc: `Rocket Part is overpowered but scales faster. Galactic unlocks at 1 Part and doesn't reset Momentum. Unlock new upgrades.`,
+			desc: `Rocket Part is ascended, but scales faster. Unlock new Momentum upgrades.`,
 
 			branch: 2,
 			icon: ['Curr/RocketFuel','Icons/StarSpeed'],
@@ -189,7 +189,7 @@ const STAR_CHART = {
 			branch: 6,
 			icon: ['Icons/Grasshop','Icons/StarSpeed'],
 
-			cost: i => E(100).pow((i+4)**1.5),
+			cost: i => E(10).pow((i+3)**1.5*2),
 			bulk: i => E(i).log(100).root(1.5).sub(4).floor().toNumber()+1,
 
 			effect(i) {
@@ -206,7 +206,7 @@ const STAR_CHART = {
 			icon: ['Icons/Grasshop','Icons/StarSpeed'],
 
 			unl: _ => true,
-			cost: i => E(100).pow((i+4.5)**1.5),
+			cost: i => E(10).pow((i+3.5)**1.5*2),
 			bulk: i => E(i).log(100).root(1.5).sub(4.5).floor().toNumber()+1,
 
 			effect(i) {
@@ -829,7 +829,7 @@ function updateStarChart() {
 
 		h += tu.desc
 		if (tu.effDesc) h += '<br>Effect: <span class="cyan">'+tu.effDesc(tt.eff[i])+"</span>"
-        h += '<br>'
+		h += '<br>'
 
 		let canBuy = Decimal.gte(star, tt.cost[i])
 		let hasBuy25 = (Math.floor(amt / 25) + 1) * 25 < max

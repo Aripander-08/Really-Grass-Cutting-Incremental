@@ -12,7 +12,7 @@ MILESTONE.agh = {
 	res: _ => player?.gal?.neg,
 	title: x => `<span style="font-size: 10px">
 		Negative Energy: <b>${player.gal.neg}</b> (Potential: <b>${tmp.gal.agh.neg}</b>)<br>
-		(gain more by -1 Grasshop or +10 Best Anti-Realm Levels from 200)
+		(gain more by -1 Grasshop or +10 Anti-Realm Levels at 200)
 	</span>`,
 	title_ms: x => x + " Negative Energy",
 
@@ -24,7 +24,7 @@ MILESTONE.agh = {
 			req: 6,
 			desc: `Astral boosts Stars.`,
 		}, {
-			req: 8,
+			req: 9,
 			desc: `Astral boosts Rocket Fuel.`,
 		}, {
 			req: 12,
@@ -35,24 +35,24 @@ MILESTONE.agh = {
 			desc: `Astral boosts XP.`,
 		}, {
 			unl: _ => player.aRes.fTimes,
-			req: 18,
+			req: 21,
 			desc: `Astral boosts Fun.`,
 		}, {
 			unl: _ => player.aRes.fTimes,
-			req: 20,
+			req: 24,
 			desc: `Astral boosts SFRGT.`,
 		}, {
 			unl: _ => player.aRes.fTimes,
-			req: 21,
-			desc: `Unlock the Dark Matter Plant reset. Moonstone chance is doubled.`,
-		}, {
-			unl: _ => MAIN.sac.did(),
 			req: 30,
-			desc: `Unlock the Recelerator upgrade in Fun Machine.`,
+			desc: `Unlock the Dark Matter Plant reset. Moonstone chance is doubled.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
 			req: 33,
 			desc: `Astral adds Unnatural Healing.`,
+		}, {
+			unl: _ => hasUpgrade("funMachine", 3),
+			req: 36,
+			desc: `Astral boosts Grass.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
 
@@ -60,7 +60,7 @@ MILESTONE.agh = {
 			desc: `Astral multiplies effects for each 25 levels of AP upgrade.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
-			req: 48,
+			req: 45,
 			desc: `Unlock the Planetoid. Astral multiplies Rings.`,
 		}, {
 			unl: _ => hasAGHMilestone(11),

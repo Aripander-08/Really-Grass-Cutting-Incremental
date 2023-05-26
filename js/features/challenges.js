@@ -1,198 +1,198 @@
 const CHALS = [
-    {
-        max: 10,
-        id: 'pp',
+	{
+		max: 10,
+		id: 'pp',
 
-        title: `Grassless`,
-        desc: `You cannot buy any grass upgrades.`,
-        cond: _=>!hasUpgrades("grass"),
-        reward: `Grass gain is <b class='green'>doubled</b> each completion.`,
+		title: `Grassless`,
+		desc: `You cannot buy any grass upgrades.`,
+		cond: _=>!hasUpgrades("grass"),
+		reward: `Grass gain is <b class='green'>doubled</b> each completion.`,
 
-        goal: i=>60+15*i,
-        bulk: i=>Math.floor((i-60)/15+1),
+		goal: i=>60+15*i,
+		bulk: i=>Math.floor((i-60)/15+1),
 
-        goalDesc: x=>"Level "+format(x,0),
-        goalAmt: _=>player.level,
+		goalDesc: x=>"Level "+format(x,0),
+		goalAmt: _=>player.level,
 
-        eff: i=>Decimal.pow(2,i),
-        effDesc: x=>format(x,0)+"x",
-    },{
-        max: 10,
-        id: 'pp',
+		eff: i=>Decimal.pow(2,i),
+		effDesc: x=>format(x,0)+"x",
+	},{
+		max: 10,
+		id: 'pp',
 
-        title: `Less Level`,
-        desc: `Prestige Upgrade's "XP II" does nothing.`,
-        cond: _=>!hasUpgrade("pp",1),
-        reward: `XP gain is <b class='green'>doubled</b> each completion.`,
+		title: `Less Level`,
+		desc: `Prestige Upgrade's "XP II" does nothing.`,
+		cond: _=>!hasUpgrade("pp",1),
+		reward: `XP gain is <b class='green'>doubled</b> each completion.`,
 
-        goal: i=>80+20*i,
-        bulk: i=>Math.floor((i-80)/20+1),
+		goal: i=>80+20*i,
+		bulk: i=>Math.floor((i-80)/20+1),
 
-        goalDesc: x=>"Level "+format(x,0),
-        goalAmt: _=>player.level,
+		goalDesc: x=>"Level "+format(x,0),
+		goalAmt: _=>player.level,
 
-        eff: i=>Decimal.pow(2,i),
-        effDesc: x=>format(x,0)+"x",
-    },{
-        max: 7,
-        id: 'crystal',
+		eff: i=>Decimal.pow(2,i),
+		effDesc: x=>format(x,0)+"x",
+	},{
+		max: 7,
+		id: 'crystal',
 
-        title: `No Tiers`,
-        desc: `You can't tier up.`,
-        cond: _=>player.tier==0,
-        reward: `TP gain is <b class='green'>doubled</b> each completion.`,
+		title: `No Tiers`,
+		desc: `You can't tier up.`,
+		cond: _=>player.tier==0,
+		reward: `TP gain is <b class='green'>doubled</b> each completion.`,
 
-        goal: i=>Math.ceil(50+15*i),
-        bulk: i=>Math.floor((i-50)/15+1),
+		goal: i=>Math.ceil(50+15*i),
+		bulk: i=>Math.floor((i-50)/15+1),
 
-        goalDesc: x=>"Level "+format(x,0),
-        goalAmt: _=>player.level,
+		goalDesc: x=>"Level "+format(x,0),
+		goalAmt: _=>player.level,
 
-        eff: i=>Decimal.pow(2,i),
-        effDesc: x=>format(x,1)+"x",
-    },{
-        max: 5,
-        id: 'crystal',
+		eff: i=>Decimal.pow(2,i),
+		effDesc: x=>format(x,1)+"x",
+	},{
+		max: 5,
+		id: 'crystal',
 
-        title: `Perkless`,
-        desc: `You cannot buy Perks.`,
-        cond: _=>player.chal.c4,
-        reward: `Perk gain is increased by <b class="green">+0.2</b> per completion.`,
+		title: `Perkless`,
+		desc: `You cannot buy Perks.`,
+		cond: _=>player.chal.c4,
+		reward: `Perk gain is increased by <b class="green">+0.2</b> per completion.`,
 
-        goal: i=>7+i*3,
-        bulk: i=>Math.floor((i-7)/3+1),
+		goal: i=>7+i*3,
+		bulk: i=>Math.floor((i-7)/3+1),
 
-        goalDesc: x=>"Tier "+format(x,0),
-        goalAmt: _=>player.tier,
+		goalDesc: x=>"Tier "+format(x,0),
+		goalAmt: _=>player.tier,
 
-        eff: i=>i/5+1,
-        effDesc: x=>format(x,1)+"x",
-    },{
-        max: 7,
-        id: 'crystal',
+		eff: i=>i/5+1,
+		effDesc: x=>format(x,1)+"x",
+	},{
+		max: 7,
+		id: 'crystal',
 
-        title: `Prestigeless`,
-        desc: `You cannot buy Prestige Upgrades.`,
-        cond: _=>!hasUpgrades("pp"),
-        reward: `PP gain is <b class="green">doubled</b> each completion.`,
+		title: `Prestigeless`,
+		desc: `You cannot buy Prestige Upgrades.`,
+		cond: _=>!hasUpgrades("pp"),
+		reward: `PP gain is <b class="green">doubled</b> each completion.`,
 
-        goal: i=>4+i*2,
-        bulk: i=>Math.floor((i-4)/2+1),
+		goal: i=>4+i*2,
+		bulk: i=>Math.floor((i-4)/2+1),
 
-        goalDesc: x=>"Tier "+format(x,0),
-        goalAmt: _=>player.tier,
+		goalDesc: x=>"Tier "+format(x,0),
+		goalAmt: _=>player.tier,
 
-        eff: i=>Decimal.pow(2,i),
-        effDesc: x=>format(x,0)+"x",
-    },{
-        max: 5,
-        id: 'crystal',
+		eff: i=>Decimal.pow(2,i),
+		effDesc: x=>format(x,0)+"x",
+	},{
+		max: 5,
+		id: 'crystal',
 
-        title: `Unefficient`,
-        desc: `You cannot buy Grass and Prestige Upgrades.`,
-        cond: _=>!hasUpgrades("grass")&&!hasUpgrades("pp"),
-        reward: `Platinum gain is increased by <b class="green">+1</b> per completion.`,
+		title: `Unefficient`,
+		desc: `You cannot buy Grass and Prestige Upgrades.`,
+		cond: _=>!hasUpgrades("grass")&&!hasUpgrades("pp"),
+		reward: `Platinum gain is increased by <b class="green">+1</b> per completion.`,
 
-        goal: i=>4+i*2,
-        bulk: i=>Math.floor((i-4)/2+1),
+		goal: i=>4+i*2,
+		bulk: i=>Math.floor((i-4)/2+1),
 
-        goalDesc: x=>"Tier "+format(x,0),
-        goalAmt: _=>player.tier,
+		goalDesc: x=>"Tier "+format(x,0),
+		goalAmt: _=>player.tier,
 
-        eff: i=>i,
-        effDesc: x=>format(x,1)+"x",
-    },{
-        unl: _=>player.grasshop >= 15,
+		eff: i=>i,
+		effDesc: x=>format(x,1)+"x",
+	},{
+		unl: _=>player.grasshop >= 15,
 
-        max: 6,
-        id: 'steel',
+		max: 6,
+		id: 'steel',
 
-        title: `Clear Crystal`,
-        desc: `You can't buy Crystal Upgrades.`,
-        cond: _=>!hasUpgrades("crystal"),
-        reward: `Steel gain is <b class='green'>tripled</b> each completion.`,
+		title: `Clear Crystal`,
+		desc: `You can't buy Crystal Upgrades.`,
+		cond: _=>!hasUpgrades("crystal"),
+		reward: `Steel gain is <b class='green'>tripled</b> each completion.`,
 
-        goal: i=>11+i*5,
-        bulk: i=>Math.floor((i-11)/5+1),
+		goal: i=>11+i*5,
+		bulk: i=>Math.floor((i-11)/5+1),
 
-        goalDesc: x=>"Tier "+format(x,0),
-        goalAmt: _=>player.tier,
+		goalDesc: x=>"Tier "+format(x,0),
+		goalAmt: _=>player.tier,
 
-        eff: i=>Decimal.pow(3,i),
-        effDesc: x=>format(x,1)+"x",
-    },{
-        unl: _=>player.grasshop >= 18,
+		eff: i=>Decimal.pow(3,i),
+		effDesc: x=>format(x,1)+"x",
+	},{
+		unl: _=>player.grasshop >= 18,
 
-        max: 4,
-        id: 'steel',
+		max: 4,
+		id: 'steel',
 
-        title: `Empower`,
-        desc: `Non-Steelie Challenge Rewards do nothing. Additionally, you gain 1 Perk per level.`,
-        cond: _=>false,
-        reward: `Charge gain is increased by <b class='green'>5x</b> each completion.`,
+		title: `Empower`,
+		desc: `Non-Steelie Challenge Rewards do nothing. Additionally, you gain 1 Perk per level.`,
+		cond: _=>false,
+		reward: `Charge gain is increased by <b class='green'>5x</b> each completion.`,
 
-        goal: i=>25+i*3,
-        bulk: i=>Math.floor((i-25)/3+1),
+		goal: i=>25+i*3,
+		bulk: i=>Math.floor((i-25)/3+1),
 
-        goalDesc: x=>"Tier "+format(x,0),
-        goalAmt: _=>player.tier,
+		goalDesc: x=>"Tier "+format(x,0),
+		goalAmt: _=>player.tier,
 
-        eff: i=>Decimal.pow(5,i),
-        effDesc: x=>format(x,1)+"x",
-    },{
-        unl: _=>hasStarTree("progress", 6),
+		eff: i=>Decimal.pow(5,i),
+		effDesc: x=>format(x,1)+"x",
+	},{
+		unl: _=>hasStarTree("progress", 6),
 
-        max: 11,
-        id: 'gal',
+		max: 11,
+		id: 'gal',
 
-        title: `Sleepy Hop`,
-        desc: `You must grasshop at least as you can. Getting 10 Rocket Parts will complete it.`,
-        cond: _=>galUnlocked()&&tmp.chal.goal[8]>=player.grasshop,
-        reward: `Nothing.`,
+		title: `Sleepy Hop`,
+		desc: `You must grasshop at least as you can. Getting 10 Rocket Parts will complete it.`,
+		cond: _=>galUnlocked()&&tmp.chal.goal[8]>=player.grasshop,
+		reward: `Nothing.`,
 
-        goal: i=>Math.max(30-i*3,0),
-        bulk: i=>Math.floor((30-i)/3+1),
+		goal: i=>Math.max(30-i*3,0),
+		bulk: i=>Math.floor((30-i)/3+1),
 
-        goalDesc: x=>"Grasshop "+format(x,0),
-        goalAmt: _=>player.rocket.part==10?player.grasshop:1/0,
+		goalDesc: x=>"Grasshop "+format(x,0),
+		goalAmt: _=>player.rocket.part==10?player.grasshop:1/0,
 
-        eff: i=>i,
-        effDesc: x=>"however, you will feel a sense of accomplishment",
-    },{
-        unl: _=>player.chal.comp[8] == 12,
+		eff: i=>i,
+		effDesc: x=>"however, you will feel a sense of accomplishment",
+	},{
+		unl: _=>player.chal.comp[8] == 12,
 
-        max: Infinity,
-        id: 'gal',
+		max: Infinity,
+		id: 'gal',
 
-        title: `Walk On Grass`,
-        desc: `You can't grasshop.`,
-        cond: _=>player.grasshop==0,
-        reward: `Nothing.`,
+		title: `Walk On Grass`,
+		desc: `You can't grasshop.`,
+		cond: _=>player.grasshop==0,
+		reward: `Nothing.`,
 
-        goal: i=>i*3,
-        bulk: i=>Math.floor(i/3+1),
+		goal: i=>i*3,
+		bulk: i=>Math.floor(i/3+1),
 
-        goalDesc: x=>"Grass-Skip "+format(x,0),
-        goalAmt: _=>player.aRes.grassskip,
+		goalDesc: x=>"Grass-Skip "+format(x,0),
+		goalAmt: _=>player.aRes.grassskip,
 
-        eff: i=>i,
-        effDesc: x=>"however, you will feel a sense of accomplishment",
-    }
+		eff: i=>i,
+		effDesc: x=>"however, you will feel a sense of accomplishment",
+	}
 ]
 
 const chalSGoal = (_=>{
-    let x = []
-    for (let i in CHALS) x.push(CHALS[i].goal(0))
-    return x
+	let x = []
+	for (let i in CHALS) x.push(CHALS[i].goal(0))
+	return x
 })()
 
 function inChal(x) {
-    let p = player.chal.progress
-    return p[x]
+	let p = player.chal.progress
+	return p[x]
 }
 
 function inChalCond(x) {
-    return inChal(x) || (CHALS[x].cond() && !player.decel)
+	return inChal(x) || (CHALS[x].cond() && !player.decel)
 }
 
 function enterChal(x) {
@@ -234,30 +234,30 @@ tmp_update.push(_=>{
 })
 
 el.setup.chal = _=>{
-    let table = new Element('chal_table')
-    let html = ``
+	let table = new Element('chal_table')
+	let html = ``
 
-    for (let i in CHALS) {
-        let c = CHALS[i]
+	for (let i in CHALS) {
+		let c = CHALS[i]
 
-        html += `
-        <div class="chal_div ${c.id}" id="chal_div_${i}" onclick="enterChal(${i})">
-            <h3>${c.title}</h3><br>
-            <b class="yellow" id="chal_comp_${i}">0 / 0</b><br><br>
-            ${c.desc}<br><br>
+		html += `
+		<div class="chal_div ${c.id}" id="chal_div_${i}" onclick="enterChal(${i})">
+			<h3>${c.title}</h3><br>
+			<b class="yellow" id="chal_comp_${i}">0 / 0</b><br><br>
+			${c.desc}<br><br>
 
-            Reward: ${c.reward}<br>
-            (<b class="cyan" id="chal_eff_${i}"></b>)
+			Reward: ${c.reward}<br>
+			(<b class="cyan" id="chal_eff_${i}"></b>)
 
-            <div style="position:absolute; bottom:7px; width:100%;">
-                <b id="chal_pro_${i}"></b><br>
-                <b class="white" id="chal_goal_${i}"></b>
-            </div>
-        </div>
-        `
-    }
+			<div style="position:absolute; bottom:7px; width:100%;">
+				<b id="chal_pro_${i}"></b><br>
+				<b class="white" id="chal_goal_${i}"></b>
+			</div>
+		</div>
+		`
+	}
 
-    table.setHTML(html)
+	table.setHTML(html)
 }
 
 el.update.chal = _=>{

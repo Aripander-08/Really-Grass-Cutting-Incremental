@@ -22,7 +22,10 @@ aMAIN.fun = {
 		r = r.mul(getGSEffect(10))
 		r = r.mul(upgEffect('funMachine', 1))
 		r = r.mul(upgEffect('sfrgt', 0))
-        r = r.mul(getAstralEff('sf'))
+		r = r.mul(upgEffect('moonstone', 5))
+		r = r.mul(getAstralEff('sf'))
+
+		r = r.pow(upgEffect('dm', 6))
 
 		return r
 	},
@@ -65,7 +68,7 @@ tmp_update.push(_=>{
 	
 	tmp.aRes.funShown = player.decel == 1 && player.aRes?.fTimes
 	tmp.aRes.funGain = mf.gain()
-	tmp.aRes.funGainP = starTreeEff("qol", 14, 0)
+	tmp.aRes.funGainP = starTreeEff("qol", 15, 0)
 
 	tmp.aRes.SFRGTgain = mf.SFRGTgain()
 })
@@ -126,19 +129,19 @@ UPGS.funMachine = {
 			res: "fun",
 			icon: ["Icons/Charger"],
 						
-			cost: i => E(1e6),
+			cost: i => E(1e7),
 			bulk: i => 1,
 		},{
 			max: 1,
 
-			unl: _ => hasAGHMilestone(8),
+			unl: _ => MAIN.sac.did(),
 			title: "Recelerator",
 			desc: `Unlock Recelerator realm, where you can slow time further.`,
 		
 			res: "fun",
 			icon: ["Icons/Recelerator"],
 						
-			cost: i => E(1e20),
+			cost: i => E(1e11),
 			bulk: i => 1,
 		}
 	],
@@ -161,8 +164,8 @@ UPGS.fundry = {
 			res: "steel",
 			icon: ["Curr/Fun"],
 						
-			cost: i => Decimal.pow(1.4,i).mul(1e35).ceil(),
-			bulk: i => i.div(1e35).max(1).log(1.4).floor().toNumber()+1,
+			cost: i => Decimal.pow(1.4,i).mul(1e45).ceil(),
+			bulk: i => i.div(1e45).max(1).log(1.4).floor().toNumber()+1,
 		
 			effect(i) {
 				let x = Decimal.pow(1.25, Math.floor(i/25)).mul(i/5+1)
@@ -179,8 +182,8 @@ UPGS.fundry = {
 			res: "star",
 			icon: ["Curr/Fun"],
 						
-			cost: i => Decimal.pow(1.2,i).mul(1e4).ceil(),
-			bulk: i => i.div(1e4).max(1).log(1.2).floor().toNumber()+1,
+			cost: i => Decimal.pow(1.2,i).mul(1e6).ceil(),
+			bulk: i => i.div(1e6).max(1).log(1.2).floor().toNumber()+1,
 		
 			effect(i) {
 				let x = Decimal.pow(1.25, Math.floor(i/25)).mul(i/5+1)
@@ -199,8 +202,8 @@ UPGS.fundry = {
 			res: "sfrgt",
 			icon: ["Curr/Fun"],
 						
-			cost: i => Decimal.pow(1.15,i).mul(50).ceil(),
-			bulk: i => i.div(50).max(1).log(1.15).floor().toNumber()+1,
+			cost: i => Decimal.pow(1.2,i).mul(50).ceil(),
+			bulk: i => i.div(50).max(1).log(1.2).floor().toNumber()+1,
 		
 			effect(i) {
 				let x = Decimal.pow(1.25, Math.floor(i/25)).mul(i/5+1)
@@ -248,8 +251,8 @@ UPGS.sfrgt = {
 			icon: ["Curr/SuperFun"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(15,i).mul(1e3).ceil(),
-			bulk: i => i.div(1e3).max(1).log(15).floor().toNumber()+1,
+			cost: i => Decimal.pow(10,i).mul(5e3).ceil(),
+			bulk: i => i.div(5e3).max(1).log(10).floor().toNumber()+1,
 		
 			effect(i) {
 				let x = Decimal.pow(2,i)
@@ -265,8 +268,8 @@ UPGS.sfrgt = {
 			icon: ["Curr/Star"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(15,i).mul(1e4).ceil(),
-			bulk: i => i.div(1e4).max(1).log(15).floor().toNumber()+1,
+			cost: i => Decimal.pow(10,i).mul(1e3).ceil(),
+			bulk: i => i.div(1e3).max(1).log(10).floor().toNumber()+1,
 		
 			effect(i) {
 				let x = Decimal.pow(2,i)
@@ -281,9 +284,9 @@ UPGS.sfrgt = {
 			res: "sfrgt",
 			icon: ["Icons/SP"],
 
-			max: 25,
-			cost: i => Decimal.pow(15,i).mul(500).ceil(),
-			bulk: i => i.div(500).max(1).log(15).floor().toNumber()+1,
+			max: Infinity,
+			cost: i => Decimal.pow(100,i).mul(500).ceil(),
+			bulk: i => i.div(500).max(1).log(100).floor().toNumber()+1,
 		
 			effect(i) {
 				let x = Decimal.pow(2,i)
@@ -298,30 +301,30 @@ UPGS.sfrgt = {
 			res: "sfrgt",
 			icon: ["Icons/Charge", "Icons/StarSpeed"],
 
-			max: 20,
-			cost: i => Decimal.pow(4,i).mul(300).ceil(),
-			bulk: i => i.div(300).max(1).log(4).floor().toNumber()+1,
+			max: 50,
+			cost: i => Decimal.pow(5,i).mul(100).ceil(),
+			bulk: i => i.div(100).max(1).log(5).floor().toNumber()+1,
 
 			effect(i) {
 				return i
 			},
 			effDesc: x => format(E(10).pow(x),0)+"x",
 		}, {
-			max: 5,
+			max: 10,
 
 			title: "Funny Foundry",
-			desc: `<b class="green">Strengthen</b> Steel Steel upgrade.`,
+			desc: `Raise first Charger effect by <b class="green">^+0.1</b>.`,
 		
 			res: "sfrgt",
 			icon: ["Icons/Foundry"],
 
-			cost: i => Decimal.pow(4,i**1.25).mul(1e5).ceil(),
-			bulk: i => i.div(1e5).max(1).log(4).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(2,i**1.25).mul(1e4).ceil(),
+			bulk: i => i.div(1e4).max(1).log(2).root(1.25).floor().toNumber()+1,
 		
 			effect(i) {
 				return i/10+1
 			},
-			effDesc: x => format(x)+"x",
+			effDesc: x => "^"+format(x,1),
 		}, {
 			max: 5,
 
@@ -331,10 +334,10 @@ UPGS.sfrgt = {
 			res: "sfrgt",
 			icon: ["Curr/UnnaturalGrass"],
 
-			unl: _ => hasUpgrade("res", 1),
+			unl: _ => hasUpgrade('res', 1),
 			cost: i => E(1/0),
 			bulk: i => 0,
-		
+
 			effect(i) {
 				return E(2).pow(i)
 			},

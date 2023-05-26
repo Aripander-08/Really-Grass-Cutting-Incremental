@@ -57,15 +57,15 @@ MILESTONE.gh = {
 
 			req: 11,
 			desc: `<b class="green">Double</b> Steel per Grasshop. (starting at 11)`,
-			eff: x=>E(2).pow(Math.max(0,x-10)),
-			effDesc: x=> format(x,0)+"x",
+			eff: x => E(2).pow(Math.max(0,x-10)),
+			effDesc: x => format(x,0)+"x",
 		},{
 			unl: _=>galUnlocked()||hasUpgrade('factory',2),
 
 			req: 12,
 			desc: `<b class="green">Double</b> Charge per Grasshop. (starting at 12 and ending at 30)`,
-			eff: x=>E(2).pow(Math.max(0,Math.min(x,30)-11)),
-			effDesc: x=> format(x,0)+"x",
+			eff: x => E(2).pow(Math.max(0, Math.min(x, hasGSMilestone(9) ? 1/0 : 30) - 11)),
+			effDesc: x => format(x,0)+"x",
 		},{
 			unl: _=>galUnlocked()||hasUpgrade('factory',3),
 

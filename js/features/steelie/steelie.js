@@ -15,7 +15,7 @@ MAIN.steel = {
 		x = x.mul(upgEffect('rocket',5))
 		x = x.mul(upgEffect('rocket',12))
 		x = x.mul(upgEffect('rocket',18))
-		x = x.mul(upgEffect('momentum',6))
+		if (hasUpgrade('momentum', 6)) x = x.mul(3)
 
 		return x.floor()
 	},
@@ -70,7 +70,7 @@ UPGS.factory = {
 
 	unl: _=>(player.grasshop >= 10 || player.sTimes) && !tmp.aRes.gs.shown && !tmp.unRes.gj.shown,
 	autoUnl: _=>hasStarTree('auto',0),
-	noSpend: _=>hasStarTree('qol', 4),
+	noSpend: _=>hasStarTree("qol", 4),
 
 	req: _=>player.sTimes > 0,
 	reqDesc: `Steelie once to unlock.`,
@@ -227,7 +227,7 @@ UPGS.foundry = {
 
 	unl: _=> hasUpgrade('factory',0) && !tmp.aRes.funShown,
 	autoUnl: _=> hasUpgrade('assembler',10),
-	noSpend: _=>hasStarTree('qol', 4),
+	noSpend: _=>hasStarTree("qol", 4),
 
 	underDesc: _=>`
 		<b class="green">${tmp.foundryEff.format()}x</b>
@@ -274,7 +274,7 @@ UPGS.foundry = {
 			},
 			effDesc: x => format(x)+"x",
 		},{
-			max: 1e3,
+			max: Infinity,
 
 			title: "Crystal Steel",
 			desc: `Increase steel gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
@@ -304,10 +304,7 @@ UPGS.foundry = {
 			bulk: i => i.div(10).max(1).log(1.2).floor().toNumber()+1,
 		
 			effect(i) {
-				let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/5+1)
-				x = x.pow(upgEffect('sfrgt',4))
-
-				return x
+				return Decimal.pow(1.5,Math.floor(i/25)).mul(i/5+1)
 			},
 			effDesc: x => format(x)+"x",
 		},
@@ -319,7 +316,7 @@ UPGS.gen = {
 
 	unl: _ => hasUpgrade('factory', 1) && !tmp.aRes.funShown,
 	autoUnl: _ => hasStarTree('auto', 1),
-	noSpend: _=>hasStarTree('qol', 4),
+	noSpend: _=>hasStarTree("qol", 4),
 
 	underDesc: _=>`<b class="green">${format(upgEffect('factory',1))}x</b> <span style="font-size:14px;">to PP/Crystal generator multiplier from factory upgrade</span>`,
 
@@ -383,7 +380,7 @@ UPGS.gen = {
 			},
 			effDesc: x => format(x)+"x",
 		},{
-			max: 1e3,
+			max: Infinity,
 
 			unl: _=>hasUpgrade("factory", 2),
 
@@ -581,7 +578,7 @@ el.update.factory = _=>{
 }
 
 MAIN.charger = {
-	unl: _ => hasUpgrade("factory", 2) || hasGSMilestone(9),
+	unl: _ => hasUpgrade("factory", 2),
 	gain() {
 		let x = E(1)
 		if (!inRecel()) {
@@ -597,10 +594,8 @@ MAIN.charger = {
 		x = x.mul(upgEffect('rocket',6))
 		x = x.mul(upgEffect('rocket',13))
 		x = x.mul(upgEffect('rocket',19))
-		x = x.mul(upgEffect('momentum',7))
-
+		if (hasUpgrade('momentum', 7)) x = x.mul(3)
 		x = x.mul(getAstralEff('ch'))
-		x = x.mul(getGSEffect(9))
 
 		return x
 	}
@@ -625,7 +620,7 @@ EFFECT.charger = {
 	effs: [
 		{
 			req: E(1),
-			eff: c => player.crystal.add(1).pow(c.add(1).log10().pow(.25).div(20)).pow(upgEffect('ring', 7)),
+			eff: c => player.crystal.add(1).pow(c.add(1).log10().pow(.25).div(20)).pow(upgEffect('sfrgt',4)),
 			desc: x => "Crystals give "+format(x)+"x more Steel.",
 		},{
 			req: E(100),
@@ -663,8 +658,7 @@ EFFECT.charger = {
 			unl: _ => hasStarTree("progress", 4),
 
 			req: E(1e27),
-			offsetOoM: 15,
-			eff: c => c.add(1).log10().div(15).pow10(),
+			eff: c => c.add(1).log10().div(20).pow10(),
 			desc: x => "Gain more "+format(x,3)+"x Space Power.",
 		},{
 			unl: _ => hasUpgrade("funMachine", 2),
@@ -676,8 +670,8 @@ EFFECT.charger = {
 		},{
 			unl: _ => hasUpgrade("funMachine", 2),
 
-			req: E(1e45),
-			offsetOoM: 35,
+			req: E(1e48),
+			offsetOoM: 36,
 			eff: c => c.add(1).log10().div(3).pow10(),
 			desc: x => "Gain more "+format(x,3)+"x Grass.",
 		}

@@ -380,7 +380,6 @@ UPGS.rocket = {
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
-			tier: 2,
 
 			max: 20,
 
@@ -476,7 +475,7 @@ UPGS.rocket = {
 let ROCKET_PART = {
 	can() {
 		let req = tmp.rp_req
-		return player.steel.gte(req.steel) && player.rocket.total_fp.gte(req.rf) && (player.rocket.part < 10 || this.upgraded())
+		return player.steel.gte(req.steel) && player.rocket.total_fp.gte(req.rf) && (player.rocket.part < 10 || tmp.rocket_upgraded)
 	},
 	req(p = player.rocket.part) {
 		if (this.upgraded()) {
@@ -494,9 +493,9 @@ let ROCKET_PART = {
 	upgraded: _ => hasStarTree("progress", 10),
 
 	m_gain() {
-		if (!this.upgraded()) return 1
+		if (!this.upgraded()) return E(1)
 		let r = E(5).pow(player.rocket.part - 1)
-		r = r.mul(upgEffect('dm', 5))
+		r = r.mul(upgEffect('dm', 2))
 		r = r.mul(upgEffect('np', 3))
 		return r
 	}
@@ -560,7 +559,7 @@ UPGS.momentum = {
 
 	underDesc: _=>getUpgResTitle('momentum')+(tmp.m_prod > 0 ? " <span class='smallAmt'>"+formatGain(player.rocket.momentum,ROCKET_PART.m_gain().mul(tmp.m_prod))+"</span>" : ""),
 
-    autoUnl: _=>hasStarTree('auto',2),
+	autoUnl: _=>hasStarTree('auto',2),
 
 	ctn: [
 		{
@@ -571,14 +570,7 @@ UPGS.momentum = {
 			icon: ['Curr/Grass'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Gotta Grow Fast",
 			desc: `Grass grows 3x faster.`,
@@ -587,14 +579,7 @@ UPGS.momentum = {
 			icon: ['Icons/Speed'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Gas Gas Gas",
 			desc: `Multiply XP gain by 3x.`,
@@ -603,14 +588,7 @@ UPGS.momentum = {
 			icon: ['Icons/XP'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "In Tiers",
 			desc: `Multiply TP gain by 3x.`,
@@ -619,14 +597,7 @@ UPGS.momentum = {
 			icon: ['Icons/TP'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Popular",
 			desc: `Multiply PP gain by 3x.`,
@@ -635,14 +606,7 @@ UPGS.momentum = {
 			icon: ['Curr/Prestige'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Shine Bright",
 			desc: `Multiply Crystal gain by 3x.`,
@@ -651,14 +615,7 @@ UPGS.momentum = {
 			icon: ['Curr/Crystal'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Steel Going?",
 			desc: `Multiply steel gain by 3x.`,
@@ -667,14 +624,7 @@ UPGS.momentum = {
 			icon: ['Curr/Steel'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Powerful",
 			desc: `Multiply charge rate by 3x.`,
@@ -683,14 +633,7 @@ UPGS.momentum = {
 			icon: ['Icons/Charge'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Quickly Forgettable",
 			desc: `Multiply AP gain by 3x.`,
@@ -699,14 +642,7 @@ UPGS.momentum = {
 			icon: ['Curr/Anonymity'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Fracking",
 			desc: `Multiply oil gain by 3x.`,
@@ -715,14 +651,7 @@ UPGS.momentum = {
 			icon: ['Curr/Oil'],
 			
 			cost: i => E(1),
-			bulk: i => 1,
-
-			effect(i) {
-				let x = i*2+1
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
+			bulk: i => 1
 		},{
 			title: "Unnatural Momentum",
 			desc: `<b class="green">+1</b> to Unnatural Healing.`,
@@ -840,8 +769,9 @@ function updateRocketTemp() {
 	tmp.rf_bulk = ROCKET.bulk(player.chargeRate, 1e20).min(ROCKET.bulk(player.aRes.oil, 100))
 
 	//Rocket Part
-	if (tmp.rocket_upgraded !== undefined && ROCKET_PART.upgraded() && !tmp.rocket_upgraded) player.rocket.part = Math.min(player.rocket.part, 1)
-	tmp.rocket_upgraded = ROCKET_PART.upgraded()
+	let upgraded = ROCKET_PART.upgraded()
+	if (tmp.rocket_upgraded !== undefined && !tmp.rocket_upgraded && upgraded) player.rocket.part = Math.min(player.rocket.part, 1)
+	tmp.rocket_upgraded = upgraded
 
 	tmp.rp_req = ROCKET_PART.req()
 	tmp.m_prod = tmp.rocket_upgraded ? 0.001 : 0

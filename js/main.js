@@ -158,7 +158,6 @@ tmp_update.push(_=>{
 	if (player.grasshop >= 3) tmp.platGain += getGHEffect(2, 0)
 	tmp.platGain += upgEffect('moonstone', 0)
 	tmp.platGain *= upgEffect('moonstone', 8)
-	tmp.platGain *= upgEffect('dm', 2)
 	tmp.platGain *= tmp.cutAmt
 })
 

@@ -96,11 +96,11 @@ MAIN.chrona = {
 RESET.time = {
 	unl: _=>player.sTimes,
 
-    req: _=>true,
-    reqDesc: _=>"",
+	req: _=>true,
+	reqDesc: _=>"",
 
-    resetDesc: `Speed up game until you run out of Time Fluxes.`,
-    resetGain: _=> `
+	resetDesc: `Speed up game until you run out of Time Fluxes.`,
+	resetGain: _=> `
 		<b>${format(player.ch.offline, 1)}</b> Offline Fluxes<br>
 		<b>${format(player.ch.amt, 1)} / ${format(MAIN.chrono.fluxMax(), 0)}</b> Time Fluxes<br>
 		<span class='smallAmt'>(${format(player.ch.speed, 1)}x speed)</span>
@@ -108,30 +108,30 @@ RESET.time = {
 	`,
 	btns: `<input id="chrono_speed" type="text">`,
 
-    title: `Time Speed`,
-    resetBtn: `Speedup!`,
+	title: `Time Speed`,
+	resetBtn: `Speedup!`,
 
-    reset(force=false) {
+	reset(force=false) {
 		MAIN.chrono.toggle()
-    },
+	},
 }
 
 RESET.warp = {
 	unl: _=>player.sTimes,
 
-    req: _=>galUnlocked(),
-    reqDesc: _=>"Galactic once to unlock.",
+	req: _=>galUnlocked(),
+	reqDesc: _=>"Galactic once to unlock.",
 
-    resetDesc: `Spend Time Fluxes to immediately skip time.`,
-    resetGain: _=>`(+${MAIN.chrono.warpCan() ? format(MAIN.chrono.warpPower(), 0) : "???"} seconds)`,
+	resetDesc: `Spend Time Fluxes to immediately skip time.`,
+	resetGain: _=>`(+${MAIN.chrono.warpCan() ? format(MAIN.chrono.warpPower(), 0) : "???"} seconds)`,
 	btns: `<input id="chrono_warp" type="number" min=1 max=100 value=50>% power`,
 
-    title: `Time Warp`,
-    resetBtn: `Warp!`,
+	title: `Time Warp`,
+	resetBtn: `Warp!`,
 
-    reset(force=false) {
+	reset(force=false) {
 		MAIN.chrono.warp()
-    },
+	},
 }
 
 UPGS.chrono = {

@@ -1,79 +1,79 @@
 const RESET = {}
 
 el.setup.reset = _=>{
-    for (x in RESET) {
-        let resetTable = new Element("reset_div_"+x)
+	for (x in RESET) {
+		let resetTable = new Element("reset_div_"+x)
 
-        if (resetTable.el) {
-            let r = RESET[x]
+		if (resetTable.el) {
+			let r = RESET[x]
 
-            let html = `
-            <div id="reset_info_div_${x}">
-                <h2>${r.title}</h2><br>
-                ${r.resetDesc}
-                <div style="position: absolute; bottom: 0; width: 100%;">
-                    <div id="reset_gain_${x}"></div>
-                    ${r.btns ?? ''}
-                    <button id="reset_btn_${x}" onclick="RESET.${x}.reset()">${(r.hotkey ? `(${r.hotkey}) ` : ``) + r.resetBtn}</button>
-                </div>
-            </div>
-            <div id="reset_req_div_${x}" class="reset_req ${x}"><div id="reset_req_desc_${x}"></div></div>
-            `
+			let html = `
+			<div id="reset_info_div_${x}">
+				<h2>${r.title}</h2><br>
+				${r.resetDesc}
+				<div style="position: absolute; bottom: 0; width: 100%;">
+					<div id="reset_gain_${x}"></div>
+					${r.btns ?? ''}
+					<button id="reset_btn_${x}" onclick="RESET.${x}.reset()">${(r.hotkey ? `(${r.hotkey}) ` : ``) + r.resetBtn}</button>
+				</div>
+			</div>
+			<div id="reset_req_div_${x}" class="reset_req ${x}"><div id="reset_req_desc_${x}"></div></div>
+			`
 
-            resetTable.setHTML(html)
-            resetTable.addClass(x)
-            resetTable.addClass("reset_div")
-        }
-    }
+			resetTable.setHTML(html)
+			resetTable.addClass(x)
+			resetTable.addClass("reset_div")
+		}
+	}
 }
 
 function updateResetHTML(id) {
-    let r = RESET[id]
-    let unl = r.unl?r.unl():true
+	let r = RESET[id]
+	let unl = r.unl?r.unl():true
 
-    tmp.el["reset_div_"+id].setDisplay(unl)
+	tmp.el["reset_div_"+id].setDisplay(unl)
 
-    if (unl) {
-        let req = r.req?r.req():true
+	if (unl) {
+		let req = r.req?r.req():true
 
-        tmp.el["reset_info_div_"+id].setDisplay(req)
-        tmp.el["reset_req_div_"+id].setDisplay(!req)
-        tmp.el["reset_req_desc_"+id].setHTML(compute(r.reqDesc))
+		tmp.el["reset_info_div_"+id].setDisplay(req)
+		tmp.el["reset_req_div_"+id].setDisplay(!req)
+		tmp.el["reset_req_desc_"+id].setHTML(compute(r.reqDesc))
 
-        if (req) {
-            tmp.el["reset_gain_"+id].setHTML(r.resetGain())
-        }
-    }
+		if (req) {
+			tmp.el["reset_gain_"+id].setHTML(r.resetGain())
+		}
+	}
 }
 
 el.update.reset = _=> {
-    if (mapID == 'pc') {
-        updateResetHTML('pp')
-        updateResetHTML('crystal')
+	if (mapID == 'pc') {
+		updateResetHTML('pp')
+		updateResetHTML('crystal')
 
-        updateResetHTML('ap')
-        updateResetHTML('oil')
+		updateResetHTML('ap')
+		updateResetHTML('oil')
 
-        updateResetHTML('np')
-        updateResetHTML('vapor')
-    }
-    if (mapID == 'gh') {
-        updateResetHTML('gh')
-        updateResetHTML('steel')
+		updateResetHTML('np')
+		updateResetHTML('vapor')
+	}
+	if (mapID == 'gh') {
+		updateResetHTML('gh')
+		updateResetHTML('steel')
 
-        updateResetHTML('gs')
-        updateResetHTML('fun')
+		updateResetHTML('gs')
+		updateResetHTML('fun')
 
-        updateResetHTML('gj')
-    }
-    if (mapID == 'dc') {
-        updateResetHTML('decel')
-        updateResetHTML('recel')
-    }
-    if (mapID == 'rf') {
-        updateResetHTML('rocket_part')
-    }
-    if (mapID == 'gal') {
-        updateResetHTML('gal')
-    }
+		updateResetHTML('gj')
+	}
+	if (mapID == 'dc') {
+		updateResetHTML('decel')
+		updateResetHTML('recel')
+	}
+	if (mapID == 'rf') {
+		updateResetHTML('rocket_part')
+	}
+	if (mapID == 'gal') {
+		updateResetHTML('gal')
+	}
 }
