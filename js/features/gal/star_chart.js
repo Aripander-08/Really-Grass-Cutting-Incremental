@@ -190,7 +190,7 @@ const STAR_CHART = {
 			icon: ['Icons/Grasshop','Icons/StarSpeed'],
 
 			cost: i => E(10).pow((i+3)**1.5*2),
-			bulk: i => E(i).log(100).root(1.5).sub(4).floor().toNumber()+1,
+			bulk: i => E(i).log(100).root(1.5).sub(3).floor().toNumber()+1,
 
 			effect(i) {
 				return i/20
@@ -207,7 +207,7 @@ const STAR_CHART = {
 
 			unl: _ => true,
 			cost: i => E(10).pow((i+3.5)**1.5*2),
-			bulk: i => E(i).log(100).root(1.5).sub(4.5).floor().toNumber()+1,
+			bulk: i => E(i).log(100).root(1.5).sub(3.5).floor().toNumber()+1,
 
 			effect(i) {
 				return i

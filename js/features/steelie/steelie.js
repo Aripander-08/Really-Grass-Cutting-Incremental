@@ -687,6 +687,6 @@ tmp_update.push(_=>{
 
 	tmp.charge = {}
 	tmp.charge.gain = MAIN.charger.gain()
-	tmp.charge.OoM = getGHEffect(11, 0) + upgEffect('sfrgt', 3, 0)
+	tmp.charge.OoM = getGHEffect(11, 0) + upgEffect('sfrgt', 3, 0) + upgEffect('dm', 1, 0)
 	tmp.charge.OoMMul = Decimal.pow(10, tmp.charge.OoM)
 })

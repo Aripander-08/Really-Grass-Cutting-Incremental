@@ -37,7 +37,7 @@ const MAP = {
 	],
 	planetoid: [
 		['opt'],
-		['ring', 'g', 'astro'],
+		["ring", 'g', 'astro'],
 		['trial']
 	],
 }

@@ -4,12 +4,12 @@ el.update.astral = _=>{
 	tmp.el.astral.setDisplay(astral_unl && inSpace())
 	if (astral_unl) {
 		tmp.el.astral_top_bar.changeStyle("width",tmp.gal.astral.progress*100+"%")
-		tmp.el.astral_top_info.setHTML(`Astral <b class="magenta">${format(player.gal.astral,0)}</b>`)
+		tmp.el.astral_top_info.setHTML(`Astral <b class="magenta">${ASTRAL.title()}</b>`)
 	}
 	if (mapID == 'g' && !inPlanetoid()) {
 		tmp.el.astral_div.setDisplay(astral_unl)
 		if (astral_unl) {
-			tmp.el.astral_amt.setTxt(format(player.gal.astral,0))
+			tmp.el.astral_amt.setTxt(ASTRAL.title())
 			tmp.el.astral_progress.setTxt(player.gal.sp.sub(tmp.gal.astral.prevReq).max(0).format(0)+" / "+tmp.gal.astral.curReq.format(0)+" SP")
 			tmp.el.astral_bar.changeStyle("width",tmp.gal.astral.progress*100+"%")
 			tmp.el.astral_cut.setTxt("+"+tmp.gal.astral.gain.format(1)+" SP/cut")
@@ -31,7 +31,6 @@ const ASTRAL = {
 		r = r.mul(upgEffect('moonstone', 2))
 		r = r.mul(getGSEffect(1))
 		r = r.mul(upgEffect('sfrgt', 2))
-		r = r.mul(upgEffect('dm', 4))
 		r = r.mul(upgEffect("unGrass", 3))
 
 		return r
@@ -40,19 +39,24 @@ const ASTRAL = {
 	req(lvl) {
 		if (!galUnlocked()) return EINF
 		if (lvl < 0) return 0
-		return E(2).pow(lvl ?? player.gal.astral).mul(1e3)
+		return E(2).pow((lvl ?? player.gal.astral) * tmp.gal.astral.scale).mul(1e3)
 	},
 	bulk() {
 		if (!galUnlocked()) return 0
 		if (player.gal.sp.lt(1e3)) return 0
-		return player.gal.sp.div(1e3).log(2).floor().toNumber() + 1
+		return player.gal.sp.div(1e3).log(2).div(tmp.gal.astral.scale).floor().toNumber() + 1
+	},
+
+	title() {
+		let data = player.gal
+		return (data.astral_pres ? data.astral_pres + "-" : "") + format(data.astral, 0)
 	},
 }
 
 EFFECT.astral = {
 	unl: _ => galUnlocked(),
-	title: r => `Astral <b class="magenta">${format(r, 0)}</b>`,
-	res: _ => player.gal.astral,
+	title: r => `Astral <b class="magenta">${ASTRAL.title()}</b>`,
+	res: _ => tmp.gal?.astral?.total,
 	effs: {
 		gr: {
 			unl: _ => hasAGHMilestone(9),
@@ -61,27 +65,27 @@ EFFECT.astral = {
 		},
 		xp: {
 			unl: _ => hasAGHMilestone(4),
-			eff: a => E(1.3).pow((a - 10) * upgEffect('ring', 1)).max(1),
+			eff: a => E(1.3).pow((a - 10) * upgEffect("dm", 4)).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to XP`
 		},
 		tp: {
 			unl: _ => true,
-			eff: a => hasUpgrade('ring',6) ? E(1.3).pow((a + 1) ** 0.8) : a + 1,
+			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow((a + 1) ** 0.8) : a + 1,
 			desc: x => `<b class="magenta">${format(x)}x</b> to TP`
 		},
 		fd: {
 			unl: _ => true,
-			eff: a => (a / 50 + 1) * upgEffect('ring',3),
+			eff: a => (a / 50 + 1) * upgEffect("ring", 2),
 			desc: x => `<b class="magenta">^${format(x)}</b> to Foundry effect`
 		},
 		ch: {
 			unl: _ => hasAGHMilestone(3),
-			eff: a => E(2).pow((a / 3 - 3)*upgEffect('ring', 2)).max(1),
+			eff: a => E(2).pow((a / 3 - 3) * upgEffect("ring", 3)).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Charge`
 		},
 		ap: {
 			unl: _ => hasAGHMilestone(10),
-			eff: a => 1+Math.min(a / 500, .25),
+			eff: a => 1+Math.min(a / 250, 1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to AP per-25 multipliers`
 		},
 		rf: {
@@ -91,7 +95,7 @@ EFFECT.astral = {
 		},
 		st: {
 			unl: _ => hasAGHMilestone(1),
-			eff: a => E(2).pow(a / 5),
+			eff: a => E(2).pow(a / 5 * upgEffect("ring", 4)),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Stars`
 		},
 		fu: {
@@ -125,9 +129,13 @@ function updateAstralTemp() {
 	let data = {}
 	tmp.gal.astral = data
 
+	let pres = player.gal.astral_pres
+	data.scale = ASTRAL_PRESTIGE.scaling(pres)
+	data.total = player.gal.astral * data.scale + ASTRAL_PRESTIGE.extra(pres)
+
 	data.gain = ASTRAL.spGain()
-	data.prevReq = ASTRAL.req(player.gal.astral - 1)
-	data.req = ASTRAL.req(player.gal.astral)
+	data.prevReq = ASTRAL.req(player.gal.astral - 1, pres)
+	data.req = ASTRAL.req(player.gal.astral, pres)
 	data.curReq = E(data.req).sub(data.prevReq)
 	data.progress = player.gal.sp.sub(tmp.gal.astral.prevReq).div(data.curReq).max(0).min(1).toNumber()
 }

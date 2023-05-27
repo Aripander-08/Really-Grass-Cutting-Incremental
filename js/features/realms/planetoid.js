@@ -24,9 +24,9 @@ REALMS.planetoid = {
 		let x = E(1)
 		x = x.mul(upgEffect('planetarium', 0))
 		x = x.mul(upgEffect('obs', 0))
-		x = x.mul(upgEffect('cloud', 2))
+		x = x.mul(upgEffect('ring', 0))
 		x = x.pow(upgEffect('astro', 0))
-		if (hasUpgrade('ring', 0)) x = x.mul(2)
+
 		if (inFormation("sp")) x = x.mul(3)
 		if (inFormation("cm")) x = x.mul(Math.log10(player.planetoid.combo + 10))
 		return x
@@ -34,9 +34,11 @@ REALMS.planetoid = {
 	xp() {
 		let x = E(1/20)
 		x = x.mul(upgEffect('planetarium', 1))
-		x = x.mul(upgEffect('obs', 1))
-		x = x.pow(upgEffect('astro', 1))
 		x = x.mul(upgEffect('measure', 0))
+		x = x.mul(upgEffect('obs', 1))
+		x = x.mul(upgEffect('ring', 1))
+		x = x.pow(upgEffect('astro', 1))
+
 		if (inFormation("sp")) x = x.mul(3)
 		if (inFormation("gd")) x = player.planetoid.xp.max(1).div(5).min(x.pow(1.1))
 		if (inFormation("cm")) x = x.mul(Math.log10(player.planetoid.combo + 10))
@@ -250,7 +252,7 @@ function endPlanetoidTrial() {
 
 UPGS.ring = {
 	title: "Ring Chart",
-	underDesc: _=>getUpgResTitle('ring'),
+	underDesc: _=>getUpgResTitle("ring"),
 
 	unl: _=>inPlanetoid(),
 	autoUnl: _=>false,
@@ -259,31 +261,45 @@ UPGS.ring = {
 	ctn: [
 		{
 			title: "Greetings, Planetoid!",
-			desc: `<b class='green'>Double</b> Cosmic.`,
+			desc: `Gain <b class='green'>+1x</b> more Cosmic.`,
 
 			res: "ring",
 			icon: ['Curr/Fun', 'Icons/Plus'],
 			
-			cost: i => E(1),
-			bulk: i => 1
-		}, {
 			max: 10,
+			cost: i => E(4).pow(i),
+			bulk: i => E(i).log(4).floor().toNumber()+1,
 
-			title: "Cosmically XP",
-			desc: `Raise 'Astral XP' effect by <b class='green'>+^0.1</b>.`,
+			effect: i => i+1,
+			effDesc: x => format(x,0)+"x"
+		}, {
+			title: "Basically Planetarium",
+			desc: `Gain <b class='green'>+1x</b> more Planetarium.`,
 
 			res: "ring",
-			icon: ['Icons/XP', 'Icons/StarProgression'],
+			icon: ['Curr/Fun', 'Icons/Plus'],
+			
+			max: 10,
+			cost: i => E(4).pow(i+2),
+			bulk: i => E(i).log(4).sub(2).floor().toNumber()+1,
 
-			max: 20,
-			cost: i => E(2).pow(i**1.25+2),
-			bulk: i => E(i).log(2).sub(2).root(1.25).floor().toNumber()+1,
+			effect: i => i+1,
+			effDesc: x => format(x,0)+"x"
+		}, {
+			title: "Astral Superfoundry",
+			desc: `Boost 'Astral Foundry' effect by <b class='green'>+0.1x</b>.`,
+
+			res: "ring",
+			icon: ['Icons/Foundry', 'Icons/StarProgression'],
+
+			max: 15,
+			costOnce: true,
+			cost: i => 150,
+			bulk: i => i/150,
 
 			effect: i => i/10+1,
-			effDesc: x => "^"+format(x,1)
+			effDesc: x => format(x,1)+"x"
 		}, {
-			max: 10,
-
 			title: "Astral Supercharge",
 			desc: `Raise 'Astral Charge' effect by <b class='green'>+^0.1</b>.`,
 
@@ -291,98 +307,81 @@ UPGS.ring = {
 			icon: ['Icons/Charge', 'Icons/StarProgression'],
 
 			max: 10,
-			cost: i => E(3).pow(i**1.25+3),
-			bulk: i => E(i).log(3).sub(3).root(1.25).floor().toNumber()+1,
+			costOnce: true,
+			cost: i => 150,
+			bulk: i => i/150,
 
 			effect: i => i/10+1,
 			effDesc: x => "^"+format(x,1)
 		}, {
 			max: 20,
 
-			title: "Superfoundry",
-			desc: `Raise 'Astral Foundry' effect by <b class='green'>+0.1x</b>.`,
-
-			res: "ring",
-			icon: ['Icons/Foundry', 'Icons/StarProgression'],
-
-			max: 10,
-			cost: i => E(5).pow(i**1.25+3),
-			bulk: i => E(i).log(5).sub(3).root(1.25).floor().toNumber()+1,
-
-			effect: i => i/10+1,
-			effDesc: x => format(x,1)+"x"
-		}, {
-			title: "Basically Normal",
-			desc: `Gain <b class='green'>+1x</b> more Normality Points.`,
-
-			res: "ring",
-			icon: ['Curr/Normality'],
-
-			max: 10,
-			costOnce: true,
-			cost: i => 100,
-			bulk: i => i/100,
-
-			effect: i => i+1,
-			effDesc: x => format(x,0)+"x"
-		}, {
-			title: "Dark and Darker",
-			desc: `Gain <b class='green'>+1x</b> more Dark Matter.`,
+			title: "Astral Superstellar",
+			desc: `Raise 'Astral Stars' by <b class='green'>+^0.05</b>.`,
 
 			res: "ring",
 			icon: ['Curr/DarkMatter'],
 
 			max: 10,
 			costOnce: true,
-			cost: i => 150,
-			bulk: i => i/150,
+			cost: i => 1000,
+			bulk: i => i/1000,
 
-			effect: i => i+1,
-			effDesc: x => format(x,0)+"x"
-		}, {
-			title: "Astral Synergizer",
-			desc: `Astral TP effect is <b class='green'>better</b>.`,
-
-			res: "ring",
-			icon: ['Icons/TP', 'Icons/StarProgression'],
-
-			cost: i => 1e4,
-			bulk: i => 1,
-
-			effect: i => i+1,
-			effDesc: x => format(x,0)+"x"
-		}, {
-			title: "Steel Purifier",
-			desc: `Raise 1st Charger effect by <b class='green'>+^0.2</b>.`,
-
-			res: "ring",
-			icon: ['Curr/Steel', 'Icons/StarProgression'],
-
-			max: 15,
-			cost: i => E(10).pow(i/2.5+4.5),
-			bulk: i => E(i).log(10).sub(4.5).mul(2.5).floor().toNumber()+1,
-
-			effect: i => i/5+1,
-			effDesc: x => "^"+format(x,1)
-		}, {
-			title: "Healing Aid",
-			desc: `Unnatural Healing's max levels is <b class='green'>doubled</b>.`,
-
-			res: "ring",
-			icon: ['Icons/Recelerator', 'Icons/StarProgression'],
-
-			cost: i => 1e9,
-			bulk: i => 1
+			effect: i => i/20+1,
+			effDesc: x => "^"+format(x)
 		}, {
 			title: "Superhealing",
 			desc: `Unnatural Healing greatly boosts <b class='green'>TP</b> in Unnatural Realm.`,
 			unl: _ => player.unRes?.vTimes,
 
 			res: "ring",
-			icon: ['Icons/Recelerator', 'Icons/StarProgression'],
+			icon: ['Icons/TP', 'Icons/StarProgression'],
 
 			cost: i => 1e9,
 			bulk: i => 1
+		}, {
+			title: "Basically Momentum",
+			desc: `Gain <b class='green'>+0.5x</b> more Momentum.`,
+
+			res: "ring",
+			icon: ['Curr/Momentum'],
+			
+			max: 10,
+			costOnce: true,
+			cost: i => 1000,
+			bulk: i => i/1000,
+
+			effect: i => i+1,
+			effDesc: x => format(x,1)+"x"
+		}, {
+			title: "It Does Accelerate The Universe",
+			desc: `Raise Dark Matter by <b class='green'>+^0.05</b>.`,
+
+			res: "ring",
+			icon: ['Curr/DarkMatter'],
+
+			max: 10,
+			costOnce: true,
+			cost: i => E(4).pow(i**1.25),
+			bulk: i => E(i).log(4).root(1.25).floor().toNumber()+1,
+
+			effect: i => i/20+1,
+			effDesc: x => "^"+format(x)
+		}, {
+			title: "Basically Normality",
+			desc: `Gain <b class='green'>+0.5x</b> more Normality Points.`,
+			unl: _ => player.unRes?.vTimes,
+
+			res: "ring",
+			icon: ['Curr/Momentum'],
+			
+			max: 10,
+			costOnce: true,
+			cost: i => 1000,
+			bulk: i => i/1000,
+
+			effect: i => i+1,
+			effDesc: x => format(x,1)+"x"
 		}, {
 			title: "I feel Cloudy...",
 			desc: `Unnatural Healing boosts <b class='green'>Cloud production</b> gain.`,
@@ -393,21 +392,6 @@ UPGS.ring = {
 
 			cost: i => 1e9,
 			bulk: i => 1
-		}, {
-			max: 10,
-
-			title: "Superfundry",
-			desc: `Raise Fundry multipliers by <b class='green'>+^0.1</b>.`,
-
-			res: "ring",
-			icon: ['Icons/Fundry', 'Icons/StarProgression'],
-
-			max: 10,
-			cost: i => E(10).pow((i*5)**1.25),
-			bulk: i => E(i).log(10).root(1.25).div(5).floor().toNumber()+1,
-
-			effect: i => i/10+1,
-			effDesc: x => "^"+format(x,1)
 		}
 	],
 }
@@ -495,6 +479,7 @@ plMAIN.obs = {
 	gain() {
 		let r = E(1)
 		r = r.add(upgEffect('measure', 1, 0))
+		r = r.mul(upgEffect('cloud', 2))
 		if (inFormation("sp")) r = r.mul(3)
 		return r
 	},
@@ -621,23 +606,18 @@ UPGS.obs = {
 			effDesc: x => format(x,1)+"x",
 		}, {
 			title: "Observed Measure",
-			desc: `Increase Measure gain by <b class="green">+1x</b>.`,
+			desc: `Raise Measure by <b class="green">^+0.05</b>.`,
 			unl: _ => player.planetoid?.qTimes,
 
 			res: "obs",
 			icon: ['Curr/Measure'],
 
-			max: 5,
-			costOnce: true,
-			cost: i => 1e6,
-			bulk: i => Math.floor(i/1e6),
+			max: 10,
+			cost: i => E(3).pow(i).mul(1e6),
+			bulk: i => E(i).div(1e6).log(3).floor().toNumber() + 1,
 
-			effect(i) {
-				let x = i+1
-
-				return x
-			},
-			effDesc: x => format(x,0)+"x",
+			effect: i => i/20+1,
+			effDesc: x => "^"+format(x),
 		},
 	],
 }
@@ -894,8 +874,8 @@ plMAIN.reset = {
 	},
 	mGain() {
 		let r = E(1.1).pow(player.planetoid.level - 90).mul(15)
-		r = r.mul(upgEffect('obs', 4))
 		r = r.mul(upgEffect('astro', 3))
+		r = r.pow(upgEffect('obs', 4))
 		return r.floor()
 	},
 }
@@ -953,7 +933,7 @@ UPGS.astro = {
 			res: "astro",
 			icon: ['Curr/Planetarium'],
 
-			max: 20,
+			max: 10,
 			cost: i => Decimal.pow(2,i**1.25).mul(3).ceil(),
 			bulk: i => i.max(1).div(3).log(2).root(1.25).floor().toNumber()+1,
 
@@ -966,8 +946,8 @@ UPGS.astro = {
 
 			res: "astro",
 			icon: ['Icons/Cosmic'],
-			
-			max: 20,
+
+			max: 10,
 			cost: i => Decimal.pow(1.5,i**1.25).mul(3).ceil(),
 			bulk: i => i.max(1).div(3).log(1.5).root(1.25).floor().toNumber()+1,
 
@@ -975,17 +955,17 @@ UPGS.astro = {
 			effDesc: x => "^"+format(x,1)
 		}, {
 			title: "Astro Habitability",
-			desc: `Raise Habitability by <b class="green">^+0.1</b>.`,
+			desc: `Raise Habitability by <b class="green">^+0.05</b>.`,
 
 			res: "astro",
 			icon: ['Icons/Compaction'],
 
 			max: 10,
-			cost: i => Decimal.pow(2,i**1.25).mul(2).ceil(),
-			bulk: i => i.max(1).div(2).log(2).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(20,i**1.25).mul(2).ceil(),
+			bulk: i => i.max(1).div(2).log(20).root(1.25).floor().toNumber()+1,
 
-			effect: i => i/10+1,
-			effDesc: x => "^"+format(x,1)
+			effect: i => i/20+1,
+			effDesc: x => "^"+format(x)
 		}, {
 			title: "Measure",
 			desc: `Gain <b class="green">+1x</b> more Measure.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
@@ -1179,12 +1159,12 @@ el.update.planetoid = _=>{
 	if (mapID == 'dc') updateResetHTML('planetoid_earth')
 
 	if (!on) return
-	if (mapID == 'ring') {
+	if (mapID == "ring") {
 		updateResetHTML('planetoid_exit')
 		updateResetHTML('planetoid_trial')
 		tmp.el.reset_btn_planetoid_trial.setTxt(player.planetoid.started ? "End Early" : "Start")
 
-		updateUpgradesHTML('ring')
+		updateUpgradesHTML("ring")
 		updateUpgradesHTML('obs')
 		updateUpgradesHTML('res')
 	}

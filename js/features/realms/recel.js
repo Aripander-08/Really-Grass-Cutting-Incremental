@@ -89,7 +89,7 @@ UPGS.unGrass = {
 			max: 50,
 
 			title: "Naturalness",
-			desc: `<b class='green'>Raise</b> Astral XP boost to Normal Realm.`,
+			desc: `In Normal Realm, raise Astral XP effect by <b class='green'>^+0.01</b>.`,
 
 			res: "unGrass",
 			icon: ['Icons/XP'],
@@ -97,10 +97,8 @@ UPGS.unGrass = {
 			cost: i => Decimal.pow(1.3,(i+5)**1.25).ceil(),
 			bulk: i => i.log(1.3).root(1.25).sub(5).add(1).floor().toNumber(),
 
-			effect(i) {
-				return i/100+1
-			},
-			effDesc: x => "^"+x,
+			effect: i => i/100+1,
+			effDesc: x => "^"+format(x),
 		}, {
 			max: 10,
 
@@ -121,33 +119,29 @@ UPGS.unGrass = {
 			max: _ => getEffect("uh", "sp", 0),
 
 			title: "Glided Power",
-			desc: `Gain <b class="green">20%</b> more Space Power compounding.`,
+			desc: `<b class="green">Double</b> Space Power.`,
 
 			res: "unGrass",
 			icon: ['Icons/SP', 'Icons/Plus'],
 			
-			cost: i => Decimal.pow(5,i).mul(1e3),
-			bulk: i => i.div(1e3).max(1).log(5).floor().toNumber()+1,
+			cost: i => Decimal.pow(30,i).mul(1e3),
+			bulk: i => i.div(1e3).max(1).log(30).floor().toNumber()+1,
 
-			effect(i) {
-				return E(1.2).pow(i)
-			},
+			effect: i => E(2).pow(i),
 			effDesc: x => format(x)+"x",
 		}, {
 			max: _ => getEffect("uh", "fun", 0),
 
 			title: "Glided Fun",
-			desc: `Gain <b class="green">30%</b> more Fun compounding.`,
+			desc: `<b class="green">Double</b> Fun.`,
 
 			res: "unGrass",
 			icon: ['Curr/Fun', 'Icons/Plus'],
 			
-			cost: i => Decimal.pow(5,i).mul(1e3),
-			bulk: i => i.div(1e3).max(1).log(5).floor().toNumber()+1,
+			cost: i => Decimal.pow(20,i).mul(1e3),
+			bulk: i => i.div(1e3).max(1).log(20).floor().toNumber()+1,
 
-			effect(i) {
-				return E(1.3).pow(i)
-			},
+			effect: i => E(2).pow(i),
 			effDesc: x => format(x)+"x",
 		}
 	],
@@ -161,11 +155,11 @@ EFFECT.uh = {
 	res: _ => upgEffect('momentum', 10, 0) + getAstralEff("uh", 0) + getGSEffect(11, 0),
 	effs: {
 		sp: {
-			eff: x => Math.ceil(x / (hasUpgrade("ring", 8) ? 1.5 : 3)),
+			eff: x => Math.ceil(x / 3),
 			desc: x => `<b style="color: #bf7">${format(x, 0)}</b> max levels for "Gilded Power"`,
 		},
 		fun: {
-			eff: x => Math.ceil(x / (hasUpgrade("ring", 8) ? 1.5 : 3)),
+			eff: x => Math.ceil(x / 3),
 			desc: x => `<b style="color: #bf7">${format(x, 0)}</b> max levels for "Gilded Fun"`,
 		},
 		hb: {
@@ -179,7 +173,7 @@ EFFECT.uh = {
 		},
 		tp: {
 			unl: _ => player.unRes?.nTimes,
-			eff: x => hasUpgrade("ring", 9) ? E(1.3).pow((x + 1) ** 0.8 - 1) : x/2+1,
+			eff: x => hasUpgrade("ring", 5) ? E(1.2).pow((x + 1) ** 0.8 - 1) : x / 2 + 1,
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Tier Points in Unnatural Realm`,
 		},
 		np: {
@@ -188,7 +182,7 @@ EFFECT.uh = {
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Normality Points`,
 		},
 		cl: {
-			unl: _ => hasUpgrade("ring", 10),
+			unl: _ => hasUpgrade("ring", 9),
 			eff: x => Math.max(x/20-1,1),
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Clouds`,
 		}
@@ -262,8 +256,8 @@ unMAIN.np = {
 		r = r.mul(E(1.08).pow(player.gal.astral - 30).max(1))
 		r = r.mul(getEffect("uh", "np"))
 		r = r.mul(upgEffect('momentum', 13))
-		r = r.mul(upgEffect("ring", 4))
 		r = r.mul(upgEffect("cloud", 1))
+		r = r.mul(upgEffect("ring", 8))
 		return r.floor()
 	},
 }
@@ -379,8 +373,8 @@ UPGS.np = {
 			res: "np",
 			icon: ["Curr/Momentum"],
 			
-			cost: i => Decimal.pow(3,i**1.25).mul(150).ceil(),
-			bulk: i => i.div(150).max(1).log(3).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,i**1.25).mul(150).ceil(),
+			bulk: i => i.div(150).max(1).log(5).root(1.25).floor().toNumber()+1,
 
 			effect(i) {
 				return E(2).pow(i)
@@ -426,8 +420,8 @@ unMAIN.vapor = {
 RESET.vapor = {
 	unl: _=>player.decel==2,
 
-	req: _=>player.unRes.level>=100,
-	reqDesc: `Reach Level 100.`,
+	req: _=>player.unRes.level>=90,
+	reqDesc: `Reach Level 90.`,
 
 	resetDesc: `Reset Normality does, and so NP and Tier for Cloud production.`,
 	resetGain: _=> `<b>+${tmp.unRes.clGain.format(0)}</b> Clouds/s`,
@@ -485,10 +479,8 @@ UPGS.cloud = {
 			cost: i => Decimal.pow(3,i).mul(10).ceil(),
 			bulk: i => i.div(10).max(1).log(3).floor().toNumber()+1,
 
-			effect(i) {
-				return i+1
-			},
-			effDesc: x => format(x,1)+"x",
+			effect: i => i+1,
+			effDesc: x => format(x,0)+"x"
 		}, {
 			title: "Cloudy NP",
 			desc: `<b class="green">Double</b> Normality Points.`,
@@ -500,40 +492,34 @@ UPGS.cloud = {
 			cost: i => Decimal.pow(2,i).mul(5).ceil(),
 			bulk: i => i.div(5).max(1).log(2).floor().toNumber()+1,
 
-			effect(i) {
-				return E(2).pow(i)
-			},
-			effDesc: x => format(x,0)+"x",
+			effect: i => E(2).pow(i),
+			effDesc: x => format(x,0)+"x"
 		}, {
-			title: "Cloudy Planetarium",
-			desc: `Gain <b class="green">+1x</b> more Planetarium.`,
+			title: "Cloudy Observatorium",
+			desc: `<b class="green">Double</b> Observatorium.`,
 
 			res: "cloud",
-			icon: ["Curr/Planetarium"],
+			icon: ["Curr/Observatorium"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(2,i).mul(5).ceil(),
-			bulk: i => i.div(5).max(1).log(2).floor().toNumber()+1,
+			cost: i => Decimal.pow(50,i).mul(5).ceil(),
+			bulk: i => i.div(5).max(1).log(50).floor().toNumber()+1,
 
-			effect(i) {
-				return i+1
-			},
-			effDesc: x => format(x,0)+"x",
+			effect: i => E(2).pow(i),
+			effDesc: x => format(x,0)+"x"
 		}, {
 			title: "Cloudy Rings",
-			desc: `Gain <b class="green">+1x</b> more Planetarium.`,
+			desc: `<b class="green">Double</b> Rings.`,
 
 			res: "cloud",
 			icon: ["Curr/Ring"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(2,i).mul(5).ceil(),
-			bulk: i => i.div(5).max(1).log(2).floor().toNumber()+1,
+			cost: i => Decimal.pow(50,i).mul(5).ceil(),
+			bulk: i => i.div(5).max(1).log(50).floor().toNumber()+1,
 
-			effect(i) {
-				return i+1
-			},
-			effDesc: x => format(x,0)+"x",
+			effect: i => E(2).pow(i),
+			effDesc: x => format(x,0)+"x"
 		}
 	],
 }

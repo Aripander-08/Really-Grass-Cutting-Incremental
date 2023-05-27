@@ -11,7 +11,7 @@ MAIN.gal = {
 		r = r.mul(getAstralEff("st"))
 		r = r.mul(upgEffect('moonstone', 3))
 		r = r.mul(upgEffect('sfrgt', 1))
-		r = r.mul(upgEffect('dm', 3))
+		r = r.mul(upgEffect("dm", 3))
 
 		return r
 	}
@@ -102,7 +102,7 @@ tmp_update.push(_=>{
 	if (hasGSMilestone(12)) data.ms.chance *= 2
 	if (hasAGHMilestone(7)) data.ms.chance *= 2
 	data.ms.gain = 1
-	data.ms.gain += upgEffect('dm', 5)
+	data.ms.gain += upgEffect("dm", 5)
 	data.ms.gain *= tmp.cutAmt
 
 	//updateChronoTemp()
@@ -138,6 +138,7 @@ function setupGal() {
 		times: 0,
 
 		astral: 0,
+		astral_pres: 0,
 		sp: E(0),
 		moonstone: E(0),
 		msLuck: 1,
@@ -182,7 +183,7 @@ el.update.space = _=>{
 	}
 	if (mapID == 'sac') {
 		updateResetHTML('sac')
-		updateUpgradesHTML('dm')
+		updateUpgradesHTML("dm")
 	}
 
 	tmp.el.main_app.changeStyle('background-color',inSpace() ? "#fff1" : "#fff2")

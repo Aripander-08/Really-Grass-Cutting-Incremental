@@ -13,7 +13,6 @@ aMAIN.fun = {
 		fd = fd.mul(upgEffect('fundry', 1))
 		fd = fd.mul(upgEffect('fundry', 2))
 		fd = fd.mul(upgEffect('fundry', 3))
-		r = r.mul(fd.pow(upgEffect('ring', 11)))
 
 		return r
 	},
@@ -25,7 +24,7 @@ aMAIN.fun = {
 		r = r.mul(upgEffect('moonstone', 5))
 		r = r.mul(getAstralEff('sf'))
 
-		r = r.pow(upgEffect('dm', 6))
+		r = r.pow(upgEffect("dm", 6))
 
 		return r
 	},

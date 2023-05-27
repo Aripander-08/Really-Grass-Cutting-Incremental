@@ -495,8 +495,9 @@ let ROCKET_PART = {
 	m_gain() {
 		if (!this.upgraded()) return E(1)
 		let r = E(5).pow(player.rocket.part - 1)
-		r = r.mul(upgEffect('dm', 2))
+		r = r.mul(upgEffect("dm", 2))
 		r = r.mul(upgEffect('np', 3))
+		r = r.mul(upgEffect('ring', 7))
 		return r
 	}
 }
@@ -716,20 +717,6 @@ UPGS.momentum = {
 				return i+1
 			},
 			effDesc: x => format(x)+"x",
-		},{
-			title: "It Does Accelerate The Universe",
-			desc: `Raise Dark Matter by <b class='green'>^+0.05</b>.`,
-
-			res: "momentum",
-			icon: ['Curr/DarkMatter'],
-			
-			unl: _ => tmp.rocket_upgraded,
-			cost: i => E(10).pow(i).mul(2e5),
-			bulk: i => E(i).div(2e5).log(10).floor().toNumber()+1,
-			max: 7,
-
-			effect: i => i/20+1,
-			effDesc: x => "^"+format(x),
 		}
 	],
 }

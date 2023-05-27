@@ -70,7 +70,7 @@ MAIN.decel = aMAIN = {
 		x = x.mul(upgEffect('aGrass', 0))
 		x = x.mul(upgEffect('ap', 1))
 		x = x.mul(upgEffect('oil', 5))
-		if (player.decel == 1 && !hasUpgrade('dm', 1)) x = x.div(1e3)
+		if (player.decel == 1 && !hasUpgrade("dm", 1)) x = x.div(1e3)
 		return x
 	},
 }

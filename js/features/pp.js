@@ -166,16 +166,16 @@ UPGS.pp = {
 			unl: _=>hasStarTree("progress", 2),
 
 			title: "Weak TP",
-			desc: `Increase Tier Points (TP) gain by <b class="green">15%</b> compounding per level.`,
+			desc: `Increase Tier Points (TP) gain by <b class="green">20%</b> compounding per level.`,
 
 			res: "pp",
 			icon: ["Icons/TP"],
 
-			cost: i => Decimal.pow(100,i**1.25).mul(1e80).ceil(),
-			bulk: i => i.div(1e80).max(1).log(100).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(50,i**1.25).mul(1e80).ceil(),
+			bulk: i => i.div(1e80).max(1).log(50).root(1.25).floor().toNumber()+1,
 		
 			effect(i) {
-				let x = Decimal.pow(1.15,i)
+				let x = Decimal.pow(1.2,i)
 		
 				return x
 			},

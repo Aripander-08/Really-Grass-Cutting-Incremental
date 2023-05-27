@@ -1,6 +1,6 @@
 const VER = 0.0404
 const EX_COMMIT = 11.08
-const TB_VER = 1.071
+const TB_VER = 1.072
 const TB_SAVE = "rgci_tb_test"
 
 function getPlayerData() {
@@ -169,9 +169,10 @@ function loadPlayer(data) {
 		delete player.aRes?.bestGrass
 		delete player.unRes?.bestGrass
 	}
-	if (player.tb_ver < 1.071 && MAIN.sac.did()) {
+	if (player.tb_ver < 1.072 && MAIN.sac.did()) {
 		player.gal.dm = E(10)
 		resetUpgrades("dm")
+		resetUpgrades("ring")
 		resetUpgrades("res")
 		//RESET.sac.doReset(true)
 	}

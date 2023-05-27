@@ -16,7 +16,7 @@ function calc(dt, skip) {
 		player.unRes.vTime += dt
 
 		if (RESET.np.req()) player.unRes.np = tmp.unRes.npGain.mul(dt * tmp.unRes.npGainP).add(player.unRes.np)
-		if (RESET.vapor.req() && hasUpgrade('res', 8)) player.unRes.cloudProd = tmp.unRes.clGain.mul(0.001).max(player.unRes.cloudProd.max)
+		if (RESET.vapor.req() && hasUpgrade('res', 8)) player.unRes.cloudProd = tmp.unRes.clGain.mul(0.01).max(player.unRes.cloudProd)
 		player.unRes.cloud = player.unRes.cloudProd.mul(dt).add(player.unRes.cloud)
 	}
 	if (tmp.unRes.habit) unMAIN.habit.tick(dt)
