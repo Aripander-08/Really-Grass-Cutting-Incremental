@@ -1,12 +1,12 @@
 MAIN.sac = {
 	dmGain() {
-		let x = player.gal.stars.div(1e6).pow(.25).floor()
+		let x = player.gal.stars.div(1e6).pow(.1)
 
 		x = x.mul(upgEffect('momentum', 11))
 		x = x.mul(upgEffect('moonstone', 7))
 		x = x.mul(upgEffect('np', 2))
-		x = x.pow(upgEffect("ring", 7))
-		return x
+		x = x.pow(upgEffect('ring', 6))
+		return x.floor()
 	},
 	did() {
 		return player?.gal?.sacTimes
@@ -15,7 +15,6 @@ MAIN.sac = {
 
 RESET.sac = {
 	unl: _ => hasAGHMilestone(7),
-
 	req: _ => player.gal.stars.gte(1e9),
 	reqDesc: _ => `Reach ${format(1e9)} stars.`,
 
@@ -75,24 +74,24 @@ UPGS.dm = {
 			title: "Astral Supertier",
 			desc: `Astral TP effect is <b class='green'>better</b>.`,
 
-			res: "ring",
+			res: "dm",
 			icon: ['Icons/TP', 'Icons/StarProgression'],
 
-			cost: i => E(25),
+			cost: i => E(10),
 			bulk: i => 1,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
 		}, {
 			title: "Self-Charge",
-			desc: `Anti-Realm <b class="green">doesn't reduce</b> Charge. Charge bonuses start <b class="green">10x</b> later.`,
+			desc: `Anti-Realm <b class="green">doesn't reduce</b> Charge. Bonuses start <b class="green">10x</b> earlier.`,
 		
 			res: "dm",
 			icon: ["Curr/Charge", "Icons/StarProgression"],
 
-			cost: i => Decimal.pow(10,i).ceil(),
-			bulk: i => i.log(10).floor().toNumber()+1,
 			max: Infinity,
+			cost: i => Decimal.pow(2,i+4).ceil(),
+			bulk: i => i.log(2).sub(4).floor().toNumber()+1,
 
 			effect: i => i,
 			effDesc: x => format(E(10).pow(x))+"x",
@@ -104,8 +103,8 @@ UPGS.dm = {
 			icon: ["Curr/Momentum"],
 
 			unl: _ => tmp.rocket_upgraded,
-			cost: i => Decimal.pow(25,i**1.25+5).ceil(),
-			bulk: i => i.log(25).sub(5).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,i**1.25+3).ceil(),
+			bulk: i => i.log(5).sub(3).root(1.25).floor().toNumber()+1,
 			max: Infinity,
 
 			effect: i => E(2).pow(i),
@@ -117,9 +116,9 @@ UPGS.dm = {
 			res: "dm",
 			icon: ["Curr/Star"],
 
-			cost: i => Decimal.pow(10,i).mul(5),
-			bulk: i => i.div(5).log(10).floor().toNumber()+1,
 			max: Infinity,
+			cost: i => Decimal.pow(5,i).mul(15),
+			bulk: i => i.div(15).log(5).floor().toNumber()+1,
 
 			effect: i => E(2).pow(i),
 			effDesc: x => format(x)+"x",
@@ -130,12 +129,12 @@ UPGS.dm = {
 			res: "dm",
 			icon: ["Icons/SP"],
 
-			cost: i => Decimal.pow(10,i**1.25).mul(5).ceil(),
-			bulk: i => i.div(5).log(10).root(1.25).floor().toNumber()+1,
 			max: 10,
+			cost: i => Decimal.pow(3,i**1.25+3).ceil(),
+			bulk: i => i.log(3).sub(3).root(1.25).floor().toNumber()+1,
 
 			effect: i => i/10+1,
-			effDesc: x => "^"+format(x, 1),
+			effDesc: x => "^"+format(x),
 		}, {
 			title: "Dark Moonstone",
 			desc: `Gain <b class="green">+1x</b> more Moonstone.<br>This is <b class="green">doubled</b> for every <b class="yellow">25</b> levels.`,
@@ -143,8 +142,8 @@ UPGS.dm = {
 			res: "dm",
 			icon: ["Curr/Moonstone"],
 
-			cost: i => Decimal.pow(1.3,i).mul(100).ceil(),
-			bulk: i => i.div(100).log(1.3).floor().toNumber()+1,
+			cost: i => Decimal.pow(1.2,i).mul(100).ceil(),
+			bulk: i => i.div(100).log(1.2).floor().toNumber()+1,
 			max: 1e4,
 		
 			effect: i => 2 ** Math.floor(i/25) * i,

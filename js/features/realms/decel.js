@@ -83,6 +83,7 @@ REALMS.decel = {
 
 		x = x.mul(upgEffect('ap', 0))
 		x = x.mul(upgEffect('oil', 0))
+		x = x.mul(getChargeEff(9))
 		return x
 	},
 	xp() {
@@ -745,73 +746,61 @@ MILESTONE.gs = {
 		{
 			req: 1,
 			desc: `Only in Anti-Realm, <b class="green">3x</b> Grass and XP. Auto-value boosts Platinum.`
-		},
-		{
+		}, {
 			req: 2,
-			desc: `<b class="green">1.2x</b> Space Power per Grass-Skip.`,
-			eff: x => E(1.2).pow(x),
+			desc: `<b class="green">+0.5x</b> Space Power per Grass-Skip.`,
+			eff: x => x / 2 + 1,
 			effDesc: x => format(x) + "x"
-		},
-		{
+		}, {
 			req: 3,
 			desc: `<b class="green">1.4x</b> Stars per Grass-Skip.`,
 			eff: x => E(1.4).pow(x),
 			effDesc: x => format(x) + "x"
-		},
-		{
+		}, {
 			req: 4,
 			desc: `<b class="green">+0.1x</b> Rocket Fuel per Grass-Skip. (starting at 4)`,
 			eff: x => Math.max(x-3,0)/10,
 			effDesc: x => "+" + format(x, 1) + "x"
-		},
-		{
+		}, {
 			req: 5,
 			desc: `<b class="green">+0.01%</b> Moonstone luck on cutting Grass and <b class="green">+5%</b> Moonstone luck on cutting Platinum. Resets on cutting Moonstone.`,
 			eff: _ => galUnlocked() ? player.gal.msLuck : 1,
 			effDesc: x => formatPercent(x-1)
-		},
-		{
+		}, {
 			req: 6,
 			desc: `There's <b class="green">10%</b> chance that next-tier Grass spawns.`
-		},
-		{
+		}, {
 			req: 7,
 			desc: `In Normal Realm: <b class="green">double</b> platinum chance, but moonstone chance is 10x lower.`
-		},
-		{
+		}, {
 			req: 8,
 			desc: `Unlock the Funify reset.`
-		},
-		{
+		}, {
 			unl: _ => player.aRes.fTimes,
 			req: 9,
 			desc: `<b class="green">Double</b> Fun per Grass-Skip. (starting at 9)`,
 			eff: x => E(2).pow(Math.max(x - 8, 0)),
 			effDesc: x => format(x, 0) + "x"
-		},
-		{
+		}, {
 			unl: _ => player.aRes.fTimes,
 			req: 10,
 			desc: `12 GH Milestone is uncapped.`
-		},
-		{
+		}, {
 			unl: _ => player.aRes.fTimes,
 			req: 12,
 			desc: `<b class="green">+1x</b> SRFGT per Grass-Skip. (starting at 12)`,
 			eff: x => Math.max(x - 10, 1),
 			effDesc: x => format(x, 0) + "x"
-		},
-		{
-			unl: _ => player.unRes,
+		}, {
+			unl: _ => player.aRes.fTimes,
 			req: 13,
-			desc: `<b class="green">+1</b> to Unnatural Healing per Grass-Skip. (starting at 13)`,
-			eff: x => Math.max(x - 12, 0),
-			effDesc: x => "+" + format(x, 0)
-		},
-		{
-			unl: _ => player.unRes,
-			req: 14,
 			desc: `<b class="green">Double</b> Moonstone chance.`
+		}, {
+			unl: _ => hasUpgrade("funMachine", 3),
+			req: 14,
+			desc: `<b class="green">+1</b> Unnatural Healing per Grass-Skip. (starting at 14)`,
+			eff: x => Math.max(x - 13, 1),
+			effDesc: x => "+" + format(x, 0)
 		},
 	],
 }

@@ -18,7 +18,6 @@ body {
     color: white;
     background-color: #0052af;
 	overflow: hidden;
-	font-size: 18px;
 	margin: 0px;
 	user-select: none;
 }
@@ -34,17 +33,17 @@ table, tr {
 
 h1 {
     display: inline;
-    font-size: 40px;
+    font-size: 30px;
 }
 
 h2 {
 	display: inline;
-    font-size: 30px;
+    font-size: 25px;
 }
 
 h3 {
 	display: inline;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 a {
@@ -53,7 +52,7 @@ a {
 
 button {
     margin: 2px;
-    font-size: 18px;
+    font-size: 15px;
     border: solid 3px #0003;
     background-color: #dddd;
     color: white;
@@ -127,6 +126,13 @@ button * {
 	font-size: 36px
 }
 
+#offline {
+	position: absolute;
+	top: 0;
+	right: 0;
+	opacity: 0.5
+}
+
 #main_app {
     position: absolute;
     top: 50%;
@@ -178,14 +184,17 @@ button * {
 	margin: 0;
 	padding: 0;
 	width: 120px;
-	height: 120px;
+	height: 90px;
 	font-size: 16px
+}
+.map_div button.dim {
+	border-radius: 50%;
 }
 .map_pin {
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 36px !important;
+	height: 30px !important;
 	width: 72px !important
 }
 .notify,
@@ -414,13 +423,6 @@ button * {
     background-color: #c5c5c5;
 }
 
-.reset_div.time,
-.reset_div.warp,
-.upg_desc.chrono,
-.upgs_div.chrono {
-    background-color: #30f;
-}
-
 .reset_div.decel,
 .reset_req.decel,
 .upg_desc.aGrass,
@@ -628,7 +630,7 @@ button * {
     height: 100%;
     background-color: #c5c5c5;
     top: 0;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 .yellow {
@@ -682,7 +684,7 @@ button * {
     position: absolute;
     width: 100%;
     height: 100%;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 .reset_req {
@@ -884,71 +886,6 @@ button * {
     background-color: #000b;
     padding: 5px 0;
     margin-bottom: 3px;
-    font-size: 16px;
-}
-
-#stats_div {
-    border: solid 4px black;
-    padding: 10px;
-    width: calc(100% - 28px);
-    height: calc(100% - 28px);
-    background-color: #222;
-
-    overflow-y: auto;
-}
-
-#stats_tab_div {
-    width: calc(100% - 10px);
-    padding: 5px;
-    background-color: #333;
-    height: 150px;
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    display: flex;
-    justify-content: start;
-
-    border-radius: 10px;
-}
-
-.stats_tab_btn {
-    min-width: 200px;
-    height: calc(100%-15px);
-
-    border-radius: 10px;
-    border: solid 3px black;
-    background-color: #222;
-    flex-shrink: 0;
-
-    margin: 5px;
-    padding: 5px;
-
-    cursor: pointer;
-}
-
-.stats_tab_btn:hover {
-    background-color: #333;
-}
-
-.stats_tab_btn > img {
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    background-color: #fff1;
-    margin-bottom: 3px;
-
-    pointer-events: none;
-}
-
-.stats_tab_btn > div {
-    font-size: 20px;
-}
-
-#stats_desc_div {
-    min-height: 400px;
-}
-
-#stats_desc {
     font-size: 16px;
 }
 

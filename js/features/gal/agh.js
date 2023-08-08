@@ -43,7 +43,7 @@ MILESTONE.agh = {
 			desc: `Astral boosts SFRGT.`,
 		}, {
 			unl: _ => player.aRes.fTimes,
-			req: 30,
+			req: 27,
 			desc: `Unlock the Dark Matter Plant reset. Moonstone chance is doubled.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
@@ -52,12 +52,11 @@ MILESTONE.agh = {
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
 			req: 36,
-			desc: `Astral boosts Grass.`,
+			desc: `Astral multiplies effects for each 25 levels of AP upgrade.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
-
 			req: 39,
-			desc: `Astral multiplies effects for each 25 levels of AP upgrade.`,
+			desc: `Astral boosts Grass.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
 			req: 45,

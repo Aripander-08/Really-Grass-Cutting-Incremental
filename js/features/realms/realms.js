@@ -45,7 +45,6 @@ let REALMS = {
 		grass() {
 			let x = E(1)
 			x = x.mul(chalEff(0))
-			x = x.mul(getChargeEff(9))
 			x = x.mul(upgEffect('rocket',0))
 			x = x.mul(upgEffect('rocket',17))
 			if (hasUpgrade('momentum', 0)) x = x.mul(3)

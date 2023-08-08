@@ -59,7 +59,7 @@ const MAIN = {
 		base(realm = player.decel) {
 			let x = realm ? 2.25 : upgEffect('crystal', 3, 2.25)
 			if (player.grasshop >= 5) x += 0.1
-			x += getChargeEff(4, 0)
+			if (realm < 2) x += getChargeEff(4, 0)
 			return x
 		},
 		mult(i, realm = player.decel) {
@@ -74,8 +74,10 @@ const MAIN = {
 }
 
 el.update.main = _=>{
-	let g = tmp.realm.src.grass
+	tmp.el.offline.setDisplay(CHEAT || tmp.offline > 0)
+	tmp.el.offline.setTxt(CHEAT ? `Dev Mode` : `Offline: ${formatTime(tmp.offline)} left`)
 
+	let g = tmp.realm.src.grass
 	tmp.el.grassAmt.setHTML(g.format(0))
 	tmp.el.grassGain.setHTML(tmp.autoCutUnlocked ? formatGain(g,tmp.grassGain.div(tmp.autocut).mul(tmp.autocutBonus).mul(tmp.autocutAmt)) : "")
 
@@ -114,20 +116,16 @@ el.update.main = _=>{
 }
 
 tmp_update.push(_=>{
+	tmp.grassGain = MAIN.grass.gain()
 	tmp.grassCap = MAIN.grass.cap()
 	tmp.grassSpawn = MAIN.grass.spawn()
 	tmp.rangeCut = MAIN.grass.range()
-	tmp.autocut = MAIN.grass.auto()
-
-	tmp.autoCutUnlocked = hasUpgrade('auto',0)
-
-	tmp.autocutBonus = upgEffect('auto',1)
-	tmp.autocutAmt = 1+upgEffect('auto',2,0)
 	tmp.spawnAmt = 1+upgEffect('perk',5,0)+upgEffect('crystal',5,0)
 
-	tmp.grassGain = MAIN.grass.gain()
-
-	tmp.perks = MAIN.level.perk()
+	tmp.autocut = MAIN.grass.auto()
+	tmp.autoCutUnlocked = hasUpgrade('auto',0)
+	tmp.autocutBonus = upgEffect('auto',1)
+	tmp.autocutAmt = 1+upgEffect('auto',2,0)
 
 	let lvl = tmp.realm.src.level
 	tmp.level.gain = MAIN.level.gain()
@@ -136,6 +134,7 @@ tmp_update.push(_=>{
 	tmp.level.cur = MAIN.level.cur(lvl)
 	tmp.level.progress = tmp.realm.src.xp.sub(tmp.level.cur).max(0).min(tmp.level.next)
 	tmp.level.percent = tmp.level.progress.div(tmp.level.next.sub(tmp.level.cur)).max(0).min(1).toNumber()
+	tmp.perks = MAIN.level.perk()
 
 	let tier = tmp.realm.src.tier
 	if (tier !== undefined) {
@@ -204,3 +203,6 @@ window.addEventListener('keyup', function(event) {
 		shiftDown = false;
 	}
 }, false);
+
+//CHEATING
+let CHEAT = false

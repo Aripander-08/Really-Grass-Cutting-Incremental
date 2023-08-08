@@ -1,6 +1,6 @@
 const VER = 0.0404
 const EX_COMMIT = 11.08
-const TB_VER = 1.072
+const TB_VER = 1.073
 const TB_SAVE = "rgci_tb_test"
 
 function getPlayerData() {
@@ -13,7 +13,6 @@ function getPlayerData() {
 
 		time: 0,
 		lastTick: Date.now(),
-		ch: MAIN.chrono.setup(),
 
 		map_notify: {},
 		options: {},
@@ -77,11 +76,6 @@ function getPlayerData() {
 		map_notify: {},
 		version: VER,
 	}
-	for (let x in UPGS) {
-		s.upgs[x] = []
-		s.autoUpg[x] = false
-	}
-	for (let x in UPGS) s.upgs[x] = []
 	return s
 }
 
@@ -122,6 +116,12 @@ function loadPlayer(data) {
 	player.version = VER
 
 	//Thunderized Balancing
+	for (var [i, d] of Object.entries(player.upgs)) {
+		let canDelete = true
+		for (var l of d) if (l) canDelete = false
+		if (canDelete) delete player.upgs[i]
+	}
+
 	if (preTB) {
 		player.tb_ver = 1
 		player.tp = E(0)
@@ -169,9 +169,11 @@ function loadPlayer(data) {
 		delete player.aRes?.bestGrass
 		delete player.unRes?.bestGrass
 	}
-	if (player.tb_ver < 1.072 && MAIN.sac.did()) {
+	if (player.tb_ver < 1.073 && MAIN.sac.did()) {
 		player.gal.dm = E(10)
 		resetUpgrades("dm")
+		resetUpgrades("unGrass")
+		resetUpgrades("np")
 		resetUpgrades("ring")
 		resetUpgrades("res")
 		//RESET.sac.doReset(true)
@@ -230,7 +232,9 @@ function save() {
 
 function resetSaveInterval() {
 	clearInterval = saveInterval
-	saveInterval = setInterval(save, 30000)
+	saveInterval = setInterval(function() {
+		if (!CHEAT) save()
+	}, 30000)
 }
 
 function load(str) {
@@ -245,7 +249,7 @@ function load(str) {
 	for (let x = 0; x < 50; x++) updateTemp()
 
 	let now = Date.now()
-	if (MAIN.chrono.unl()) player.ch.offline += (now - player.lastTick) / 1e4
+	if (player.lastTick > 0) tmp.offline = (now - player.lastTick) / 1e3
 	player.lastTick = now
 }
 

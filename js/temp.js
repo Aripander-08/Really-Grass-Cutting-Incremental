@@ -44,19 +44,7 @@ function resetTemp() {
 		unRes: {
 			gj: {}
 		},
-		plRes: {},
-
-		gSpeed: 1,
-		gJump: 0,
-
-        /*total_astral: 0,
-        cosmicLevel: {
-
-        },
-
-        lunar_eff: [],
-        lunar_next: [],
-        lunar_max_active: 3,*/
+		plRes: {}
 	}
 
 	for (let x in UPG_RES) tmp.upg_res[x] = E(0)

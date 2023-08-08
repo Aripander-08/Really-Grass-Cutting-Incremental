@@ -24,7 +24,7 @@ RESET.gal = {
 	req: _=>player.rocket.part>=RESET.gal.part_req(),
 	reqDesc: _=>`Get ${RESET.gal.part_req()} Rocket Parts to unlock.`,
 
-	resetDesc: `Reset <b class="red">EVERYTHING prior</b> except Refinery and Chronology! Last chance before blast-off...`,
+	resetDesc: `Reset <b class="red">EVERYTHING prior</b> except Refinery! Last chance before blast-off...`,
 	resetGain: _=> galUnlocked() ? `<b>+${tmp.gal.star_gain.format(0)}</b> Stars<br><b class='red'>Max Star Accumulator first!</b>` : `<b class='cyan'>Also unlock Grass-Skips, Star Accumulator upgrade, and Astral!</b>`,
 
 	title: `Galactic`,
@@ -99,13 +99,12 @@ tmp_update.push(_=>{
 	data.ms.chance = 1/200
 	if (hasGSMilestone(5)) data.ms.chance *= player.gal.msLuck
 	if (hasGSMilestone(6) && !player.decel) data.ms.chance /= 10
-	if (hasGSMilestone(12)) data.ms.chance *= 2
+	if (hasGSMilestone(11)) data.ms.chance *= 2
 	if (hasAGHMilestone(7)) data.ms.chance *= 2
 	data.ms.gain = 1
 	data.ms.gain += upgEffect("dm", 5)
 	data.ms.gain *= tmp.cutAmt
 
-	//updateChronoTemp()
 	updateSCTemp()
 })
 

@@ -15,9 +15,7 @@ el.update.astral = _=>{
 			tmp.el.astral_cut.setTxt("+"+tmp.gal.astral.gain.format(1)+" SP/cut")
 		}
 	}
-	if (mapID == 'at') {
-		updateEffectHTML('astral')
-	}
+	if (mapID == 'at') updateEffectHTML('astral')
 }
 
 const ASTRAL = {
@@ -33,18 +31,20 @@ const ASTRAL = {
 		r = r.mul(upgEffect('sfrgt', 2))
 		r = r.mul(upgEffect("unGrass", 3))
 
+		if (player.gal.astral_pres) r = r.root(tmp.gal.astral.scale).div(E(10).pow(player.gal.astral_pres))
+
 		return r
 	},
 
 	req(lvl) {
 		if (!galUnlocked()) return EINF
 		if (lvl < 0) return 0
-		return E(2).pow((lvl ?? player.gal.astral) * tmp.gal.astral.scale).mul(1e3)
+		return E(2).pow(lvl ?? player.gal.astral).mul(1e3)
 	},
 	bulk() {
 		if (!galUnlocked()) return 0
 		if (player.gal.sp.lt(1e3)) return 0
-		return player.gal.sp.div(1e3).log(2).div(tmp.gal.astral.scale).floor().toNumber() + 1
+		return player.gal.sp.div(1e3).log(2).floor().toNumber() + 1
 	},
 
 	title() {
@@ -59,8 +59,8 @@ EFFECT.astral = {
 	res: _ => tmp.gal?.astral?.total,
 	effs: {
 		gr: {
-			unl: _ => hasAGHMilestone(9),
-			eff: a => E(1.2).pow(a - 40).max(1),
+			unl: _ => hasAGHMilestone(10),
+			eff: a => E(1.2).pow(a - 30).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Grass`
 		},
 		xp: {
@@ -70,22 +70,22 @@ EFFECT.astral = {
 		},
 		tp: {
 			unl: _ => true,
-			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow((a + 1) ** 0.8) : a + 1,
+			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow(a ** 0.8) : a + 1,
 			desc: x => `<b class="magenta">${format(x)}x</b> to TP`
 		},
 		fd: {
 			unl: _ => true,
-			eff: a => (a / 50 + 1) * upgEffect("ring", 2),
+			eff: a => (a / 50 + 1) * upgEffect('ring', 2),
 			desc: x => `<b class="magenta">^${format(x)}</b> to Foundry effect`
 		},
 		ch: {
 			unl: _ => hasAGHMilestone(3),
-			eff: a => E(2).pow((a / 3 - 3) * upgEffect("ring", 3)).max(1),
+			eff: a => E(2).pow((a / 3 - 3) * upgEffect('ring', 3)).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Charge`
 		},
 		ap: {
-			unl: _ => hasAGHMilestone(10),
-			eff: a => 1+Math.min(a / 250, 1),
+			unl: _ => hasAGHMilestone(9),
+			eff: a => 1 + Math.min(a / 200, 1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to AP per-25 multipliers`
 		},
 		rf: {
@@ -95,7 +95,7 @@ EFFECT.astral = {
 		},
 		st: {
 			unl: _ => hasAGHMilestone(1),
-			eff: a => E(2).pow(a / 5 * upgEffect("ring", 4)),
+			eff: a => E(2).pow(a / 5 - 2).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Stars`
 		},
 		fu: {
@@ -105,12 +105,12 @@ EFFECT.astral = {
 		},
 		sf: {
 			unl: _ => hasAGHMilestone(6),
-			eff: a => E(1.2).pow(a - 12).max(1),
+			eff: a => E(1.2).pow(a - 16).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to SFRGT`
 		},
 		uh: {
 			unl: _ => hasAGHMilestone(8),
-			eff: a => Math.floor(Math.max(a / 5 - 5,0)),
+			eff: a => Math.floor(Math.max(a / 3 - 8, 0)),
 			desc: x => `<b class="magenta">+${format(x,0)}</b> to Unnatural Healing`
 		},
 		rg: {

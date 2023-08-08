@@ -40,7 +40,7 @@ RESET.steel = {
 	reqDesc: _ => inDecel() ? `You can't Steelie!` : `Reach Level 240.`,
 
 	resetDesc: `Reset everything grasshop does, but it benefits from the milestones for grasshop.`,
-	resetGain: _=> player.sTimes ? `<b>+${tmp.steelGain.format(0)}</b> Steel` : `<b class='cyan'>Also unlock Chronology and Pins!</b>`,
+	resetGain: _=> player.sTimes ? `<b>+${tmp.steelGain.format(0)}</b> Steel` : `<b class='cyan'>Also unlock Pins!</b>`,
 
 	title: `Steelie`,
 	resetBtn: `Steelie!`,
@@ -566,9 +566,7 @@ tmp_update.push(_=>{
 el.update.factory = _=>{
 	if (mapID == "fd") {
 		let unl = MAIN.charger.unl()
-
 		tmp.el.charger_div.setDisplay(unl)
-
 		if (unl) {
 			tmp.el.charge_upper.setHTML("<b class='yellow'>Temp. Charge:</b> "+player.chargeRate.format(0)+" <span class='smallAmt'>"+player.chargeRate.formatGain(tmp.charge.gain)+"</span>")
 			tmp.el.charge_under.setHTML("<b class='yellow'>Best Charge:</b> "+player.bestCharge.format(0))
@@ -580,17 +578,16 @@ el.update.factory = _=>{
 MAIN.charger = {
 	unl: _ => hasUpgrade("factory", 2),
 	gain() {
+		if (inRecel()) return E(0)
+
 		let x = E(1)
-		if (!inRecel()) {
-			x = E(upgEffect('factory',2)).mul(upgEffect('factory',3)).mul(upgEffect('factory',4))
-			x = x.mul(upgEffect('gen',2)).mul(upgEffect('gen',3))
-			x = x.mul(upgEffect('plat',7))
-			x = x.mul(getGHEffect(9, 1))
-			x = x.mul(chalEff(7))
+		x = E(upgEffect('factory',2)).mul(upgEffect('factory',3)).mul(upgEffect('factory',4))
+		x = x.mul(upgEffect('gen',2)).mul(upgEffect('gen',3))
+		x = x.mul(upgEffect('plat',7))
+		x = x.mul(getGHEffect(9, 1))
+		x = x.mul(chalEff(7))
 
-			x = x.mul(aMAIN.chargeGain())
-		}
-
+		x = x.mul(aMAIN.chargeGain())
 		x = x.mul(upgEffect('rocket',6))
 		x = x.mul(upgEffect('rocket',13))
 		x = x.mul(upgEffect('rocket',19))
@@ -628,13 +625,13 @@ EFFECT.charger = {
 			desc: x => "Each Tier gives "+format(x)+"x more PP.",
 		},{
 			req: E(1e6),
-			eff: c => E(1).sub(E(1).div(c.add(1).log10().div(20).add(1))).toNumber(),
+			eff: c => c.add(1).log10().div(50).min(1).toNumber(),
 			desc: x => "Strengthen Grass Upgrade's 'PP' by +"+format(x)+"x.",
 		},{
 			unl: _ => hasUpgrade("factory", 4) || galUnlocked(),
 
 			req: E(1e9),
-			eff: c => E(2).sub(E(1).div(c.add(1).log10().div(15).add(1))).min(1.5).toNumber(),
+			eff: c => c.add(1).log10().div(50).add(1).min(1.5).toNumber(),
 			desc: x => "Gain " + format(x) + "x Levels in Anti-Realm.",
 		},{
 			unl: _ => hasUpgrade("factory", 4) || galUnlocked(),
@@ -667,13 +664,6 @@ EFFECT.charger = {
 			offsetOoM: 30,
 			eff: c => c.add(1).log10().div(15).pow10(),
 			desc: x => "Gain more "+format(x,3)+"x Fun.",
-		},{
-			unl: _ => hasUpgrade("funMachine", 2),
-
-			req: E(1e48),
-			offsetOoM: 36,
-			eff: c => c.add(1).log10().div(3).pow10(),
-			desc: x => "Gain more "+format(x,3)+"x Grass.",
 		}
 	],
 }

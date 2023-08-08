@@ -31,7 +31,6 @@
 	<script src="js/features/milestones.js"></script>
 	<script src="js/features/gh.js"></script>
 	<script src="js/features/effects.js"></script>
-	<script src="js/features/chrono.js"></script>
 
 	<script src="js/features/steelie/steelie.js"></script>
 	<script src="js/features/steelie/rocket.js"></script>
@@ -60,6 +59,7 @@
 	<div id="planet_bg" style="display: none"></div>
 	<div id="fog" style="display: none"></div>
 	<div id="app">
+		<div id="offline"></div>
 		<div class="table_space">
 			<div id="grass_div" style="margin: 10px;">
 				<div class="table_between">
@@ -69,7 +69,8 @@
 					</div>
 				</div>
 			</div>
-		</div><div class="table_space">
+		</div>
+		<div class="table_space">
 			<div id="level" style="margin: 10px;">
 				<div id="level_top_bar"></div>
 				<div id="level_top_info"></div>
@@ -126,32 +127,25 @@
 				</div>
 			</div><div id="map_div_opt">
 				<button onclick="save()">Save</button>
+				<button onclick="exporty()">Save to File</button>
 				<button onclick="importy()">Import</button>
 				<button onclick="export_copy()">Export</button>
-				<button onclick="exporty()">Download</button>
 				<button id="wipeBtn" onclick="wipe()">Hard Reset</button><br>
 				<button id="sciBtn" onclick="toggleOption('scientific')">Scientific: <span id="scientific"></span></button>
-				<button id="hideCapBtn" onclick="toggleLowGrass()">Grass cap: <span id="capOpt">Unlimited</span></button>
-				<button id="hideMaxBtn" onclick="toggleOption('hideUpgOption')">Hide max: <span id="hideMax"></span></button>
+				<button id="hideCapBtn" onclick="toggleLowGrass()">Grass Cap: <span id="capOpt">Unlimited</span></button>
+				<button id="hideMaxBtn" onclick="toggleOption('hideUpgOption')">Maxed: <span id="hideMax"></span></button>
 				<button id="hideMilestoneBtn" onclick="toggleOption('hideMilestone')">Milestones: <span id="hideMilestone"></span></button><br><br>
 
-				<b style="color: #ffffbf">RGCI: Thunderized Balance</b> - <a href="http://aarextiaokhiao.github.io">By TehAarex</a><br>
-				<span style="font-size: 16px">
-					Version β4c α5
-				</span><br>
-				<span style="font-size: 12px">
-					Inspired by <a href="http://www.roblox.com/games/9292879820">Grass Cutting Incremental</a>,
-					Built on <a href="http://aarextiaokhiao.github.io/Really-Grass-Cutting-Incremental/">RGCI: Extension</a>,
-					Original by <a href="http://mrredshark77.github.io/Really-Grass-Cutting-Incremental/">MrRedShark77</a>
-				</span><br><br>
+				<b style="color: #ffffbf">RGCI: Thunderized Balance</b> - <a href="http://aarextiaokhiao.github.io">By Aarex</a> - β4c α5<br>
+				<span style="font-size: 12px">(Built on <a href="http://mrredshark77.github.io/Really-Grass-Cutting-Incremental/">RGCI</a> and <a href="http://aarextiaokhiao.github.io/Really-Grass-Cutting-Incremental/">RGCI: Extension</a>)</span>
+				<br><br>
 
 				<button onclick="window.open('http://aarextiaokhiao.github.io/chat.html')">Discord</button>
 				<button onclick="window.open('http://discord.gg/Ekp8FsSwzR')">RGCI Discord</button>
-				<button onclick="window.open('http://aarextiaokhiao.github.io')">Home</button><br><br>
+				<br><br>
 
-				<b class="red">Recommended size is 1920x1080! You may change zoom!</b><br>
-				Hint: Use arrow keys / WASD to move through the map. Hold shift to quick upgrade.<br>
-				Endgame: ???<br>
+				<b class="red">Recommended size is 1920x1080!</b><br>
+				Hint: Hold shift to quick upgrade.
 			</div><div id="map_div_time">
 				<span id="time"></span><br><br>
 				<h1>Reset Layers</h1>
@@ -302,22 +296,6 @@
 					</div></div>
 				</div>
 				<div style="width: 100%; height: 50%;"><div id="upgs_div_star"></div></div>
-			</div><div id="map_div_chrono">
-				<div id="chrono_unl">
-					Steelie once to unlock.
-				</div><div id="chrono_div">
-					<div style="width: 100%; height: 50%;" class="table_center">
-						<div style="width: 33%; height: 100%;">
-							<h2>Next Chrona:</h2><br>
-							<b id="chrona_plat">??? Platinum</b><br>
-							<b id="chrona_moon">??? Moonstone</b>
-						</div>
-						<div style="width: 34%; height: 100%;"><div id="reset_div_time"></div></div>
-						<div style="width: 33%; height: 100%;"><div id="reset_div_warp"></div></div>
-					</div><div style="width: 100%; height: 50%;" class="table_center">
-						<div id="upgs_div_chrono"></div>
-					</div>
-				</div>
 			</div><div id="map_div_sc" style="position: relative;">
 				<div id="star_chart_div">
 					<div id="star_chart_table"></div>
@@ -376,7 +354,6 @@
                     <div style="width: 67%; height: 100%;"><div id="upgs_div_measure" style="display: none;"></div></div>
                 </div>
             </div><div id="map_div_trial">
-                <span id='trial_req'>Use the Quadrant to unlock.</span>
 				<div id="mil_div_pt"></div>
             </div><div id="map_div_ap">
                 <div style="width: 100%; height: 100%;" class="table_center">
@@ -411,7 +388,6 @@
 		</div>
 		<div id="map_div">
 			<span id="map_div_inner"></span>
-			<button id="spaceButton" onclick="goToSpace()"></button>
 			<button onclick="go_to = ''">Close</button>
 		</div>
 		<div id="pin_div">

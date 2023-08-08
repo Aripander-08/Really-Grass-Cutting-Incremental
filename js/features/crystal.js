@@ -16,7 +16,7 @@ MAIN.crystal = {
 }
 
 RESET.crystal = {
-	unl: _=>player.pTimes>0 && player.decel == 0,
+	unl: _=>player.pTimes > 0 && player.decel == 0,
 
 	req: _=>player.level>=90,
 	reqDesc: `Reach Level 90.`,

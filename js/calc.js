@@ -1,14 +1,14 @@
-function calc(dt, skip) {
-	//CHRONOLOGY
-	if (MAIN.chrono.unl() && !skip) {
-		MAIN.chrono.tick(dt)
-		dt *= player.ch.speed
+function calc(dt) {
+	if (tmp.offline > 0) {
+		let dt_add = Math.min(Math.max(tmp.offline / 50, dt), tmp.offline)
+		tmp.offline -= dt_add
+		dt += dt_add
 	}
 	player.time += dt
 
 	//GALACTIC
 	if (galUnlocked()) galTick(dt)
-	if (player.planetoid?.started) planetoidTick(dt)
+	if (player.planetoid?.started && !player.planetoid?.pause) planetoidTick(dt)
 
 	//UNNATURAL REALM
 	if (player.unRes) {
@@ -69,33 +69,26 @@ function calc(dt, skip) {
 	}
 
 	//START
-	let grass = tmp.grasses
-	if (tmp.grassSpawn < 1/0) {
-		tmp.spawn_time += dt
-		tmp.autocutTime += dt
-		if (tmp.spawn_time >= tmp.grassSpawn) {
-			while (tmp.spawn_time >= tmp.grassSpawn) {
-				tmp.spawn_time -= tmp.grassSpawn
-				for (let i=0;i<tmp.spawnAmt;i++) createGrass()
-			}
-			tmp.spawn_time = 0
-		}
-	}
+	tmp.spawn_time += dt
+	tmp.autocutTime += dt
 
-	if (tmp.autocutTime >= tmp.autocut && tmp.grasses.length > 0 && hasUpgrade('auto',0)) {
-		while (tmp.autocutTime >= tmp.autocut) {
-			tmp.autocutTime -= tmp.autocut
-			for (let i = 0; i < tmp.autocutAmt; i++) {
-				let r = randint(0, grass.length-1)
-				let g = grass[r]
-				if (g && !g.habit) removeGrass(r,true)
-			}
-		}
-		tmp.autocutTime = 0
+	let auto_spawn = Math.floor(tmp.spawn_time / tmp.grassSpawn)
+	let auto_cut = Math.floor(tmp.autocutTime / tmp.autocut)
+
+	tmp.spawn_time -= auto_spawn * tmp.grassSpawn
+	tmp.autocutTime -= auto_cut * tmp.autocut
+	auto_spawn *= tmp.spawnAmt
+	auto_cut *= tmp.autocutAmt
+
+	let grass = tmp.grasses
+	for (let i = 0; i < Math.min(auto_spawn, 100); i++) createGrass()
+	for (let i = 0; i < Math.min(auto_cut, 100); i++) {
+		let r = randint(0, grass.length-1)
+		let g = grass[r]
+		if (g && !g.habit) removeGrass(r, Math.max(auto_cut / 100, 1))
 	}
 
 	for (const i of tmp.realm.in) MAIN.levelUp(i)
-
 	for (let x in UPGS) if (tmp.upgs[x].autoUnl && player.autoUpg[x]) buyAllUpgrades(x,true)
 	player.maxPerk = Math.max(player.maxPerk, tmp.perks)
 }

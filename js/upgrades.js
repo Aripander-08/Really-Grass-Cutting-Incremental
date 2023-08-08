@@ -8,7 +8,6 @@ const UPG_RES = {
 	plat: ["Platinum",_=>[player,"plat"],"PlatBase",'Curr/Platinum'],
 	crystal: ["Crystals",_=>[player,"crystal"],"CrystalBase",'Curr/Crystal'],
 	steel: ["Steel",_=>[player,"steel"],"GrasshopBase",'Curr/Steel'],
-	chrona: ["Chrona",_=>[player.ch,"chrona","spent"],'ChronoBase','Curr/Chrona'],
 	aGrass: ["Anti-Grass",_=>[player.aRes,"grass"],'AntiGrassBase','Curr/Grass'],
 	ap: ["AP",_=>[player.aRes,"ap"],'AnonymityBase','Curr/Anonymity'],
 	oil: ["Oil",_=>[player.aRes,"oil"],'LiquefyBase','Curr/Oil'],
@@ -195,7 +194,7 @@ const UPGS = {
 				costOnce: true,
 
 				title: "Cap Perk",
-				desc: `Increase grass cap by <b class="green">=20</b> per level.`,
+				desc: `Increase grass cap by <b class="green">+20</b> per level.`,
 
 				res: "perk",
 				icon: ['Icons/MoreGrass'],
@@ -784,10 +783,10 @@ function buyUpgrade(id, x, type = "once", amt) {
 	//Upgrade Data
 	let tu = tmp.upgs[id]
 	let upg = UPGS[id].ctn[x]
-	let upgData = player.upgs[id]
+	let upgData = player.upgs[id] ?? []
 
 	//Determine Levels
-	let lvl = upgData[x] || 0
+	let lvl = upgData[x] ?? 0
 	let bulk = amt ? getUpgradeBulk(id, x, amt) : tu.bulk[x]
 	if (type == "next") bulk = Math.min(bulk, Math.ceil((lvl + 1) / 25) * 25)
 
@@ -814,6 +813,7 @@ function buyUpgrade(id, x, type = "once", amt) {
 	}
 
 	upgData[x] = bulk
+	player.upgs[id] = upgData
 	updateUpgTemp(id)
 }
 
@@ -842,7 +842,7 @@ function getUpgradeBulk(id, x, amt) {
 	let res = amt || getUpgradeResource(id, x)
 
 	let lvl = 0
-	let min = player.upgs[id][x] || 0
+	let min = getUpgradeLvl(id, x)
 	if (upg.costOnce) lvl = Math.floor(res / tu.cost[x]) + min
 	else if (E(res).gte(tu.cost[x])) lvl = upg.bulk(E(res))
 	else lvl = min
@@ -861,7 +861,7 @@ function updateUpgTemp(id) {
 		let upg = uc[x]
 		if (!compute(upg.unl, true)) continue
 
-		let amt = player.upgs[id][x]||0
+		let amt = getUpgradeLvl(id, x)
 		let res = tmp.upg_res[upg.res]
 
 		tu.max[x] = compute(upg.max, 1)
@@ -874,6 +874,7 @@ function updateUpgTemp(id) {
 	if (upgs.cannotBuy) tu.cannotBuy = upgs.cannotBuy()
 	if (upgs.noSpend) tu.noSpend = upgs.noSpend()
 	if (upgs.autoUnl) tu.autoUnl = upgs.autoUnl()
+	if (CHEAT) tu.noSpend = tu.autoUnl = true
 	tu.unlLength = ul
 }
 
@@ -958,7 +959,7 @@ function updateUpgradesHTML(id) {
 			if (ch > -1) {
 				let upg = UPGS[id].ctn[ch]
 				let max = tu.max[ch]
-				let amt = player.upgs[id][ch]||0
+				let amt = getUpgradeLvl(id, ch)
 				let res = tmp.upg_res[upg.res]
 				let dis = UPG_RES[upg.res][0]
 
@@ -1001,7 +1002,7 @@ function updateUpgradesHTML(id) {
 				for (let x = 0; x < upgs.ctn.length; x++) {
 					let upg = upgs.ctn[x]
 					let div_id = "upg_ctn_"+id+x
-					let amt = player.upgs[id][x]||0
+					let amt = getUpgradeLvl(id, x)
 
 					let unlc = compute(upg.unl, true) && (player.options.hideUpgOption ? amt < tu.max[x] : true)
 					tmp.el[div_id].setDisplay(unlc)
@@ -1025,17 +1026,17 @@ function updateUpgradesHTML(id) {
 	}
 }
 
-function hasUpgrade(id,x) { return player.upgs[id][x] > 0 }
+function getUpgradeLvl(id, x) { return player.upgs[id]?.[x] ?? 0 }
+function hasUpgrade(id,x) { return getUpgradeLvl(id, x) > 0 }
 function hasUpgrades(id) {
-	for (let i of player.upgs[id]) {
-		if (i > 0) return true 
-	}
+	if (!player.upgs[id]) return false
+	for (let i of player.upgs[id]) if (i > 0) return true
 	return false
 }
 function upgEffect(id,x,def=1) { return tmp.upgs[id].eff[x] || def }
 
 function resetUpgrades(id) {
-	player.upgs[id] = []
+	delete player.upgs[id]
 }
 
 function updateUpgResource(id) {
@@ -1114,7 +1115,7 @@ el.update.upgs = _=>{
 		tmp.el.hideCapBtn.setDisplay(player.cTimes)
 		tmp.el.capOpt.setTxt(player.options.lowGrass?250:"∞")
 		tmp.el.hideMaxBtn.setDisplay(player.cTimes)
-		tmp.el.hideMax.setTxt(player.options.hideUpgOption?"ON":"OFF")
+		tmp.el.hideMax.setTxt(player.options.hideUpgOption?"Hidden":"Shown")
 		tmp.el.hideMilestoneBtn.setDisplay(grassHopped())
 		tmp.el.hideMilestone.setTxt(player.options.hideMilestone?"Unobtained":"All")
 	}

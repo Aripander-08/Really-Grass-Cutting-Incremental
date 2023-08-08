@@ -497,7 +497,8 @@ let ROCKET_PART = {
 		let r = E(5).pow(player.rocket.part - 1)
 		r = r.mul(upgEffect("dm", 2))
 		r = r.mul(upgEffect('np', 3))
-		r = r.mul(upgEffect('ring', 7))
+		r = r.mul(upgEffect("sfrgt", 6))
+		r = r.mul(upgEffect('ring', 5))
 		return r
 	}
 }
@@ -655,35 +656,31 @@ UPGS.momentum = {
 			bulk: i => 1
 		},{
 			title: "Unnatural Momentum",
-			desc: `<b class="green">+1</b> to Unnatural Healing.`,
+			desc: `<b class="green">+1</b> Unnatural Healing.`,
 
 			res: "momentum",
 			icon: ['Curr/UnnaturalGrass'],
 			
 			unl: _ => tmp.rocket_upgraded,
-			cost: i => E(4).pow(i).mul(1e3),
-			bulk: i => E(i).div(1e3).log(4).floor().toNumber()+1,
-			max: 10,
+			cost: i => E(25).pow(i).mul(50),
+			bulk: i => E(i).div(50).log(25).floor().toNumber()+1,
+			max: Infinity,
 
-			effect(i) {
-				return i
-			},
+			effect: i => i,
 			effDesc: x => "+"+format(x),
 		},{
 			title: "It Doesn't Matter",
-			desc: `<b class="green">Double</b> Dark Matter.`,
+			desc: `<b class="green">+1x</b> to Space Power.`,
 
 			res: "momentum",
 			icon: ['Curr/DarkMatter'],
 			
 			unl: _ => tmp.rocket_upgraded,
-			cost: i => E(5).pow(i).mul(1e5),
-			bulk: i => E(i).div(1e5).log(5).floor().toNumber()+1,
-			max: 2,
+			cost: i => E(10).pow(i).mul(100),
+			bulk: i => E(i).div(100).log(10).floor().toNumber()+1,
+			max: Infinity,
 
-			effect(i) {
-				return E(2).pow(i)
-			},
+			effect: i => i+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "A New Star",
@@ -693,13 +690,11 @@ UPGS.momentum = {
 			icon: ['Icons/SP'],
 			
 			unl: _ => hasStarTree("progress", 11),
-			cost: i => E(3).pow(i).mul(2e5),
-			bulk: i => E(i).div(2e5).log(3).floor().toNumber()+1,
-			max: 5,
+			cost: i => E(10).pow(i).mul(200),
+			bulk: i => E(i).div(200).log(10).floor().toNumber()+1,
+			max: Infinity,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "No Problem",
@@ -709,13 +704,11 @@ UPGS.momentum = {
 			icon: ['Curr/Normality'],
 			
 			unl: _ => hasStarTree("progress", 11),
-			cost: i => E(15).pow(i).mul(1e4),
-			bulk: i => E(i).div(1e4).log(15).floor().toNumber()+1,
+			cost: i => E(5).pow(i).mul(25),
+			bulk: i => E(i).div(25).log(5).floor().toNumber()+1,
 			max: Infinity,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x)+"x",
 		}
 	],
@@ -761,7 +754,7 @@ function updateRocketTemp() {
 	tmp.rocket_upgraded = upgraded
 
 	tmp.rp_req = ROCKET_PART.req()
-	tmp.m_prod = tmp.rocket_upgraded ? 0.001 : 0
+	tmp.m_prod = tmp.rocket_upgraded ? 0.01 : 0
 }
 
 tmp_update.push(_=>{

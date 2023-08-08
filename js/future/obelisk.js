@@ -11,8 +11,8 @@ const ASTRAL_PRESTIGE = {
 RESET.astral_pres = {
 	unl: _ => true,
 
-	req: _ => player.gal?.astral >= 100 || player.gal?.astral_pres,
-	reqDesc: _ =>`Reach Astral ${ASTRAL_PRESTIGE.req}.`,
+	req: _ => true,
+	reqDesc: _ => ``,
 
 	resetDesc: `
 		Reach Astral ${ASTRAL_PRESTIGE.req} to perform a Astral Prestige.<br>

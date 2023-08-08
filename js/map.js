@@ -6,7 +6,7 @@ function resetMap() {
 	mapPos = {
 		earth: [1,1],
 		space: [1,1],
-		planetoid: [0,1]
+		planetoid: [1,1]
 	}
 
 	onSwitchDim(inPlanetoid() ? "planetoid" : "earth")
@@ -26,19 +26,19 @@ window.addEventListener('keydown', e=>{
 
 const MAP = {
 	earth: [
-		['time','opt',   null,  'fd','rf' ],
-		['upg', 'g',	 'pc',  'gh','gal'],
-		['auto','chrono','chal','dc'],
+		['time','opt',null,  'fd','rf' ],
+		['upg', 'g',  'pc',  'gh','gal'],
+		['auto',null, 'chal','dc','dim_space'],
 	],
 	space: [
 		['time', 'opt'],
 		['gal',  'sc', 'at'  ,'sac','ap'],
-		[null ,  null, 'chal']
+		['dim_earth', null, 'chal', 'dim_planetoid']
 	],
 	planetoid: [
-		['opt'],
-		["ring", 'g', 'astro'],
-		['trial']
+		[null, 'opt'],
+		["dim_space", "ring", 'g', 'astro'],
+		[null, 'trial']
 	],
 }
 
@@ -46,9 +46,9 @@ const MAP_UNLS = {
 	opt: _ => player.xp.gte(10) || player.pTimes,
 	stats: _ => false, //player.pTimes > 0,
 	time: _ => player.pTimes > 0,
-	chrono: _ => grassHopped(),
 
 	//EARTH
+	dim_earth: _ => !player.planetoid?.started,
 	g: _ => true,
 	upg: _ => player.xp.gte(10) || player.pTimes,
 	auto: _ => (player.level > 5 || player.pTimes) && !inRecel(),
@@ -61,15 +61,17 @@ const MAP_UNLS = {
 	gal: _ => player.rocket.part > 0 || galUnlocked(),
 
 	//SPACE
+	dim_space: _ => galUnlocked(),
 	sc: _ => galUnlocked(),
 	at: _ => galUnlocked(),
 	sac: _ => hasAGHMilestone(0),
 	ap: _ => false,
 
 	//Planetoid
-	ring: _ => true,
-	astro: _ => true,
-	trial: _ => player.planetoid?.aTimes,
+	dim_planetoid: _ => player.planetoid != undefined,
+	ring: _ => player.planetoid != undefined,
+	astro: _ => player.planetoid != undefined,
+	trial: _ => hasUpgrade("res", 24),
 }
 
 const MAP_IDS = (_=>{
@@ -80,7 +82,8 @@ const MAP_IDS = (_=>{
 
 function unlockedMapId(i, dim) {
 	if (dim && !canAccessDim(dim)) return
-	return MAP_UNLS[i] && MAP_UNLS[i]()
+	if (i && i.split("dim_")[1]) return
+	return MAP_UNLS[i]?.()
 }
 
 function getMapPosId(x, y, dim) {
@@ -154,7 +157,7 @@ function switchDim(id) {
 }
 
 function canAccessDim(id) {
-	return id == "planetoid" || !player.planetoid?.started
+	return MAP_UNLS["dim_" + id]()
 }
 
 function onSwitchDim(dim) {
@@ -167,7 +170,6 @@ const MAP_COLORS = {
 	opt: "misc",
 	stats: "misc",
 	time: "misc",
-	chrono: "gh",
 
 	//EARTH
 	g: "grass",
@@ -198,7 +200,6 @@ const MAP_CATEGORIES = {
 	opt: "Misc",
 	stats: "Misc",
 	time: "Misc",
-	chrono: "Misc",
 
 	//EARTH
 	g: "Field",
@@ -240,9 +241,9 @@ function showLoc(x) {
 const GO_TO_NAMES = {
 	opt: "Options",
 	time: "Stats",
-	chrono: "Chronology",
 
 	//EARTH
+	dim_earth: "Earth",
 	g: "Field",
 	auto: "Automation",
 	upg: "Upgrades",
@@ -255,12 +256,14 @@ const GO_TO_NAMES = {
 	gal: "Galactic",
 
 	//SPACE
+	dim_space: "Space",
 	sc: "Star Chart",
 	at: "Star Platform",
 	sac: "Dark Forest",
 	ap: "Light Forest",
 
 	//Planetoid
+	dim_planetoid: "Planetoid",
 	ring: "Ring Chart",
 	astro: "Upgrades",
 	trial: "The Trial",
@@ -279,9 +282,13 @@ el.setup.go_to = _ => {
 			html += "<tr>"
 			for (const [x, dx] of Object.entries(dy)) {
 				html += `<td id="map_div_${dim}_${dx}">`
-				if (dx !== null) {
-					html += `<button id="map_btn_${dim}_${dx}" onclick="switchMapPos(${x}, ${y}, '${dim}')">${GO_TO_NAMES[dx]}</button>`
-					html += `<button class="map_pin" id="map_pin_${dim}_${dx}" onclick="pinMap('${dim}', '${dx}')">Pin</button>`
+				if (dx != null) {
+					let to_dim = dx.split("dim_")[1]
+					if (to_dim) html += `<button class="dim" id="map_btn_${dim}_${dx}" onclick="switchDim('${to_dim}')">${GO_TO_NAMES[dx]}</button>`
+					else {
+						html += `<button id="map_btn_${dim}_${dx}" onclick="switchMapPos(${x}, ${y}, '${dim}')">${GO_TO_NAMES[dx]}</button>`
+						html += `<button class="map_pin" id="map_pin_${dim}_${dx}" onclick="pinMap('${dim}', '${dx}')">Pin</button>`
+					}
 				}
 				html += "</td>"
 			}
@@ -306,14 +313,11 @@ el.update.go_to = _ => {
 					if (dx !== null) {
 						const unl = MAP_UNLS[dx]()
 						tmp.el[`map_div_${dim}_${dx}`].setDisplay(unl)
-						if (unl) updateMapButton(`map_btn_${dim}_${dx}`, x, y, dim)
+						if (unl && !dx.split("dim_")[1]) updateMapButton(`map_btn_${dim}_${dx}`, x, y, dim)
 					}
 				}
 			}
 		}
-
-		tmp.el.spaceButton.setDisplay(galUnlocked() && canAccessDim("space"))
-		tmp.el.spaceButton.setTxt("(Z) To " + (inSpace() ? "Ground" : "Space"))
 	}
 }
 
@@ -321,7 +325,6 @@ el.update.go_to = _ => {
 const MAP_NOTIFY = {
 	opt: _ => 0,
 	time: _ => player.pTimes > 0 ? 1 : 0,
-	chrono: _ => galUnlocked() ? 2 : player.sTimes ? 1 : 0,
 
 	//EARTH
 	g: _ => 0,
@@ -331,7 +334,7 @@ const MAP_NOTIFY = {
 	upg: _ => player.cTimes > 0 || player.tier >= 2 ? 2 :
 		player.pTimes > 0 || player.level >= 1 ? 1 :
 		0,
-	pc: _ => player.cTimes > 0 || player.level > 100 ? 2 :
+	pc: _ => player.cTimes > 0 || player.level >= 100 ? 2 :
 		player.pTimes > 0 || player.level >= 30 ? 1 :
 		0,
 	chal: _ => player.sTimes > 0 ? 2 :
@@ -355,11 +358,18 @@ const MAP_NOTIFY = {
 	sc: _ => 0,
 	at: _ => 0,
 	sac: _ => hasAGHMilestone(11) ? 2 : hasAGHMilestone(7) ? 1 : 0,
+
+	//PLANETOID
+	ring: _ => player.planetoid.aTimes > 0 ? 1 : 0,
+	astro: _ => player.planetoid.qTimes > 0 || player.planetoid.level >= 90 ? 2 :
+		player.planetoid.aTimes > 0 || player.planetoid.level >= 25 ? 1 :
+		0,
+	trial: _ => hasUpgrade("res", 24) ? 1 : 0
 }
 
 tmp_update.push(_=>{
 	for (let [id, cond] of Object.entries(MAP_NOTIFY)) {
-		cond = cond()
+		cond = MAP_UNLS[id]() ? cond() : 0
 		if (tmp.map_notify[id] === undefined) tmp.map_notify[id] = cond
 		if (cond > tmp.map_notify[id]) {
 			tmp.map_notify[id] = cond
