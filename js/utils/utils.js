@@ -12,8 +12,8 @@ function randint(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
-function compute(func, def) {
-	return typeof func == "function" ? func() : func || def 
+function compute(data, def = true) {
+	return (typeof data == "function" ? data?.() : data) ?? def 
 }
 
 function advCalc(func, main, sec) {

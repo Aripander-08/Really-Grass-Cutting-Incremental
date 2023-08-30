@@ -99,11 +99,9 @@ tmp_update.push(_=>{
 	data.ms.chance = 1/200
 	if (hasGSMilestone(5)) data.ms.chance *= player.gal.msLuck
 	if (hasGSMilestone(6) && !player.decel) data.ms.chance /= 10
-	if (hasGSMilestone(11)) data.ms.chance *= 2
+	if (hasGSMilestone(10)) data.ms.chance *= 2
 	if (hasAGHMilestone(7)) data.ms.chance *= 2
-	data.ms.gain = 1
-	data.ms.gain += upgEffect("dm", 5)
-	data.ms.gain *= tmp.cutAmt
+	data.ms.gain = E(1).add(upgEffect("dm", 5))
 
 	updateSCTemp()
 })
@@ -165,7 +163,7 @@ function inSpace() {
 }
 
 function goToSpace() {
-	if (galUnlocked() && !player.planetoid?.started) switchDim(mapPos.dim != "space" ? "space" : inPlanetoid() ? "planetoid" : "earth")
+	if (canGoAnywhere()) switchDim(mapPos.dim != "space" ? "space" : inPlanetoid() ? "planetoid" : "earth")
 }
 
 el.update.space = _=>{
@@ -332,30 +330,28 @@ UPGS.moonstone = {
 			res: "moonstone",
 			icon: ["Curr/DarkMatter"],
 
-			max: 5,
-			cost: i => 100,
-			bulk: i => Math.floor(i/100),
+			max: 2,
+			cost: i => 2e3,
+			bulk: i => Math.floor(i/2e3),
 
 			effect(i) {
 				return i+1
 			},
 			effDesc: x => format(x,0)+"x",
 		}, {
-			unl: _ => hasAGHMilestone(7),
 			title: "Moon Platinum II",
 			tier: 3,
 			desc: `<b class="green">Double</b> Platinum per level.`,
 
+			unl: _ => hasAGHMilestone(7),
 			res: "moonstone",
 			icon: ["Curr/Platinum"],
 			
-			max: 500,
+			max: Infinity,
 			cost: i => E(2).pow(i).mul(1e3),
 			bulk: i => E(i).div(1e3).log(2).floor().toNumber()+1,
 
-			effect(i) {
-				return 2**i
-			},
+			effect: i => E(2).pow(i),
 			effDesc: x => format(x,1)+"x",
 		}
 	],
@@ -370,68 +366,56 @@ UPGS.star = {
 
 	ctn: [
 		{
-			max: Infinity,
-
 			title: "Shiny Stars",
 			desc: `Increase star gain by <b class="green">20%</b> compounding per level.`,
 		
 			res: "plat",
 			icon: ["Curr/Star"],
 
+			max: Infinity,
 			cost: i => E(1.5).pow(i).mul(300),
 			bulk: i => E(i).div(300).log(1.5).floor().toNumber() + 1,
 
-			effect(i) {
-				return E(1.2).pow(i)
-			},
+			effect: i => E(1.2).pow(i),
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
-
 			title: "Industrial Stars",
 			desc: `Increase star gain by <b class="green">20%</b> compounding per level.`,
 		
 			res: "steel",
 			icon: ["Curr/Star"],
 
+			max: Infinity,
 			cost: i => E(5).pow(i).mul(1e35),
 			bulk: i => E(i).div(1e35).log(5).floor().toNumber() + 1,
 
-			effect(i) {
-				return E(1.2).pow(i)
-			},
+			effect: i => E(1.2).pow(i),
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
-
 			title: "Launch Stars",
 			desc: `Increase star gain by <b class="green">20%</b> compounding per level.`,
 
 			res: "rf",
 			icon: ["Curr/Star"],
 
+			max: Infinity,
 			cost: i => E(2).pow(i**0.8).mul(200),
 			bulk: i => E(i).div(200).log(2).root(0.8).floor().toNumber() + 1,
-		
-			effect(i) {
-				return E(1.2).pow(i)
-			},
+
+			effect: i => E(1.2).pow(i),
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
-
 			title: "Accumulated Stars",
 			desc: `Increase star gain by <b class="green">20%</b> compounding per level.`,
-		
+
 			res: "moonstone",
 			icon: ["Curr/Star"],
 
+			max: Infinity,
 			cost: i => E(1.5).pow(i),
 			bulk: i => E(i).log(1.5).floor().toNumber() + 1,
 
-			effect(i) {
-				return E(1.2).pow(i)
-			},
+			effect: i => E(1.2).pow(i),
 			effDesc: x => format(x)+"x",
 		}
 	],

@@ -30,9 +30,9 @@ MILESTONE.gh = {
 			desc: `<b class="green">Double</b> Crystals.`,
 		},{
 			req: 3,
-			desc: `<b class="green">+0.5</b> Platinum per Grasshop. (starting at 2 and ending at 10)`,
+			desc: `<b class="green">+0.5</b> Platinum per Grasshop. (starting at 2)`,
 
-			eff: x=>Math.max(Math.min(x,10)-1,0)/2,
+			eff: x=>Math.max(x-1,0)/2,
 			effDesc: x=> "+"+format(x,1),
 		},{
 			req: 4,
@@ -63,8 +63,8 @@ MILESTONE.gh = {
 			unl: _=>galUnlocked()||hasUpgrade('factory',2),
 
 			req: 12,
-			desc: `<b class="green">Double</b> Charge per Grasshop. (starting at 12 and ending at 30)`,
-			eff: x => E(2).pow(Math.max(0, Math.min(x, hasGSMilestone(9) ? 1/0 : 30) - 11)),
+			desc: `<b class="green">Double</b> Charge per Grasshop. (starting at 12)`,
+			eff: x => E(2).pow(Math.max(0, x - 11)),
 			effDesc: x => format(x,0)+"x",
 		},{
 			unl: _=>galUnlocked()||hasUpgrade('factory',3),

@@ -14,7 +14,6 @@ function resetTemp() {
 		autocutTime: 0,
 		autocutAmt: 1,
 		spawnAmt: 1,
-		cutAmt: 1,
 
 		platChance: 0.001,
 		platGain: 1,

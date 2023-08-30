@@ -11,7 +11,7 @@ const SC_IDS = {
 		[5,6,2,4],
 		[7,8,9,null],
 		[11,10,12,13],
-		[14,15]
+		[null,14,15,16],
 	],
 	auto: [
 		[4,0,1],
@@ -143,7 +143,7 @@ const STAR_CHART = {
 			max: 1,
 
 			title: "Tiered Space",
-			desc: `Every 5 tiers, gain more Space Power by <b class="green">tier base</b>. (starting at 50)`,
+			desc: `Every 15 tiers, gain more Space Power by <b class="green">tier base</b>. (starting at 55)`,
 
 			branch: 5,
 			icon: ['Icons/SP','Icons/StarSpeed'],
@@ -154,7 +154,7 @@ const STAR_CHART = {
 
 			effect(i) {
 				if (player.tier < 50) return E(1)
-				return E(MAIN.tier.base(0)).pow(Math.floor((player.tier - 50) / 5 + 1))
+				return E(MAIN.tier.base(0)).pow(Math.floor((player.tier - 55) / 15 + 1))
 			},
 			effDesc: x => format(x) + "x"
 		}, {
@@ -167,7 +167,7 @@ const STAR_CHART = {
 			icon: ['Curr/RocketFuel','Icons/StarSpeed'],
 
 			unl: _ => MAIN.sac.did(),
-			cost: i => E(2e15),
+			cost: i => E(1e14),
 			bulk: i => 1
 		}, {
 			max: 1,
@@ -189,8 +189,8 @@ const STAR_CHART = {
 			branch: 6,
 			icon: ['Icons/Grasshop','Icons/StarSpeed'],
 
-			cost: i => E(10).pow((i+3)**1.5*2),
-			bulk: i => E(i).log(100).root(1.5).sub(3).floor().toNumber()+1,
+			cost: i => E(10).pow((i+4)**1.5),
+			bulk: i => E(i).log(10).root(1.5).sub(4).floor().toNumber()+1,
 
 			effect(i) {
 				return i/20
@@ -206,8 +206,8 @@ const STAR_CHART = {
 			icon: ['Icons/Grasshop','Icons/StarSpeed'],
 
 			unl: _ => true,
-			cost: i => E(10).pow((i+3.5)**1.5*2),
-			bulk: i => E(i).log(100).root(1.5).sub(3.5).floor().toNumber()+1,
+			cost: i => E(10).pow((i+5)**1.5),
+			bulk: i => E(i).log10().root(1.5).sub(5).floor().toNumber()+1,
 
 			effect(i) {
 				return i
@@ -375,7 +375,7 @@ const STAR_CHART = {
 			branch: 8,
 			icon: ['Curr/AntiGrass','Icons/StarProgression'],
 
-			cost: i => E(1e15),
+			cost: i => E(1e9),
 			bulk: i => 1
 		}, {
 			unl: _ => MAIN.sac.did(),
@@ -387,42 +387,50 @@ const STAR_CHART = {
 			branch: 12,
 			icon: ['Curr/AntiGrass','Icons/StarProgression'],
 
-			cost: i => E(1e30),
+			cost: i => E(1e18),
 			bulk: i => 1
 		}, {
-			unl: _ => hasAGHMilestone(11),
-			max: 1,
-
 			title: "Stardust Generator",
 			desc: `Produce <b class="green">+0.1%</b> of Star gain.`,
 
+			unl: _ => MAIN.sac.did(),
 			branch: 12,
 			icon: ['Curr/Star','Icons/StarProgression'],
 
-			cost: i => E(1e30),
-			bulk: i => 1,
+			max: 100,
+			cost: i => E(10).pow(i+15),
+			bulk: i => i.log10().sub(15).floor().toNumber()+1,
 
-			effect(i) {
-				return i/1e3
-			},
+			effect: i => i/1e3,
 			effDesc: x => "+"+formatPercent(x)+"/s"
 		}, {
-			unl: _ => hasAGHMilestone(11),
-			max: 1,
-
 			title: "Excited!",
 			desc: `Produce <b class="green">+0.1%</b> of Fun gain.`,
 
+			unl: _ => MAIN.sac.did(),
 			branch: 12,
 			icon: ['Curr/Fun','Icons/StarProgression'],
 
-			cost: i => E(1e30),
-			bulk: i => 1,
+			max: 100,
+			cost: i => E(10).pow(i+17),
+			bulk: i => i.log10().sub(17).floor().toNumber()+1,
 
-			effect(i) {
-				return i/1e3
-			},
+			effect: i => i/1e3,
 			effDesc: x => "+"+formatPercent(x)+"/s"
+		}, {
+			title: "Habit!",
+			desc: `Automatically cut grass at <b class='green'>+1%</b> of Habitability max value per level.`,
+
+			unl: _ => MAIN.sac.did(),
+			branch: 15,
+			icon: ['Icons/Compaction','Icons/StarProgression'],
+
+			max: 10,
+			cost: i => E(10).pow(i+18),
+			bulk: i => i.log10().sub(18).floor().toNumber()+1,
+
+			effect: i => i/100,
+			effDesc: x => formatPercent(x)
 		},
 	],
 	auto: [
@@ -551,7 +559,7 @@ const STAR_CHART = {
 			icon: ['Icons/Fundry','Icons/StarAuto'],
 
 			unl: _ => MAIN.sac.did(),
-			cost: i => E(1e20),
+			cost: i => E(1e14),
 			bulk: i => 1,
 		}, {
 			max: 1,
@@ -559,11 +567,11 @@ const STAR_CHART = {
 			title: "Beyond The Stars",
 			desc: `Automate Progression Chart.`,
 
-			branch: 9,
+			branch: 8,
 			icon: ['Curr/Star','Icons/StarAuto'],
 
-			unl: _ => hasAGHMilestone(11),
-			cost: i => E(1e20),
+			unl: _ => MAIN.sac.did(),
+			cost: i => E(1e16),
 			bulk: i => 1,
 		}, {
 			max: 1,
@@ -574,8 +582,8 @@ const STAR_CHART = {
 			branch: 9,
 			icon: ['Curr/SuperFun','Icons/StarAuto'],
 
-			unl: _ => hasAGHMilestone(11),
-			cost: i => E(1e20),
+			unl: _ => MAIN.sac.did(),
+			cost: i => E(1e18),
 			bulk: i => 1,
 		}, {
 			max: 1,
@@ -696,27 +704,6 @@ function starTreeAmt(id,i) { return (galUnlocked() && player.gal.star_chart[id][
 
 function updateSCTemp() {
 	let data = tmp.gal.sc || {
-		qol: {
-			max: [],
-			cost: [],
-			bulk: [],
-			eff: [],
-			unl: [],
-		},
-		auto: {
-			max: [],
-			cost: [],
-			bulk: [],
-			eff: [],
-			unl: [],
-		},
-		progress: {
-			max: [],
-			cost: [],
-			bulk: [],
-			eff: [],
-			unl: [],
-		},
 		tab: "progress",
 		choosed: [null, null]
 	}
@@ -724,7 +711,13 @@ function updateSCTemp() {
 
 	let star = player.gal.stars
 	for (let id in STAR_CHART) {
-		let tt = data[id]
+		let tt = data[id] = {
+			max: [],
+			cost: [],
+			bulk: [],
+			eff: [],
+			unl: [],
+		}
 
 		for (let i = 0; i < STAR_CHART[id].length; i++) {
 			let tu = STAR_CHART[id][i]

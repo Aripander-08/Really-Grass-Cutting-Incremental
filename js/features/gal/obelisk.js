@@ -4,18 +4,16 @@ const ASTRAL_PRESTIGE = {
 		return p * 5
 	},
 	scaling(p) {
-		return 1 + p ** 1.25 / 4
+		return 1 + p ** 1.25 / 2
 	}
 }
 
 RESET.astral_pres = {
-	unl: _ => true,
-
+	unl: _ => hasAGHMilestone(20),
 	req: _ => true,
 	reqDesc: _ => ``,
 
 	resetDesc: `
-		Reach Astral ${ASTRAL_PRESTIGE.req} to perform a Astral Prestige.<br>
 		Reset your astral to power your Astral bonuses, but also scale Astral.<br><br>
 		<span id='nextAPBonus' class='green'></span>
 	`,
@@ -27,13 +25,14 @@ RESET.astral_pres = {
 	reset(force=false) {
 		if (player.gal.astral<100) return
 
+		let pres = player.gal.astral_pres
 		player.gal.astral_pres++
 		player.gal.astral = 0
-		player.gal.sp = E(0)
+		player.gal.sp = player.gal.sp.root(ASTRAL_PRESTIGE.scaling(pres+1) / ASTRAL_PRESTIGE.scaling(pres)).div(1e3)
 	},
 }
 
-const AP_BONUS = ["Observatorium", "Momentum", "Clouds", "Cosmic"]
+const AP_BONUS = ["Planetarium", "Clouds", "Momentum", "Tier Base", "Lunar Power"]
 
 /*
 const LUNAR_OB = [
@@ -108,6 +107,7 @@ el.update.obelisk = _ => {
 		let bonus = AP_BONUS[player.gal.astral_pres]
 		tmp.el.nextAPBonus.setHTML(bonus ? `You'll unlock the ${bonus} astral bonus.` : ``)
 		updateResetHTML("astral_pres")
+		tmp.el.reset_btn_astral_pres.setClasses({locked: player.gal.astral < 100})
 
 		/*let unl = player.grassjump>=5
 		tmp.el.lunar_obelisk_div.setDisplay(unl)

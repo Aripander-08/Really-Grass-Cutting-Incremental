@@ -69,8 +69,18 @@ function calc(dt) {
 	}
 
 	//START
+	for (const i of tmp.realm.in) {
+		let oldLvl = getRealmSrc(i).level
+		MAIN.levelUp(i)
+		if (i == 3 && hasAGHMilestone(20)) TRIAL.onLevel(oldLvl, getRealmSrc(i).level)
+	}
+	player.maxPerk = Math.max(player.maxPerk, tmp.perks)
+	for (let x in UPGS) if (tmp.upgs[x].autoUnl && player.autoUpg[x]) buyAllUpgrades(x,true)
+
+	//GRASS
 	tmp.spawn_time += dt
-	tmp.autocutTime += dt
+	if (hasUpgrade("auto", 0)) tmp.autocutTime += dt
+	if (isNaN(tmp.grassSpawn) || tmp.grassSpawn == 0 || tmp.grassSpawn == Infinity) return
 
 	let auto_spawn = Math.floor(tmp.spawn_time / tmp.grassSpawn)
 	let auto_cut = Math.floor(tmp.autocutTime / tmp.autocut)
@@ -87,8 +97,4 @@ function calc(dt) {
 		let g = grass[r]
 		if (g && !g.habit) removeGrass(r, Math.max(auto_cut / 100, 1))
 	}
-
-	for (const i of tmp.realm.in) MAIN.levelUp(i)
-	for (let x in UPGS) if (tmp.upgs[x].autoUnl && player.autoUpg[x]) buyAllUpgrades(x,true)
-	player.maxPerk = Math.max(player.maxPerk, tmp.perks)
 }

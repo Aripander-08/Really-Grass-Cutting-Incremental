@@ -9,14 +9,15 @@ function updateEffectTemp() {
 		let res = effs.res()
 		data[id] = {}
 		for (let [eff_id, eff] of Object.entries(effs.effs)) {
-			if (compute(eff.unl, true)) data[id][eff_id] = eff.eff(advCalc(effs.getEff, res, eff))
+			if (compute(eff.unl)) data[id][eff_id] = eff.eff(advCalc(effs.getEff, res, eff))
 		}
 	}
 }
 tmp_update.push(updateEffectTemp)
 
 function getEffect(id, x, def = 1) {
-	return tmp.effs?.[id]?.[x] || def
+	let eff = tmp.effs?.[id]?.[x]
+	return !isNaN(eff) ? eff : def
 }
 
 function setupEffectsHTML(x) {

@@ -117,11 +117,9 @@ UPGS.funMachine = {
 			res: "fun",
 			icon: ["Icons/Charger"],
 						
-			cost: i => E(1e5),
+			cost: i => E(1e6),
 			bulk: i => 1,
 		},{
-			max: 1,
-
 			unl: _ => MAIN.sac.did(),
 			title: "Recelerator",
 			desc: `Unlock Recelerator realm, where you can slow time further.`,
@@ -129,7 +127,7 @@ UPGS.funMachine = {
 			res: "fun",
 			icon: ["Icons/Recelerator"],
 						
-			cost: i => E(1e8),
+			cost: i => E(1e13),
 			bulk: i => 1,
 		}
 	],
@@ -147,37 +145,29 @@ UPGS.fundry = {
 			max: Infinity,
 
 			title: "Steel Fun",
-			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
+			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
 		
 			res: "steel",
 			icon: ["Curr/Fun"],
 						
 			cost: i => Decimal.pow(1.4,i).mul(1e45).ceil(),
 			bulk: i => i.div(1e45).max(1).log(1.4).floor().toNumber()+1,
-		
-			effect(i) {
-				let x = Decimal.pow(1.5, Math.floor(i/25)).mul(i/5+1)
-		
-				return x
-			},
+
+			effect: i => E(1.25).pow(Math.floor(i / 25)).mul(i / 2 + 1),
 			effDesc: x => format(x)+"x",
 		},{
 			max: Infinity,
 
 			title: "Star Fun",
-			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
+			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
 		
 			res: "star",
 			icon: ["Curr/Fun"],
 						
 			cost: i => Decimal.pow(1.2,i).mul(1e6).ceil(),
 			bulk: i => i.div(1e6).max(1).log(1.2).floor().toNumber()+1,
-		
-			effect(i) {
-				let x = Decimal.pow(1.5, Math.floor(i/25)).mul(i/5+1)
-		
-				return x
-			},
+
+			effect: i => E(1.25).pow(Math.floor(i / 25)).mul(i / 2 + 1),
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasUpgrade("funMachine", 1),
@@ -185,7 +175,7 @@ UPGS.fundry = {
 			max: Infinity,
 
 			title: "SFRGT Fun",
-			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
+			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
 
 			res: "sfrgt",
 			icon: ["Curr/Fun"],
@@ -193,29 +183,21 @@ UPGS.fundry = {
 			cost: i => Decimal.pow(1.2,i).mul(50).ceil(),
 			bulk: i => i.div(50).max(1).log(1.2).floor().toNumber()+1,
 
-			effect(i) {
-				let x = Decimal.pow(1.5, Math.floor(i/25)).mul(i/5+1)
-		
-				return x
-			},
+			effect: i => E(1.25).pow(Math.floor(i / 25)).mul(i / 2 + 1),
 			effDesc: x => format(x)+"x",
 		},{
 			max: Infinity,
 
 			title: "Fun Fun",
-			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
+			desc: `Increase fun gain by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
 		
 			res: "fun",
 			icon: ["Curr/Fun"],
 						
 			cost: i => Decimal.pow(1.2,i).mul(10).ceil(),
 			bulk: i => i.div(10).max(1).log(1.2).floor().toNumber()+1,
-		
-			effect(i) {
-				let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/5+1)
 
-				return x
-			},
+			effect: i => E(1.25).pow(Math.floor(i / 25)).mul(i / 2 + 1),
 			effDesc: x => format(x)+"x",
 		},
 	],
@@ -239,8 +221,8 @@ UPGS.sfrgt = {
 			icon: ["Curr/SuperFun"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(10,i).mul(5e3).ceil(),
-			bulk: i => i.div(5e3).max(1).log(10).floor().toNumber()+1,
+			cost: i => Decimal.pow(3,i).mul(1e3).ceil(),
+			bulk: i => i.div(1e3).log(3).floor().toNumber()+1,
 		
 			effect(i) {
 				let x = Decimal.pow(2,i)
@@ -308,41 +290,35 @@ UPGS.sfrgt = {
 			cost: i => Decimal.pow(2,i**1.25).mul(1e4).ceil(),
 			bulk: i => i.div(1e4).max(1).log(2).root(1.25).floor().toNumber()+1,
 		
-			effect(i) {
-				return i/10+1
-			},
+			effect: i => i/10,
 			effDesc: x => "^"+format(x,1),
 		}, {
-			unl: _ => hasUpgrade('res', 1),
 			title: "Funny Healing",
 			desc: `<b class='green'>+1</b> Unnatural Healing.`,
 
+			unl: _ => hasUpgrade('res', 1),
 			res: "sfrgt",
 			icon: ["Curr/UnnaturalGrass"],
 
-			max: 5,
-			cost: i => E(1/0),
-			bulk: i => 0,
+			max: Infinity,
+			cost: i => Decimal.pow(20,i).mul(1e35).ceil(),
+			bulk: i => i.div(1e35).max(1).log(20).floor().toNumber()+1,
 
-			effect(i) {
-				return E(2).pow(i)
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}, {
-			unl: _ => hasUpgrade('res', 1),
 			title: "Funny Blastoff",
 			desc: `<b class='green'>+1x</b> Momentum.`,
 
+			unl: _ => hasUpgrade('res', 1),
 			res: "sfrgt",
 			icon: ["Curr/Momentum"],
 
-			max: 5,
-			cost: i => E(1/0),
-			bulk: i => 0,
+			max: Infinity,
+			cost: i => Decimal.pow(20,i).mul(1e35).ceil(),
+			bulk: i => i.div(1e35).max(1).log(20).floor().toNumber()+1,
 
-			effect(i) {
-				return E(2).pow(i)
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}
 	],

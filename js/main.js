@@ -34,6 +34,7 @@ const MAIN = {
 		perk() {
 			let x = chalEff(3)
 			if (player.grasshop >= 4) x += getGHEffect(3, 0)
+			if (hasAGHMilestone(9)) x++
 			if (inChal(7)) x = 1
 
 			return Math.floor(x * player.level)
@@ -60,6 +61,7 @@ const MAIN = {
 			let x = realm ? 2.25 : upgEffect('crystal', 3, 2.25)
 			if (player.grasshop >= 5) x += 0.1
 			if (realm < 2) x += getChargeEff(4, 0)
+			x += getAstralEff("mn", 0)
 			return x
 		},
 		mult(i, realm = player.decel) {
@@ -152,12 +154,9 @@ tmp_update.push(_=>{
 	if (!player.decel && hasGSMilestone(6)) tmp.platChance *= 2
 	tmp.platChance += upgEffect('rocket',16,0)
 
-	tmp.platGain = 1
-	tmp.platGain += chalEff(5,0)
+	tmp.platGain = 1 + chalEff(5,0) + upgEffect('moonstone', 0)
 	if (player.grasshop >= 3) tmp.platGain += getGHEffect(2, 0)
-	tmp.platGain += upgEffect('moonstone', 0)
-	tmp.platGain *= upgEffect('moonstone', 8)
-	tmp.platGain *= tmp.cutAmt
+	tmp.platGain = E(tmp.platGain).mul(upgEffect('moonstone', 8))
 })
 
 let shiftDown = false

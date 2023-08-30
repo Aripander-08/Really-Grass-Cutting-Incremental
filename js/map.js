@@ -48,7 +48,7 @@ const MAP_UNLS = {
 	time: _ => player.pTimes > 0,
 
 	//EARTH
-	dim_earth: _ => !player.planetoid?.started,
+	dim_earth: _ => canGoAnywhere(),
 	g: _ => true,
 	upg: _ => player.xp.gte(10) || player.pTimes,
 	auto: _ => (player.level > 5 || player.pTimes) && !inRecel(),
@@ -61,17 +61,17 @@ const MAP_UNLS = {
 	gal: _ => player.rocket.part > 0 || galUnlocked(),
 
 	//SPACE
-	dim_space: _ => galUnlocked(),
+	dim_space: _ => galUnlocked() && canGoAnywhere(),
 	sc: _ => galUnlocked(),
 	at: _ => galUnlocked(),
 	sac: _ => hasAGHMilestone(0),
-	ap: _ => false,
+	ap: _ => hasAGHMilestone(20),
 
 	//Planetoid
 	dim_planetoid: _ => player.planetoid != undefined,
 	ring: _ => player.planetoid != undefined,
 	astro: _ => player.planetoid != undefined,
-	trial: _ => hasUpgrade("res", 24),
+	trial: _ => hasAGHMilestone(14),
 }
 
 const MAP_IDS = (_=>{
@@ -153,6 +153,7 @@ function updateMapButton(el, mx, my, dim) {
 
 //Dimensions
 function switchDim(id) {
+	if (!canAccessDim(id)) return
 	switchMapPos(mapPos[id][0], mapPos[id][1], id)
 }
 
@@ -358,13 +359,14 @@ const MAP_NOTIFY = {
 	sc: _ => 0,
 	at: _ => 0,
 	sac: _ => hasAGHMilestone(11) ? 2 : hasAGHMilestone(7) ? 1 : 0,
+	ap: _ => hasAGHMilestone(20) ? 1 : 0,
 
 	//PLANETOID
 	ring: _ => player.planetoid.aTimes > 0 ? 1 : 0,
 	astro: _ => player.planetoid.qTimes > 0 || player.planetoid.level >= 90 ? 2 :
 		player.planetoid.aTimes > 0 || player.planetoid.level >= 25 ? 1 :
 		0,
-	trial: _ => hasUpgrade("res", 24) ? 1 : 0
+	trial: _ => hasAGHMilestone(20) ? 1 : 0
 }
 
 tmp_update.push(_=>{

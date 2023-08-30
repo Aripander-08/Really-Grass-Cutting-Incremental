@@ -51,8 +51,9 @@ RESET.decel = {
 
 	reset(force=false) {
 		if (inPlanetoid()) return
+		if (!hasUpgrade("factory", 4)) return
 		if (!player.aRes) player.aRes = setupDecel()
-		if (hasUpgrade("factory", 4)) switchRealm(1)
+		switchRealm(1)
 	},
 }
 
@@ -84,13 +85,14 @@ REALMS.decel = {
 		x = x.mul(upgEffect('ap', 0))
 		x = x.mul(upgEffect('oil', 0))
 		x = x.mul(getChargeEff(9))
+		if (upgEffect("unGrass", 1) > 1) x = x.mul(getAstralEff("xp",E(1)).pow(upgEffect("unGrass", 1) - 1))
 		return x
 	},
 	xp() {
 		let x = E(1)
 		if (!player.sTimes) return x
 
-		x = x.mul(upgEffect('ap', 2))
+		x = x.mul(upgEffect('ap', 3))
 		x = x.mul(upgEffect('oil', 1))
 		return x
 	},
@@ -135,14 +137,13 @@ UPGS.aGrass = {
 
 	ctn: [
 		{
-			max: 500,
-
 			title: "Anti-Grass Charge",
 			desc: `Increase charge rate by <b class="green">+25%</b> per level.<br>This is increased by <b class="green">50%</b> every <b class="yellow">25</b> levels.`,
 
 			res: "aGrass",
 			icon: ['Curr/Charge'],
-			
+
+			max: Infinity,
 			cost: i => Decimal.pow(1.2,i).mul(10).ceil(),
 			bulk: i => i.div(10).max(1).log(1.2).floor().toNumber()+1,
 
@@ -219,20 +220,17 @@ UPGS.aGrass = {
 		},{
 			unl: _ => player.aRes?.aTimes,
 
-			max: 400,
-
 			title: "Anti-Grass AP",
 			desc: `Increase AP gain by <b class="green">+15%</b> compounding.`,
 
 			res: "aGrass",
 			icon: ['Curr/Anonymity'],
-			
+
+			max: Infinity,
 			cost: i => Decimal.pow(1.2,i).mul(1e7).ceil(),
 			bulk: i => i.div(1e7).max(1).log(1.2).floor().toNumber()+1,
 
-			effect(i) {
-				return E(1.15).pow(i)
-			},
+			effect: i => E(1.15).pow(i),
 			effDesc: x => x.format()+"x",
 		},{
 			max: 5,
@@ -247,9 +245,7 @@ UPGS.aGrass = {
 			cost: i => Decimal.pow(15,i).mul(200).ceil(),
 			bulk: i => i.div(200).max(1).log(15).floor().toNumber()+1,
 
-			effect(i) {
-				return i*10
-			},
+			effect: i => i * 10,
 			effDesc: x => "+"+format(x,0),
 		}
 	],
@@ -359,7 +355,7 @@ aMAIN.ap = {
 	gain() {
 		if (!player.aRes) return E(1)
 
-		let x = Decimal.pow(1.1,player.aRes.level).mul(3)
+		let x = Decimal.pow(1.05,player.aRes.level).mul(5)
 
 		x = x.mul(upgEffect('aGrass',5))
 		x = x.mul(upgEffect('plat',8))
@@ -406,11 +402,9 @@ RESET.ap = {
 		player.aRes.xp = E(0)
 		player.aRes.level = 0
 		player.chargeRate = E(0)
-
-		if (!hasUpgrade('aAuto',8)) resetUpgrades('aGrass')
+		if (!hasUpgrade('aAuto', 8)) resetUpgrades('aGrass')
 
 		resetGrasses()
-
 		updateTemp()
 	},
 }
@@ -430,8 +424,6 @@ UPGS.ap = {
 
 	ctn: [
 		{
-			max: Infinity,
-
 			title: "AP Value",
 			tier: 2,
 			desc: `Increase grass gain by <b class="green">+25%</b> per level.`,
@@ -439,6 +431,7 @@ UPGS.ap = {
 			res: "ap",
 			icon: ["Curr/Grass"],
 
+			max: Infinity,
 			cost: i => Decimal.pow(1.2,i).mul(25).ceil(),
 			bulk: i => i.div(25).max(1).log(1.2).floor().toNumber()+1,
 		
@@ -449,15 +442,14 @@ UPGS.ap = {
 			},
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
-
 			title: "AP Charge",
 			tier: 2,
 			desc: `Increase charge rate by <b class="green">+25%</b> per level.`,
 		
 			res: "ap",
 			icon: ['Curr/Charge'],
-			
+
+			max: Infinity,
 			cost: i => Decimal.pow(1.2,i).mul(20).ceil(),
 			bulk: i => i.div(20).max(1).log(1.2).floor().toNumber()+1,
 
@@ -468,15 +460,14 @@ UPGS.ap = {
 			},
 			effDesc: x => x.format()+"x",
 		},{
-			max: Infinity,
-
 			title: "AP XP",
 			tier: 2,
 			desc: `Increase XP by <b class="green">+25%</b> per level.`,
 		
 			res: "ap",
 			icon: ['Icons/XP'],
-			
+
+			max: Infinity,
 			cost: i => Decimal.pow(1.2,i).mul(20).ceil(),
 			bulk: i => i.div(20).max(1).log(1.2).floor().toNumber()+1,
 
@@ -487,22 +478,17 @@ UPGS.ap = {
 			},
 			effDesc: x => format(x,0)+"x",
 		},{
-			max: 50,
-
 			title: "AP TP",
 			desc: `Increase TP by <b class="green">+25%</b> per level.`,
 		
 			res: "ap",
 			icon: ['Icons/TP'],
-			
+
+			max: 50,
 			cost: i => Decimal.pow(1.2,i).mul(20).ceil(),
 			bulk: i => i.div(20).max(1).log(1.2).floor().toNumber()+1,
 
-			effect(i) {
-				let r = E(i/4+1)
-				r = r.mul(E(getAstralEff('ap')).pow(Math.floor(i/25)))
-				return r
-			},
+			effect: i => E(i/4+1),
 			effDesc: x => format(x,1)+"x",
 		},{
 			max: 25,
@@ -783,10 +769,6 @@ MILESTONE.gs = {
 			effDesc: x => format(x, 0) + "x"
 		}, {
 			unl: _ => player.aRes.fTimes,
-			req: 10,
-			desc: `12 GH Milestone is uncapped.`
-		}, {
-			unl: _ => player.aRes.fTimes,
 			req: 12,
 			desc: `<b class="green">+1x</b> SRFGT per Grass-Skip. (starting at 12)`,
 			eff: x => Math.max(x - 10, 1),
@@ -795,13 +777,7 @@ MILESTONE.gs = {
 			unl: _ => player.aRes.fTimes,
 			req: 13,
 			desc: `<b class="green">Double</b> Moonstone chance.`
-		}, {
-			unl: _ => hasUpgrade("funMachine", 3),
-			req: 14,
-			desc: `<b class="green">+1</b> Unnatural Healing per Grass-Skip. (starting at 14)`,
-			eff: x => Math.max(x - 13, 1),
-			effDesc: x => "+" + format(x, 0)
-		},
+		}
 	],
 }
 

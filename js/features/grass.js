@@ -83,16 +83,16 @@ function removeGrass(i, auto) {
 	let tg = tmp.grasses[i]
 	if (!tg) return
 
-	let v = auto ? (hasUpgrade('res', 4) ? tmp.unRes.habit.max / 10 : 1) * auto : tg.habit ?? 1
-	let av = tv = v
-	if (auto) av *= tmp.autocutBonus
+	let v = auto ? tmp.unRes.habitAuto.mul(auto) : E(tg.habit ?? 1)
+	let av = tv = E(v)
+	if (auto) av = tmp.autocutBonus.mul(av)
 	if (tg.nt) tv = MAIN.tier.base()
 
 	for (const i of tmp.realm.in) cutRealmGrass(i, v, tv)
 	if (galUnlocked()) player.gal.sp = player.gal.sp.add(tmp.gal.astral.gain.mul(v))
 
-	if (tg.pl) player.plat = E(tmp.platGain).mul(hasGSMilestone(0) ? av : v).add(player.plat)
-	if (tg.ms) player.gal.moonstone = E(tmp.gal.ms.gain).mul(v).add(player.gal.moonstone)
+	if (tg.pl) player.plat = tmp.platGain.mul(hasGSMilestone(0) ? av : v).add(player.plat)
+	if (tg.ms) player.gal.moonstone = tmp.gal.ms.gain.mul(v).add(player.gal.moonstone)
 	if (tg.obs) {
 		player.planetoid.obs = plMAIN.obs.gain().mul(v).add(player.planetoid.obs)
 		if (plMAIN.obs.canGetRes()) player.planetoid.res = plMAIN.obs.gain().mul(v).add(player.planetoid.res)

@@ -1,6 +1,5 @@
 const CHALS = [
 	{
-		max: 10,
 		id: 'pp',
 
 		title: `Grassless`,
@@ -8,6 +7,7 @@ const CHALS = [
 		cond: _=>!hasUpgrades("grass"),
 		reward: `Grass gain is <b class='green'>doubled</b> each completion.`,
 
+		max: 10,
 		goal: i=>60+15*i,
 		bulk: i=>Math.floor((i-60)/15+1),
 
@@ -17,7 +17,6 @@ const CHALS = [
 		eff: i=>Decimal.pow(2,i),
 		effDesc: x=>format(x,0)+"x",
 	},{
-		max: 10,
 		id: 'pp',
 
 		title: `Less Level`,
@@ -25,6 +24,7 @@ const CHALS = [
 		cond: _=>!hasUpgrade("pp",1),
 		reward: `XP gain is <b class='green'>doubled</b> each completion.`,
 
+		max: 10,
 		goal: i=>80+20*i,
 		bulk: i=>Math.floor((i-80)/20+1),
 
@@ -34,7 +34,6 @@ const CHALS = [
 		eff: i=>Decimal.pow(2,i),
 		effDesc: x=>format(x,0)+"x",
 	},{
-		max: 7,
 		id: 'crystal',
 
 		title: `No Tiers`,
@@ -42,6 +41,7 @@ const CHALS = [
 		cond: _=>player.tier==0,
 		reward: `TP gain is <b class='green'>doubled</b> each completion.`,
 
+		max: 7,
 		goal: i=>Math.ceil(50+15*i),
 		bulk: i=>Math.floor((i-50)/15+1),
 
@@ -51,7 +51,6 @@ const CHALS = [
 		eff: i=>Decimal.pow(2,i),
 		effDesc: x=>format(x,1)+"x",
 	},{
-		max: 5,
 		id: 'crystal',
 
 		title: `Perkless`,
@@ -59,6 +58,7 @@ const CHALS = [
 		cond: _=>player.chal.c4,
 		reward: `Perk gain is increased by <b class="green">+0.2</b> per completion.`,
 
+		max: 5,
 		goal: i=>7+i*3,
 		bulk: i=>Math.floor((i-7)/3+1),
 
@@ -68,7 +68,6 @@ const CHALS = [
 		eff: i=>i/5+1,
 		effDesc: x=>format(x,1)+"x",
 	},{
-		max: 7,
 		id: 'crystal',
 
 		title: `Prestigeless`,
@@ -76,6 +75,7 @@ const CHALS = [
 		cond: _=>!hasUpgrades("pp"),
 		reward: `PP gain is <b class="green">doubled</b> each completion.`,
 
+		max: 7,
 		goal: i=>4+i*2,
 		bulk: i=>Math.floor((i-4)/2+1),
 
@@ -85,96 +85,87 @@ const CHALS = [
 		eff: i=>Decimal.pow(2,i),
 		effDesc: x=>format(x,0)+"x",
 	},{
-		max: 5,
 		id: 'crystal',
-
 		title: `Unefficient`,
 		desc: `You cannot buy Grass and Prestige Upgrades.`,
+
 		cond: _=>!hasUpgrades("grass")&&!hasUpgrades("pp"),
-		reward: `Platinum gain is increased by <b class="green">+1</b> per completion.`,
 
+		max: 5,
 		goal: i=>4+i*2,
-		bulk: i=>Math.floor((i-4)/2+1),
-
 		goalDesc: x=>"Tier "+format(x,0),
 		goalAmt: _=>player.tier,
+		bulk: i=>Math.floor((i-4)/2+1),
 
+		reward: `Platinum gain is increased by <b class="green">+1</b> per completion.`,
 		eff: i=>i,
 		effDesc: x=>format(x,1)+"x",
 	},{
-		unl: _=>player.grasshop >= 15,
-
-		max: 6,
 		id: 'steel',
-
 		title: `Clear Crystal`,
 		desc: `You can't buy Crystal Upgrades.`,
+
+		unl: _=>player.grasshop >= 15,
 		cond: _=>!hasUpgrades("crystal"),
-		reward: `Steel gain is <b class='green'>tripled</b> each completion.`,
 
+		max: 6,
 		goal: i=>11+i*5,
-		bulk: i=>Math.floor((i-11)/5+1),
-
 		goalDesc: x=>"Tier "+format(x,0),
 		goalAmt: _=>player.tier,
+		bulk: i=>Math.floor((i-11)/5+1),
 
+		reward: `Steel gain is <b class='green'>tripled</b> each completion.`,
 		eff: i=>Decimal.pow(3,i),
 		effDesc: x=>format(x,1)+"x",
 	},{
-		unl: _=>player.grasshop >= 18,
-
-		max: 4,
 		id: 'steel',
-
 		title: `Empower`,
 		desc: `Non-Steelie Challenge Rewards do nothing. Additionally, you gain 1 Perk per level.`,
+
+		unl: _=>player.grasshop >= 18,
 		cond: _=>false,
-		reward: `Charge gain is increased by <b class='green'>5x</b> each completion.`,
 
+		max: 4,
 		goal: i=>25+i*3,
-		bulk: i=>Math.floor((i-25)/3+1),
-
 		goalDesc: x=>"Tier "+format(x,0),
 		goalAmt: _=>player.tier,
+		bulk: i=>Math.floor((i-25)/3+1),
 
+		reward: `Charge gain is increased by <b class='green'>5x</b> each completion.`,
 		eff: i=>Decimal.pow(5,i),
 		effDesc: x=>format(x,1)+"x",
 	},{
-		unl: _=>hasStarTree("progress", 6),
-
-		max: 11,
 		id: 'gal',
-
 		title: `Sleepy Hop`,
 		desc: `You must grasshop at least as you can. Getting 10 Rocket Parts will complete it.`,
+
+		unl: _=>hasStarTree("progress", 6),
 		cond: _=>galUnlocked()&&tmp.chal.goal[8]>=player.grasshop,
-		reward: `Nothing.`,
 
+		max: 11,
 		goal: i=>Math.max(30-i*3,0),
-		bulk: i=>Math.floor((30-i)/3+1),
-
 		goalDesc: x=>"Grasshop "+format(x,0),
 		goalAmt: _=>player.rocket.part==10?player.grasshop:1/0,
+		bulk: i=>Math.floor((30-i)/3+1),
 
+		reward: `Nothing.`,
 		eff: i=>i,
 		effDesc: x=>"however, you will feel a sense of accomplishment",
 	},{
+		id: 'gal',
+		title: `Dreamy Grasswalk`,
+		desc: `You can't grasshop.`,
+
 		unl: _=>player.chal.comp[8] == 12,
+		cond: _=>player.grasshop==0,
 
 		max: Infinity,
-		id: 'gal',
-
-		title: `Walk On Grass`,
-		desc: `You can't grasshop.`,
-		cond: _=>player.grasshop==0,
-		reward: `Nothing.`,
-
 		goal: i=>i*3,
-		bulk: i=>Math.floor(i/3+1),
-
 		goalDesc: x=>"Grass-Skip "+format(x,0),
 		goalAmt: _=>player.aRes.grassskip,
+		bulk: i=>Math.floor(i/3+1),
 
+		reward: `Nothing.`,
 		eff: i=>i,
 		effDesc: x=>"however, you will feel a sense of accomplishment",
 	}
@@ -223,9 +214,9 @@ tmp_update.push(_=>{
 	for (let [i, c] of Object.entries(CHALS)) {
 		let comp = player.chal.comp[i] || 0
 		tmp.chal.goal[i] = c.goal(comp)
-		tmp.chal.eff[i] = c.eff(compute(c.unl, true) && (!inChal(7) || c.id == "steel") ? comp : 0)
+		tmp.chal.eff[i] = c.eff(compute(c.unl) && (!inChal(7) || c.id == "steel") ? comp : 0)
 
-		if (compute(c.unl, true) && inChalCond(i)) {
+		if (compute(c.unl) && inChalCond(i)) {
 			let a = c.goalAmt()
 			tmp.chal.amt[i] = a
 			tmp.chal.bulk[i] = Math.max(Math.min(c.bulk(a), c.max), 0)
@@ -278,7 +269,7 @@ el.update.chal = _=>{
 			for (let i in CHALS) {
 				let c = CHALS[i]
 				let l = player.chal.comp[i] || 0
-				let unl2 = compute(c.unl, true) && (!player.options.hideUpgOption || l < c.max || player.chal.progress == i)
+				let unl2 = compute(c.unl) && (!player.options.hideUpgOption || l < c.max || player.chal.progress == i)
 				tmp.el['chal_div_'+i].setDisplay(unl2)
 
 				if (unl2) {

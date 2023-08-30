@@ -981,7 +981,7 @@ button * {
 }
 
 #mil_div_pt,
-#mil_div_pt .milestone_ctns > div {
+#mil_div_pt .milestone_ctns > div.bought {
     background: linear-gradient(0deg, rgba(0,212,255,1) 0%, rgba(0,21,139,1) 100%);
 }
 

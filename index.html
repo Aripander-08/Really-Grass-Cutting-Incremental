@@ -11,7 +11,6 @@
 	<script src="js/utils/Element.js"></script>
 	<script src="js/utils/format.js"></script>
 	<script src="js/utils/saves.js"></script>
-	<!-- <script src="js/utils/stats.js"></script> -->
 	<script src="js/utils/time.js"></script>
 	<script src="js/utils/utils.js"></script>
 
@@ -45,9 +44,9 @@
 	<script src="js/features/gal/star_chart.js"></script>
 	<script src="js/features/gal/agh.js"></script>
 	<script src="js/features/gal/sacrifice.js"></script>
+	<script src="js/features/gal/obelisk.js"></script>
 
 	<script src="js/features/realms/planetoid.js"></script>
-	<script src="js/future/obelisk.js"></script>
 
 	<link rel="stylesheet" href="style.css">
 </head>
@@ -136,7 +135,7 @@
 				<button id="hideMaxBtn" onclick="toggleOption('hideUpgOption')">Maxed: <span id="hideMax"></span></button>
 				<button id="hideMilestoneBtn" onclick="toggleOption('hideMilestone')">Milestones: <span id="hideMilestone"></span></button><br><br>
 
-				<b style="color: #ffffbf">RGCI: Thunderized Balance</b> - <a href="http://aarextiaokhiao.github.io">By Aarex</a> - β4c α5<br>
+				<b style="color: #ffffbf">RGCI: Thunderized Balance</b> - <a href="http://aarextiaokhiao.github.io">By Aarex</a> - β4c α7<br>
 				<span style="font-size: 12px">(Built on <a href="http://mrredshark77.github.io/Really-Grass-Cutting-Incremental/">RGCI</a> and <a href="http://aarextiaokhiao.github.io/Really-Grass-Cutting-Incremental/">RGCI: Extension</a>)</span>
 				<br><br>
 
@@ -354,11 +353,30 @@
                     <div style="width: 67%; height: 100%;"><div id="upgs_div_measure" style="display: none;"></div></div>
                 </div>
             </div><div id="map_div_trial">
+                <div style="width: 100%; height: 100%;" class="table_center">
+                    <div style="width: 50%; height: 100%;">
+						<div style="width: 100%; height: 50%;">
+							<h2>Time-Limited Trials</h2><br>
+							Time-limit your trial here.<br>
+							<button onclick="TRIAL.time.set(180)">3 minutes</button>
+							<button onclick="TRIAL.time.set(120)">2 minutes</button>
+							<button onclick="TRIAL.time.set(60)">1 minute</button>
+							<button onclick="TRIAL.time.set(30)">30 seconds</button>
+						</div><div id="trial_cp_div" style="width: 100%; height: 50%;">
+							<h2>Quadrant Trials</h2><br>
+							Set your checkpoint here but only Measure and Observatorium preserved.<br>
+							<span id="trial_cp"></span><br>
+							<button id="trial_cp_set" onclick="TRIAL.checkpoint.set()">Set Checkpoint</button>
+							<button id="trial_cp_go" onclick="TRIAL.checkpoint.go()">Go to Checkpoint</button>
+						</div>
+					</div>
+					<div style="width: 50%; height: 100%;"><div id="mil_div_pt"></div></div>
+                </div>
 				<div id="mil_div_pt"></div>
             </div><div id="map_div_ap">
                 <div style="width: 100%; height: 100%;" class="table_center">
                     <div style="width: 33.3%; height: 100%;"><div class="reset_div" id="reset_div_astral_pres"></div></div>
-                    <div style="width: 33.4%; height: 100%;"><div id="lunar_obelisk_div">
+                    <!--<div style="width: 33.4%; height: 100%;"><div id="lunar_obelisk_div">
                         <div style="height: 80px;">
                             Lunar Power: <b id="lp_gain">???/s</b><br>
                             Active: <span id="lp_active">0 / 0</span>
@@ -366,7 +384,7 @@
                             
                         </div>
                     </div></div>
-                    <div style="width: 33.3%; height: 100%;"></div>
+                    <div style="width: 33.3%; height: 100%;"></div>-->
                 </div>
             </div>
 		</div>

@@ -360,8 +360,6 @@ UPGS.gen = {
 			},
 			effDesc: x => "+"+formatPercent(x)+"/s",
 		},{
-			max: Infinity,
-
 			unl: _=>hasUpgrade("factory", 2),
 
 			title: "Prestige Charge",
@@ -369,19 +367,14 @@ UPGS.gen = {
 		
 			res: "pp",
 			icon: ["Curr/Charge"],
-						
+
+			max: Infinity,
 			cost: i => Decimal.pow(1.2,i).mul(1e25).ceil(),
 			bulk: i => i.div(1e25).max(1).log(1.2).floor().toNumber()+1,
-		
-			effect(i) {
-				let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/10+1)
-		
-				return x
-			},
+
+			effect: i => E(1.5).pow(Math.floor(i/25)).mul(i/10+1),
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
-
 			unl: _=>hasUpgrade("factory", 2),
 
 			title: "Crystal Charge",
@@ -389,35 +382,27 @@ UPGS.gen = {
 		
 			res: "crystal",
 			icon: ["Curr/Charge"],
-						
+
+			max: Infinity,
 			cost: i => Decimal.pow(1.15,i**0.8).mul(1e9).ceil(),
 			bulk: i => i.div(1e9).max(1).log(1.15).root(0.8).floor().toNumber()+1,
-		
-			effect(i) {
-				let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/10+1)
-		
-				return x
-			},
+
+			effect: i => E(1.5).pow(Math.floor(i/25)).mul(i/10+1),
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
-
 			unl: _=>hasUpgrade("factory", 2) && hasStarTree("progress", 3),
 
 			title: "Steel Charge",
-			desc: `Increase charge rate by <b class="green">+10%</b> per level.<br>This is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
-		
+			desc: `Increase charge rate by <b class="green">+20%</b> per level.<br>This is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
+
 			res: "steel",
 			icon: ["Curr/Charge"],
-						
+
+			max: Infinity,
 			cost: i => Decimal.pow(1.15,i).mul(1e30).ceil(),
 			bulk: i => i.div(1e30).max(1).log(1.15).floor().toNumber()+1,
-		
-			effect(i) {
-				let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/10+1)
-		
-				return x
-			},
+
+			effect: i => E(1.5).pow(Math.floor(i/25)).mul(i/5+1),
 			effDesc: x => format(x)+"x",
 		},
 	],
@@ -576,7 +561,7 @@ el.update.factory = _=>{
 }
 
 MAIN.charger = {
-	unl: _ => hasUpgrade("factory", 2),
+	unl: _ => hasUpgrade("factory", 2) && !inRecel(),
 	gain() {
 		if (inRecel()) return E(0)
 
@@ -605,7 +590,7 @@ EFFECT.charger = {
 	getEff(res, data) {
 		if (player.bestCharge.lt(data.req)) return E(0)
 
-		let penalty = E(10).pow(data.offsetOoM).mul(data.req).div(tmp.charge.OoMMul)
+		let penalty = E(10).pow(data.offsetOoM).mul(data.req).div(tmp.charge.OoMMul || 1)
 		return res.div(penalty.max(1))
 	},
 	effDesc(desc, data) {
@@ -643,7 +628,7 @@ EFFECT.charger = {
 			unl: _ => hasUpgrade("factory", 4) || galUnlocked(),
 
 			req: E(1e15),
-			eff: c => c.add(1).log10().root(1.25).div(10).pow10(),
+			eff: c => c.add(1).log10().pow(.8).div(hasAGHMilestone(12) ? 8 : 10).pow10(),
 			desc: x => "Gain more "+format(x,3)+"x TP in Anti-Realm.",
 		},{
 			unl: _ => hasUpgrade("factory", 4) || galUnlocked(),
@@ -660,7 +645,7 @@ EFFECT.charger = {
 		},{
 			unl: _ => hasUpgrade("funMachine", 2),
 
-			req: E(1e42),
+			req: E(1e39),
 			offsetOoM: 30,
 			eff: c => c.add(1).log10().div(15).pow10(),
 			desc: x => "Gain more "+format(x,3)+"x Fun.",

@@ -8,7 +8,6 @@ let REALMS = {
 			x = x.mul(upgEffect('pp',0))
 			x = x.mul(upgEffect('crystal',0))
 			x = x.mul(upgEffect('plat',2))
-			x = x.mul(getAstralEff("gr"))
 			return x
 		},
 		xp() {
@@ -30,16 +29,6 @@ let REALMS = {
 			return x
 		}
 	},
-	accelOnly: {
-		on: r => r == 0,
-		grass: _ => E(1),
-		xp() {
-			let r = E(1)
-			if (upgEffect("unGrass", 1) > 1) r = E(getAstralEff("xp")).pow(upgEffect("unGrass", 1) - 1)
-			return r
-		},
-		tp: _ => E(1),
-	},
 	earth: {
 		on: r => r < 3,
 		grass() {
@@ -48,6 +37,7 @@ let REALMS = {
 			x = x.mul(upgEffect('rocket',0))
 			x = x.mul(upgEffect('rocket',17))
 			if (hasUpgrade('momentum', 0)) x = x.mul(3)
+			x = x.mul(getAstralEff("gr"))
 			return x
 		},
 		xp() {
@@ -58,6 +48,7 @@ let REALMS = {
 			x = x.mul(upgEffect('rocket',10))
 			if (hasUpgrade('momentum', 2)) x = x.mul(3)
 			x = x.mul(getAstralEff('xp'))
+			x = x.mul(upgEffect("dm", 4))
 			return x
 		},
 		tp() {
@@ -74,12 +65,6 @@ let REALMS = {
 			return x
 		}
 	},
-	global: {
-		on: _ => true,
-		grass: _ => tmp.cutAmt,
-		xp: _ => tmp.cutAmt,
-		tp: _ => tmp.cutAmt,
-	}
 }
 
 function updateRealmTemp() {

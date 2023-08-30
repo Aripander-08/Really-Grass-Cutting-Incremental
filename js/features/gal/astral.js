@@ -20,8 +20,7 @@ el.update.astral = _=>{
 
 const ASTRAL = {
 	spGain() {
-		let r = E(tmp.cutAmt)
-
+		let r = E(1)
 		r = r.mul(getChargeEff(7))
 		r = r.mul(upgEffect('momentum', 12))
 		if (hasStarTree("progress", 8)) r = r.mul(starTreeEff("progress", 8))
@@ -30,8 +29,9 @@ const ASTRAL = {
 		r = r.mul(getGSEffect(1))
 		r = r.mul(upgEffect('sfrgt', 2))
 		r = r.mul(upgEffect("unGrass", 3))
+		r = r.mul(upgEffect("ring", 6))
 
-		if (player.gal.astral_pres) r = r.root(tmp.gal.astral.scale).div(E(10).pow(player.gal.astral_pres))
+		if (player.gal.astral_pres) r = r.root(tmp.gal.astral.scale).div(E(1e3).pow(player.gal.astral_pres))
 
 		return r
 	},
@@ -56,67 +56,99 @@ const ASTRAL = {
 EFFECT.astral = {
 	unl: _ => galUnlocked(),
 	title: r => `Astral <b class="magenta">${ASTRAL.title()}</b>`,
-	res: _ => tmp.gal?.astral?.total,
+	res: _ => {
+		return {
+			lvl: tmp.gal?.astral?.total,
+			pres: player.gal.astral_pres
+		}
+	},
 	effs: {
 		gr: {
-			unl: _ => hasAGHMilestone(10),
-			eff: a => E(1.2).pow(a - 30).max(1),
+			unl: _ => hasAGHMilestone(9),
+			eff: a => E(1.2).pow((a.lvl - 15) * upgEffect("ring", 3, 0)).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Grass`
 		},
 		xp: {
 			unl: _ => hasAGHMilestone(4),
-			eff: a => E(1.3).pow((a - 10) * upgEffect("dm", 4)).max(1),
+			eff: a => E(1.2).pow(a.lvl - 10).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to XP`
 		},
 		tp: {
 			unl: _ => true,
-			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow(a ** 0.8) : a + 1,
+			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow(a.lvl ** 0.8) : a + 1,
 			desc: x => `<b class="magenta">${format(x)}x</b> to TP`
 		},
 		fd: {
 			unl: _ => true,
-			eff: a => (a / 50 + 1) * upgEffect('ring', 2),
+			eff: a => (a.lvl / 50 + 1) * upgEffect("ring", 4),
 			desc: x => `<b class="magenta">^${format(x)}</b> to Foundry effect`
 		},
 		ch: {
 			unl: _ => hasAGHMilestone(3),
-			eff: a => E(2).pow((a / 3 - 3) * upgEffect('ring', 3)).max(1),
+			eff: a => E(2).pow((a.lvl / 3 - 3) * upgEffect("ring", 5)).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Charge`
 		},
 		ap: {
-			unl: _ => hasAGHMilestone(9),
-			eff: a => 1 + Math.min(a / 200, 1),
-			desc: x => `<b class="magenta">${format(x)}x</b> to AP per-25 multipliers`
+			unl: _ => hasAGHMilestone(10),
+			eff: a => 1 + Math.min(a.lvl / 200, .5),
+			desc: x => `<b class="magenta">${format(x)}x</b> to some AP upgrades (per 25 levels)`
 		},
 		rf: {
 			unl: _ => hasAGHMilestone(2),
-			eff: a => a / 20,
+			eff: a => a.lvl / 20,
 			desc: x => `<b class="magenta">+${format(x)}x</b> to Rocket Fuel`
 		},
 		st: {
 			unl: _ => hasAGHMilestone(1),
-			eff: a => E(2).pow(a / 5 - 2).max(1),
+			eff: a => E(2).pow(a.lvl / 5 - 2).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Stars`
 		},
 		fu: {
 			unl: _ => hasAGHMilestone(5),
-			eff: a => E(1.3).pow(a - 16).max(1),
+			eff: a => E(1.3).pow(a.lvl - 16).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Fun`
 		},
 		sf: {
 			unl: _ => hasAGHMilestone(6),
-			eff: a => E(1.2).pow(a - 16).max(1),
+			eff: a => E(hasAGHMilestone(11) ? 1.3 : 1.2).pow(a.lvl - 16).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to SFRGT`
 		},
 		uh: {
 			unl: _ => hasAGHMilestone(8),
-			eff: a => Math.floor(Math.max(a / 3 - 8, 0)),
+			eff: a => Math.floor(Math.max(a.lvl / 2 - 8, 0)),
 			desc: x => `<b class="magenta">+${format(x,0)}</b> to Unnatural Healing`
 		},
 		rg: {
-			unl: _ => hasAGHMilestone(11),
-			eff: a => Math.max(a / 5 - 10, 1),
+			unl: _ => hasAGHMilestone(13),
+			eff: a => Math.max(a.lvl / 5 - 10, 1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to Rings`
+		},
+
+		//Prestiges
+		pl: {
+			unl: _ => player.gal.astral_pres >= 1,
+			eff: a => E(5).pow(a.pres),
+			desc: x => `<b class="magenta">${format(x)}x</b> to Planetarium`
+		},
+		cl: {
+			unl: _ => player.gal.astral_pres >= 2,
+			eff: a => E(2).pow(a.pres - 1),
+			desc: x => `<b class="magenta">${format(x)}x</b> to Clouds`
+		},
+		mn: {
+			unl: _ => player.gal.astral_pres >= 3,
+			eff: a => E(5).pow(a.pres - 2),
+			desc: x => `<b class="magenta">${format(x)}x</b> to Momentum`
+		},
+		tb: {
+			unl: _ => player.gal.astral_pres >= 4,
+			eff: a => (a.pres - 3) / 20,
+			desc: x => `<b class="magenta">+${format(x)}x</b> to Tier Base`
+		},
+		lp: {
+			unl: _ => player.gal.astral_pres >= 5,
+			eff: a => E(2).pow(a.pres - 4),
+			desc: x => `<b class="magenta">${format(x)}x</b> to Lunar Power`
 		},
 	},
 }
@@ -131,7 +163,7 @@ function updateAstralTemp() {
 
 	let pres = player.gal.astral_pres
 	data.scale = ASTRAL_PRESTIGE.scaling(pres)
-	data.total = player.gal.astral * data.scale + ASTRAL_PRESTIGE.extra(pres)
+	data.total = Math.min(player.gal.astral, 100) * data.scale + ASTRAL_PRESTIGE.extra(pres)
 
 	data.gain = ASTRAL.spGain()
 	data.prevReq = ASTRAL.req(player.gal.astral - 1, pres)

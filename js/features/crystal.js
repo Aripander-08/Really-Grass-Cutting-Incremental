@@ -74,108 +74,86 @@ UPGS.crystal = {
 
 	ctn: [
 		{
-			max: 60,
-
 			title: "Grass Value III",
 			tier: 3,
 			desc: `Increase grass gain by <b class="green">+1</b> per level.`,
-		
+
 			res: "crystal",
 			icon: ["Curr/Grass"],
-						
+		
+			max: 60,	
 			cost: i => Decimal.pow(2,i).mul(20).ceil(),
 			bulk: i => i.div(20).max(1).log(2).floor().toNumber()+1,
-		
-			effect(i) {
-				return i+1
-			},
+
+			effect: i => i+1,
 			effDesc: x => format(x)+"x",
 		},{
-			max: 60,
-
 			title: "XP III",
 			tier: 3,
 			desc: `Increase XP gain by <b class="green">+0.5</b> per level.`,
-		
+
 			res: "crystal",
 			icon: ["Icons/XP"],
-						
+
+			max: 60,
 			cost: i => Decimal.pow(2,i).mul(30).ceil(),
 			bulk: i => i.div(30).max(1).log(2).floor().toNumber()+1,
-		
-			effect(i) {
-				return i/2+1
-			},
+
+			effect: i => i/2+1,
 			effDesc: x => format(x)+"x",
 		},{
-			max: Infinity,
-
 			title: "TP II",
 			tier: 2,
 			desc: `Increase TP gain by <b class="green">25%</b> compounding per level.`,
-		
+
 			res: "crystal",
 			icon: ["Icons/TP"],
-						
+
+			max: Infinity,
 			cost: i => Decimal.pow(2,i).mul(1e3).ceil(),
 			bulk: i => i.div(1e3).max(1).log(2).floor().toNumber()+1,
-		
-			effect(i) {
-				return E(1.25).pow(i)
-			},
+
+			effect: i => E(1.25).pow(i),
 			effDesc: x => format(x)+"x",
 		},{
-			max: 10,
-
 			title: "Tiered Boost",
 			desc: `Tiers are more effective. (<b class='green'>+0.1x</b> multiplier per Tier)`,
-		
+
 			res: "crystal",
 			icon: ["Icons/TP", "Icons/StarSpeed"],
 
+			max: 10,
 			cost: i => Decimal.pow(20,i/2.5).mul(100).ceil(),
 			bulk: i => i.div(100).max(1).log(20).mul(2.5).floor().toNumber()+1,
-		
-			effect(i) {
-				return i/10+2.25
-			},
+
+			effect: i => i/10+2.25,
 			effDesc: x => format(x,2)+"x per Tier ("+format(E(MAIN.tier.base()).pow(player.tier),0)+"x -> "+format(E(MAIN.tier.base()+.1).pow(player.tier),0)+"x)",
 		},{
-			max: 60,
-
 			title: "Prestiged Synergy",
 			desc: `Grass Upgrade's "PP" is <b class='green'>+0.033x</b> more effective.`,
-		
+
 			res: "crystal",
 			icon: ["Curr/Prestige", "Icons/StarSpeed"],
 
+			max: 60,
 			cost: i => Decimal.pow(10,i/2).mul(50).ceil(),
 			bulk: i => i.div(50).max(1).log(10).mul(2).floor().toNumber()+1,
-		
-			effect(i) {
-				let x = i/30+1
-		
-				return x
-			},
+
+			effect: i => i/30+1,
 			effDesc: x => format(x,3)+"x effective",
 		},{
-			max: 3,
-
 			title: "Grow Amount II",
 			tier: 2,
 			desc: `Increase grass grow amount by <b class="green">1</b>.`,
-		
+
 			res: "crystal",
 			icon: ["Icons/MoreGrass", "Icons/StarSpeed"],
 
+			max: 3,
 			cost: i => Decimal.pow(3,i).mul(500).ceil(),
 			bulk: i => i.div(500).max(1).log(3).floor().toNumber()+1,
 		
-			effect(i) {
-				let x = i
-		
-				return x
-			},
+			effect: i => i,
 			effDesc: x => "+"+format(x,0),
 		}
 	],

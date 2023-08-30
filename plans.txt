@@ -1,10 +1,90 @@
-Remaining content:
-- Charge boosts Grass (instead of Steel)
+-=- [ Milestones ] -=-
+Grass-Jump Formula: [Unnatural Tier]
+- GJ 1: GJ boosts Tier Power. [+1/GJ]
+- GJ 2: Improve Momentum upgrades.
+- GJ 3: GJ boosts Space Power. [x2/GJ]
+- GJ 4: GJ boosts Unnatural Healing. [+1/GJ]
+- GJ 5: GJ boosts Habitability. [+1/GJ]
+- GJ 6: Double Moonstone chance.
+- GJ 7: GJ boosts Normality Points. [x2/GJ]
+- GJ 8: GJ adds Planetoid Time. [+5/GJ]
+- GJ ?: Double Stability.
+- GJ ?: [ Dark Obelisk stuff ]
+- GJ ?: [ Dark Obelisk stuff ]
+- GJ ?: [ Dark Obelisk stuff ]
 
-Thinking for scalings, which cap the levels:
-- Grass PP
-- Crystal TP
-- PP XP
-- PP Grass
+Tier Formula: [Total Cosmic]^0.8
+- Tier 1: Unlock the Stellar Obelisk.
+- Tier 2: Unlock Grass-Jumps.
+- Tier 3: +10 Time per Tier.
+- Tier 4: Every 25 Tiers, multiply Momentum by Tier Base.
+- Tier 5: Unlock the Lunar Obelisk.
+- Tier 6: Improve "Weak TP" upgrade.
+- Tier 7: Improve "Flashback IV" upgrade.
+- Tier 8: Double Tier Power.
+- Tier 9: Unlock Constellation.
+- Tier 10: Double Lines.
+- Tier 11: Double Stability.
+- Tier 12: Double Arcs.
+- Tier 13: Unlock the Dark Obelisk.
+- Tier 14: ???
+- Tier 15: ???
+- Tier 16: ???
+- Tier 17: Unlock the Star.
 
-Other Crystal Upgrades will recieve cap because it becomes too weak.
+-=- [ Stellar Obelisk ] -=-
+- AP 1: Boost Planetarium.
+- AP 2: Boost Clouds.
+- AP 3: Boost Momentum.
+- AP 4: Add Tier Base.
+- AP 5: Boost Lunar Power.
+- AP 6: Boost Stability.
+
+-=- [ Lunar Obelisk ] -=-
+- Boost Grass.
+- Boost Oil.
+- Boost Clouds.
+- Boost Planetarium.
+- Boost Cosmic.
+
+-=- [ Constellation Changes ] -=-
+Multipliers can't boost Constellation generators for balancing reasons.
+
+Line:
+- Arc: Based on Moon Constellations. No tier requirement.
+- Prism: Unlocks 3-4 tiers later.
+Arc:
+- Bulwark: Reduces instability in nearest spaces.
+- Magnifier: Shares Amplifiers to Line Constellations. [additive]
+- Echo: Boosts Line Constellations on the left.
+- Crescent [new]: Shares power to adjacent Line Constellations. [maximum]
+Dark:
+- Charge: Now a Dark Constellation.
+
+-=- [ Dark Era ] -=-
+I'll put Dark Obelisk as a early replacement to HSJ.
+
+Black Market:
+- The Phantom
+- Dark Garden
+- Dark Charger
+- Dark Constellations
+- The Star
+
+The Phantom:
+- The Phantom is a Dark Obelisk feature.
+- On enable: Phantom rarely starts to grow.
+- Cutting Phantom gives a temporary Cursed effect:
+-- Grow Speed is always 100/s.
+-- You only gain Phantom.
+
+Dark Garden:
+- Place Phantom into a 5x5 field of Garden.
+- Grow Phantom with different Souls by Fertilizer. (must wait to grow)
+- Souls boost Dark Garden (dependent on kind) and give more Phantom.
+
+Star Frenzy [SNT1]:
+- Star Frenzy starts per 10x Star Growth.
+- Star Frenzy: Cut Grass for Solar Rays and Shards.
+- Cutting reduces / adds lifespan. (higher eclipse = higher reduction)
+- If lifespan reaches 0, Star Frenzy ends.

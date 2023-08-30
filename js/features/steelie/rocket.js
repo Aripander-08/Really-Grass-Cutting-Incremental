@@ -35,84 +35,56 @@ UPGS.rocket = {
 	ctn: [
 		//Tier 1
 		{
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Grass",
 			desc: `Increase grass gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Grass'],
-			
+
 			cost: i => 1,
-			bulk: i => i,
-
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
-		},{
+			costOnce: true,
 			max: 50,
 
-			costOnce: true,
-
+			effect: i/20+1,
+			effDesc: x => format(x)+"x",
+		},{
 			title: "Rocket Fueled Levels",
 			desc: `Increase XP gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Icons/XP'],
-			
+
 			cost: i => 1,
-			bulk: i => i,
-
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
-		},{
+			costOnce: true,
 			max: 50,
 
-			costOnce: true,
-
+			effect: i/20+1,
+			effDesc: x => format(x)+"x",
+		},{
 			title: "Rocket Fueled Tiers",
-			desc: `Increase TP gain by <b class="green">+5%</b> per level.`,
+			desc: `Increase TP gain by <b class="green">+10%</b> per level.`,
 
 			res: "rf",
 			icon: ['Icons/TP'],
-			
+
 			cost: i => 2,
-			bulk: i => Math.floor(i/2),
-
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
-		},{
+			costOnce: true,
 			max: 50,
 
-			costOnce: true,
-
+			effect: i/10+1,
+			effDesc: x => format(x)+"x",
+		},{
 			title: "Rocket Fueled Prestiges",
 			desc: `Increase PP gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Prestige'],
-			
+
 			cost: i => 1,
-			bulk: i => i,
+			costOnce: true,
+			max: 50,
 
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
+			effect: i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			max: 50,
@@ -135,254 +107,161 @@ UPGS.rocket = {
 			},
 			effDesc: x => format(x)+"x",
 		},{
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Foundry",
 			desc: `Increase steel gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Steel'],
-			
-			cost: i => 1,
-			bulk: i => i,
 
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
-		},{
+			cost: i => 2,
+			costOnce: true,
 			max: 50,
 
-			costOnce: true,
-
+			effect: i/20+1,
+			effDesc: x => format(x)+"x",
+		},{
 			title: "Rocket Fueled Charge",
 			desc: `Increase charge rate by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Icons/Charge'],
-			
-			cost: i => 1,
-			bulk: i => i,
 
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
-		},{
+			cost: i => 2,
+			costOnce: true,
 			max: 50,
 
-			costOnce: true,
-
+			effect: i/20+1,
+			effDesc: x => format(x)+"x",
+		},{
 			title: "Rocket Fueled Anonymity",
 			desc: `Increase AP gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Anonymity'],
-			
+
 			cost: i => 1,
-			bulk: i => i,
-
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
-			effDesc: x => format(x)+"x",
-		},{
+			costOnce: true,
 			max: 50,
 
-			costOnce: true,
-
+			effect: i/20+1,
+			effDesc: x => format(x)+"x",
+		},{
 			title: "Rocket Fueled Pumpjacks",
 			desc: `Increase oil gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Oil'],
-			
+
 			cost: i => 1,
-			bulk: i => i,
+			costOnce: true,
+			max: 50,
 
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
+			effect: i/20+1,
 			effDesc: x => format(x)+"x",
 		},
 
 		//Tier 2
 		{
 			unl: _ => hasStarTree("progress", 0),
-			tier: 2,
-
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Speed",
 			desc: `Increase grow speed by <b class="green">+0.1/s</b> per level.`,
 
 			res: "rf",
 			icon: ['Icons/Speed'],
-			
-			cost: i => 10,
-			bulk: i => i/10,
-
-			effect(i) {
-				let x = E(i*0.1+1)
-
-				return x
-			},
-			effDesc: x => format(x,1)+"/s",
-		},{
-			unl: _ => hasStarTree("progress", 0),
 			tier: 2,
 
+			cost: i => 10,
+			costOnce: true,
 			max: 50,
 
-			costOnce: true,
-
+			effect: i/10+1,
+			effDesc: x => format(x)+"x",
+		},{
+			unl: _ => hasStarTree("progress", 0),
 			title: "Rocket Fueled Levels II",
-			desc: `Increase XP gain by <b class="green">+10%</b> per level.`,
+			desc: `Increase XP gain by <b class="green">+20%</b> per level.`,
 
 			res: "rf",
 			icon: ['Icons/XP'],
+			tier: 2,
 			
 			cost: i => 30,
 			bulk: i => i/30,
 
-			effect(i) {
-				let x = E(i*0.1+1)
-
-				return x
-			},
+			effect: i => i/5+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
-			tier: 2,
-
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Prestiges II",
 			desc: `Increase PP gain by <b class="green">+10%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Prestige'],
-			
+
 			cost: i => 30,
-			bulk: i => i/30,
+			costOnce: true,
+			max: 50,
 
-			effect(i) {
-				let x = E(i*0.1+1)
-
-				return x
-			},
+			effect: i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
-			tier: 2,
-
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Foundry II",
 			desc: `Increase steel gain by <b class="green">+10%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Steel'],
-			
+
 			cost: i => 30,
-			bulk: i => i/30,
+			costOnce: true,
+			max: 50,
 
-			effect(i) {
-				let x = E(i*0.1+1)
-
-				return x
-			},
+			effect: i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
-			tier: 2,
-
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Charge II",
 			desc: `Increase charge rate by <b class="green">+10%</b> per level.`,
 
 			res: "rf",
 			icon: ['Icons/Charge'],
-			
+
 			cost: i => 30,
-			bulk: i => i/30,
+			costOnce: true,
+			max: 50,
 
-			effect(i) {
-				let x = E(i*0.1+1)
-
-				return x
-			},
+			effect: i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
-			tier: 2,
-
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Anonymity II",
 			desc: `Increase AP gain by <b class="green">+10%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Anonymity'],
-			
+
 			cost: i => 30,
-			bulk: i => i/30,
+			costOnce: true,
+			max: 50,
 
-			effect(i) {
-				let x = E(i*0.1+1)
-
-				return x
-			},
+			effect: i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
-			tier: 2,
-
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Pumpjacks II",
 			desc: `Increase oil gain by <b class="green">+10%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Oil'],
-			
+
 			cost: i => 30,
-			bulk: i => i/30,
+			costOnce: true,
+			max: 50,
 
-			effect(i) {
-				let x = E(i*0.1+1)
-
-				return x
-			},
+			effect: i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
-
-			max: 20,
-
 			title: "Rocket Fueled Luck",
 			desc: `Increase Platinum chance by <b class="green">+0.2%</b>.`,
 
@@ -392,9 +271,7 @@ UPGS.rocket = {
 			cost: i => E(2).pow(i).mul(100),
 			bulk: i => E(i).div(100).log(2).floor().toNumber() + 1,
 
-			effect(i) {
-				return i * 0.002
-			},
+			effect: i => i * 0.002,
 			effDesc: x => "+"+formatPercent(x),
 		},
 
@@ -494,11 +371,12 @@ let ROCKET_PART = {
 
 	m_gain() {
 		if (!this.upgraded()) return E(1)
-		let r = E(5).pow(player.rocket.part - 1)
+		let r = E(2).pow(player.rocket.part - 1)
 		r = r.mul(upgEffect("dm", 2))
 		r = r.mul(upgEffect('np', 3))
 		r = r.mul(upgEffect("sfrgt", 6))
-		r = r.mul(upgEffect('ring', 5))
+		r = r.mul(upgEffect("ring", 7))
+		r = r.mul(getAstralEff("mn"))
 		return r
 	}
 }
@@ -656,32 +534,32 @@ UPGS.momentum = {
 			bulk: i => 1
 		},{
 			title: "Unnatural Momentum",
-			desc: `<b class="green">+1</b> Unnatural Healing.`,
+			desc: `<b class="green">+1</b> to Unnatural Healing.`,
 
 			res: "momentum",
 			icon: ['Curr/UnnaturalGrass'],
 			
 			unl: _ => tmp.rocket_upgraded,
-			cost: i => E(25).pow(i).mul(50),
-			bulk: i => E(i).div(50).log(25).floor().toNumber()+1,
+			cost: i => E(5).pow(i+1),
+			bulk: i => E(i).log(5).floor().toNumber(),
 			max: Infinity,
 
 			effect: i => i,
 			effDesc: x => "+"+format(x),
 		},{
 			title: "It Doesn't Matter",
-			desc: `<b class="green">+1x</b> to Space Power.`,
+			desc: `<b class="green">+0.5x</b> to Dark Matter.`,
 
 			res: "momentum",
 			icon: ['Curr/DarkMatter'],
-			
+
 			unl: _ => tmp.rocket_upgraded,
-			cost: i => E(10).pow(i).mul(100),
-			bulk: i => E(i).div(100).log(10).floor().toNumber()+1,
+			cost: i => E(8).pow(i+1),
+			bulk: i => E(i).log(8).floor().toNumber(),
 			max: Infinity,
 
-			effect: i => i+1,
-			effDesc: x => format(x)+"x",
+			effect: i => i/2+1,
+			effDesc: x => format(x,1)+"x",
 		},{
 			title: "A New Star",
 			desc: `<b class="green">+1x</b> to Space Power.`,
@@ -690,8 +568,8 @@ UPGS.momentum = {
 			icon: ['Icons/SP'],
 			
 			unl: _ => hasStarTree("progress", 11),
-			cost: i => E(10).pow(i).mul(200),
-			bulk: i => E(i).div(200).log(10).floor().toNumber()+1,
+			cost: i => E(10).pow(i+1),
+			bulk: i => E(i).log(10).floor().toNumber(),
 			max: Infinity,
 
 			effect: i => i+1,

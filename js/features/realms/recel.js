@@ -25,9 +25,9 @@ function setupRecel() {
 
 REALMS.recelOnly = {
 	on: r => r == 2,
-	grass: _ => E(1e-5).mul(upgEffect("sfrgt", 5, 1)),
-	xp: _ => 1e-7,
-	tp: _ => 1e-6 * getEffect("uh", "tp"),
+	grass: _ => E(1e-6).mul(upgEffect("sfrgt", 5, 1)),
+	xp: _ => 1e-8,
+	tp: _ => 1e-5 * getEffect("uh", "tp"),
 }
 MAIN.recel = unMAIN = {}
 
@@ -46,8 +46,9 @@ RESET.recel = {
 
 	reset(force=false) {
 		if (inPlanetoid()) return
+		if (!hasUpgrade("funMachine", 3)) return
 		if (!player.unRes) player.unRes = setupRecel()
-		if (hasUpgrade("funMachine", 3)) switchRealm(2)
+		switchRealm(2)
 	},
 }
 
@@ -86,16 +87,16 @@ UPGS.unGrass = {
 			},
 			effDesc: x => format(x,1)+"x value",
 		}, {
-			max: 50,
+			max: 100,
 
 			title: "Naturalness",
-			desc: `Raise Astral XP effect by <b class='green'>^+0.01</b> in Normal Realm.`,
+			desc: `Raise Astral XP effect by <b class='green'>^+0.01</b> in Normal and Anti-Realms.`,
 
 			res: "unGrass",
 			icon: ['Icons/XP'],
 
-			cost: i => Decimal.pow(1.3,(i+5)**1.25).ceil(),
-			bulk: i => i.log(1.3).root(1.25).sub(5).add(1).floor().toNumber(),
+			cost: i => Decimal.pow(1.5,i+8).ceil(),
+			bulk: i => i.log(1.5).sub(8).add(1).floor().toNumber(),
 
 			effect: i => i/100+1,
 			effDesc: x => "^"+format(x),
@@ -108,8 +109,8 @@ UPGS.unGrass = {
 			res: "unGrass",
 			icon: ['Icons/Range'],
 			
-			cost: i => Decimal.pow(10,i).mul(1e3),
-			bulk: i => i.div(1e3).max(1).log10().floor().toNumber()+1,
+			cost: i => Decimal.pow(10,i).mul(50),
+			bulk: i => i.div(50).max(1).log10().floor().toNumber()+1,
 
 			effect(i) {
 				return i*10
@@ -123,9 +124,9 @@ UPGS.unGrass = {
 
 			res: "unGrass",
 			icon: ['Icons/SP', 'Icons/Plus'],
-			
-			cost: i => Decimal.pow(30,i).mul(1e3),
-			bulk: i => i.div(1e3).max(1).log(30).floor().toNumber()+1,
+
+			cost: i => Decimal.pow(100,i+1),
+			bulk: i => i.max(1).log(100).floor().toNumber(),
 
 			effect: i => E(2).pow(i),
 			effDesc: x => format(x)+"x",
@@ -137,9 +138,9 @@ UPGS.unGrass = {
 
 			res: "unGrass",
 			icon: ['Curr/Fun', 'Icons/Plus'],
-			
-			cost: i => Decimal.pow(20,i).mul(1e3),
-			bulk: i => i.div(1e3).max(1).log(20).floor().toNumber()+1,
+
+			cost: i => Decimal.pow(50,i+1),
+			bulk: i => i.max(1).log(50).floor().toNumber(),
 
 			effect: i => E(2).pow(i),
 			effDesc: x => format(x)+"x",
@@ -154,11 +155,11 @@ EFFECT.uh = {
 	res: _ => tmp.unRes.healing,
 	effs: {
 		sp: {
-			eff: x => Math.ceil(x / 2),
+			eff: x => Math.ceil(x / 4),
 			desc: x => `<b style="color: #bf7">${format(x, 0)}</b> max levels for "Gilded Power"`,
 		},
 		fun: {
-			eff: x => Math.ceil(x / 2),
+			eff: x => Math.ceil(x / 4),
 			desc: x => `<b style="color: #bf7">${format(x, 0)}</b> max levels for "Gilded Fun"`,
 		},
 		hb: {
@@ -166,13 +167,11 @@ EFFECT.uh = {
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Habitability growth`,
 		},
 		hm: {
-			unl: _ => player.unRes?.nTimes,
 			eff: x => x / 2 + 1,
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Habitability starting value`,
 		},
 		tp: {
-			unl: _ => player.unRes?.nTimes,
-			eff: x => hasUpgrade('ring', 4) ? E(1.3).pow(x ** 0.8) : x / 2 + 1,
+			eff: x => x / 2 + 1,
 			desc: x => `<b style="color: #bf7">${format(x)}x</b> to Tier Points in Unnatural Realm`,
 		},
 		np: {
@@ -186,30 +185,33 @@ EFFECT.uh = {
 /* HABITABILITY */
 unMAIN.habit = {
 	speed() {
-		let r = 0.5
-		r *= getEffect("uh", "hb")
-		r *= upgEffect("np", 1)
-		r *= upgEffect("obs", 2)
-		if (inFormation("dr")) r *= 4
-		if (inFormation("sc")) r /= 4
-		if (hasUpgrade('res', 5)) r = Math.max(r, tmp.unRes.habit.max * 2)
+		let r = E(2)
+		r = r.mul(getEffect("uh", "hb"))
+		r = r.mul(upgEffect("np", 1))
+		r = r.mul(upgEffect("obs", 2))
+		r = r.mul(upgEffect("cloud", 0))
+		r = r.mul(upgEffect("ring", 2))
+		if (hasUpgrade('res', 5)) r = r.max(tmp.unRes.habit.max.div(2))
+
+		if (inFormation("dr")) r = r.mul(4)
+		if (inFormation("sc")) r = r.div(4)
 		return r
 	},
 	startingMult() {
-		let r = getEffect("uh", "hm")
-		if (inFormation("hs")) r = Math.max(r, tmp.unRes.habit.max / 2)
+		let r = E(getEffect("uh", "hm"))
+		if (inFormation("hs")) r = r.max(tmp.unRes.habit.max.div(2))
 		return r
 	},
 
 	max() {
-		let r = upgEffect("unGrass", 0)
-		r *= upgEffect("np", 0)
-		r *= upgEffect("cloud", 0)
-		r **= upgEffect("astro", 2)
+		let r = E(upgEffect("unGrass", 0))
+		r = r.mul(upgEffect("np", 0))
+		r = r.mul(upgEffect("cloud", 0))
+		r = r.mul(upgEffect("ring", 2))
 		return r
 	},
 	progress(g) {
-		return (g.habit - 1) / (tmp.unRes.habit.max - 1)
+		return g.habit.sub(1).div(tmp.unRes.habit.max.sub(1))
 	},
 
 	tick(dt, click) {
@@ -217,8 +219,8 @@ unMAIN.habit = {
 		for (var [i, g] of Object.entries(tmp.grasses).reverse()) {
 			if (!g.habit) continue
 
-			g.habit = Math.min(g.habit + dt * t.speed, t.max)
-			if (g.habit == t.max || click) removeGrass(i)
+			g.habit = g.habit.add(t.speed.mul(dt)).min(t.max)
+			if (g.habit.eq(t.max) || click) removeGrass(i)
 		}
 	},
 	destroy() {
@@ -227,16 +229,18 @@ unMAIN.habit = {
 }
 
 tmp_update.push(_=>{
+	let data = tmp.unRes
+	data.habitAuto = 1
 	if (!player.unRes) return
 
-	let data = tmp.unRes
-	data.healing = upgEffect('momentum', 10, 0) + upgEffect("sfrgt", 5, 0) + getGSEffect(12, 0) + getAstralEff("uh", 0)
-	data.habit = {
-		on: unMAIN.habit.max() > 1,
-		start: unMAIN.habit.startingMult(),
-		speed: unMAIN.habit.speed(),
-		max: unMAIN.habit.max(),
-	}
+	data.healing = upgEffect('momentum', 10, 0) + upgEffect("sfrgt", 5, 0) + getAstralEff("uh", 0)
+
+	data.habit = {}
+	let max = data.habit.max = unMAIN.habit.max()
+	data.habit.on = unMAIN.habit.max()
+	data.habit.start = unMAIN.habit.startingMult()
+	data.habit.speed = unMAIN.habit.speed()
+	data.habitAuto = E(data.habit.max).mul(starTreeEff("qol", 16, 0) + upgEffect("res", 4, 0)).max(1)
 
 	//Resets
 	data.npGain = unMAIN.np.gain()
@@ -255,7 +259,8 @@ unMAIN.np = {
 		r = r.mul(getEffect("uh", "np"))
 		r = r.mul(upgEffect('momentum', 13))
 		r = r.mul(upgEffect("cloud", 1))
-		r = r.mul(upgEffect('ring', 7))
+		r = r.mul(upgEffect("ring", 8))
+		r = r.mul(getAstralEff("cl"))
 		return r.max(1).floor()
 	},
 }
@@ -318,8 +323,8 @@ UPGS.np = {
 			res: "np",
 			icon: ['Icons/Compaction', "Icons/Plus"],
 
-			cost: i => Decimal.pow(5,i).ceil(),
-			bulk: i => i.max(1).log(5).floor().toNumber()+1,
+			cost: i => Decimal.pow(3,i),
+			bulk: i => i.log(3).floor().toNumber()+1,
 
 			effect(i) {
 				return i+1
@@ -334,8 +339,8 @@ UPGS.np = {
 			res: "np",
 			icon: ['Icons/Compaction', "Icons/StarSpeed"],
 
-			cost: i => Decimal.pow(10,i+1).ceil(),
-			bulk: i => i.max(1).log(10).sub(1).floor().toNumber()+1,
+			cost: i => Decimal.pow(10,i).ceil(),
+			bulk: i => i.log10().floor().toNumber()+1,
 
 			effect(i) {
 				return i+1
@@ -350,8 +355,8 @@ UPGS.np = {
 			res: "np",
 			icon: ['Curr/DarkMatter'],
 
-			cost: i => Decimal.pow(5,i+2).ceil(),
-			bulk: i => i.max(1).log(5).sub(2).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,i*3+1).ceil(),
+			bulk: i => i.max(1).log(5).sub(1).div(3).floor().toNumber()+1,
 
 			effect(i) {
 				return E(2).pow(i)
@@ -378,14 +383,14 @@ UPGS.np = {
 			max: Infinity,
 
 			title: "NP Clouds",
-			desc: `<b class="green">Double</b> Clouds.`,
+			desc: `<b class="green">Double</b> Cloud production.`,
 
 			unl: _ => player.unRes?.vTimes,
 			res: "np",
 			icon: ["Curr/Cloud"],
 			
-			cost: i => Decimal.pow(3,i**1.25).mul(1e3).ceil(),
-			bulk: i => i.div(1e3).max(1).log(3).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,i**1.25).mul(1e7).ceil(),
+			bulk: i => i.div(1e7).max(1).log(5).root(1.25).floor().toNumber()+1,
 
 			effect(i) {
 				return E(2).pow(i)
@@ -400,9 +405,10 @@ unMAIN.vapor = {
 	gain() {
 		if (!player.unRes) return E(0)
 
-		let r = E(2).pow(player.unRes.tier - 5).max(1)
+		let r = E(2).pow(player.unRes.tier - 15).max(1)
 		r = r.mul(upgEffect('np', 4))
-		if (hasUpgrade('ring', 10)) r = r.mul(2)
+		if (hasUpgrade("ring", 11)) r = r.mul(2)
+		if (hasUpgrade("ring", 12)) r = r.mul(2)
 		return r.floor()
 	},
 }
@@ -455,14 +461,14 @@ UPGS.cloud = {
 		{
 			title: "Habited II",
 			tier: 3,
-			desc: `Habitability grows higher.`,
+			desc: `Habitability grows <b class='green'>+1x</b> higher. This affects speed too.`,
 
 			res: "cloud",
 			icon: ['Icons/Compaction', "Icons/Plus"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(3,i).mul(10).ceil(),
-			bulk: i => i.div(10).max(1).log(3).floor().toNumber()+1,
+			cost: i => Decimal.pow(2,i).mul(100).ceil(),
+			bulk: i => i.div(100).max(1).log(2).floor().toNumber()+1,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -474,37 +480,50 @@ UPGS.cloud = {
 			icon: ["Curr/Normality"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(2,i).mul(5).ceil(),
-			bulk: i => i.div(5).max(1).log(2).floor().toNumber()+1,
+			cost: i => Decimal.pow(3,i).mul(200).ceil(),
+			bulk: i => i.div(200).max(1).log(3).floor().toNumber()+1,
+
+			effect: i => E(2).pow(i),
+			effDesc: x => format(x,0)+"x"
+		}, {
+			title: "Cloudy Planetarium",
+			desc: `<b class="green">Double</b> Planetarium.`,
+
+			res: "cloud",
+			icon: ["Curr/Planetarium"],
+
+			max: Infinity,
+			cost: i => Decimal.pow(4,i).mul(2e3).ceil(),
+			bulk: i => i.div(2e3).max(1).log(4).floor().toNumber()+1,
 
 			effect: i => E(2).pow(i),
 			effDesc: x => format(x,0)+"x"
 		}, {
 			title: "Cloudy Observatorium",
-			desc: `<b class="green">Double</b> Observatorium.`,
+			desc: `Gain <b class="green">+1x</b> more Observatorium.`,
 
 			res: "cloud",
 			icon: ["Curr/Observatorium"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(5,i).mul(5).ceil(),
-			bulk: i => i.div(5).max(1).log(5).floor().toNumber()+1,
+			cost: i => Decimal.pow(1.5,i).mul(1e3).ceil(),
+			bulk: i => i.div(1e3).max(1).log(1.5).floor().toNumber()+1,
 
-			effect: i => E(2).pow(i),
-			effDesc: x => format(x,0)+"x"
+			effect: i => i+1,
+			effDesc: x => format(x)+"x"
 		}, {
 			title: "Cloudy Rings",
-			desc: `<b class="green">Double</b> Rings.`,
+			desc: `Gain <b class="green">+0.5x</b> more Rings. This is <b class='green'>decupled</b> every 25 levels.`,
 
 			res: "cloud",
 			icon: ["Curr/Ring"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(5,i).mul(5).ceil(),
-			bulk: i => i.div(5).max(1).log(5).floor().toNumber()+1,
+			cost: i => Decimal.pow(1.5,i).mul(1e4).ceil(),
+			bulk: i => i.div(1e4).max(1).log(1.5).floor().toNumber()+1,
 
-			effect: i => E(2).pow(i),
-			effDesc: x => format(x,0)+"x"
+			effect: i => E(10).pow(Math.floor(i/25)).mul(i/2+1),
+			effDesc: x => format(x)+"x"
 		}
 	],
 }
@@ -527,7 +546,7 @@ MILESTONE.gj = {
 	milestone: [
 		{
 			req: 1,
-			desc: `...`
+			desc: `[ How?!?! ]`
 		}
 	],
 }
@@ -543,7 +562,7 @@ RESET.gj = {
 	req: _=>player.unRes.level>=200,
 	reqDesc: `Reach Level 200.`,
 
-	resetDesc: `End of content right now. Wait until next alpha!`, //`Reset everything Vaporize does, and so Sacrifice and Clouds.`,
+	resetDesc: `Reset everything Vaporize does, and so Sacrifice and Clouds.`,
 	resetGain: _ => grassJumped() ? `Reach Level <b>${format(tmp.unRes.gj.req,0)}</b> to Grass-Jump` : ``,
 
 	title: `Grass-Jump`,
@@ -600,7 +619,7 @@ RESET.gj = {
 }
 
 tmp_update.push(_=>{
-	tmp.unRes.gj.shown = player.unRes?.vTimes && player.decel == 2
+	tmp.unRes.gj.shown = hasMilestone("pt", 1) && player.decel == 2
 	tmp.unRes.gj.req = unMAIN.gj.req()
 })
 

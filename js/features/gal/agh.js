@@ -11,7 +11,7 @@ MILESTONE.agh = {
 
 	res: _ => player?.gal?.neg,
 	title: x => `<span style="font-size: 10px">
-		Negative Energy: <b>${player.gal.neg}</b> (Potential: <b>${tmp.gal.agh.neg}</b>)<br>
+		Negative Energy: <b>${format(player.gal.neg,0)}</b> (Potential: <b>${format(tmp.gal.agh.neg,0)}</b>)<br>
 		(gain more by -1 Grasshop or +10 Anti-Realm Levels at 200)
 	</span>`,
 	title_ms: x => x + " Negative Energy",
@@ -47,8 +47,12 @@ MILESTONE.agh = {
 			desc: `Unlock the Dark Matter Plant reset. Moonstone chance is doubled.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
-			req: 33,
+			req: 30,
 			desc: `Astral adds Unnatural Healing.`,
+		}, {
+			unl: _ => hasUpgrade("funMachine", 3),
+			req: 33,
+			desc: `Astral boosts Grass. +1 Perk per Level.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
 			req: 36,
@@ -56,11 +60,15 @@ MILESTONE.agh = {
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
 			req: 39,
-			desc: `Astral boosts Grass.`,
+			desc: `Improve Astral SFRGT effect.`,
+		}, {
+			unl: _ => hasUpgrade("funMachine", 3),
+			req: 42,
+			desc: `Improve the sixth Charge effect.`,
 		}, {
 			unl: _ => hasUpgrade("funMachine", 3),
 			req: 45,
-			desc: `Unlock the Planetoid. Astral multiplies Rings.`,
+			desc: `Unlock the Planetoid.`,
 		}, {
 			unl: _ => hasAGHMilestone(11),
 			req: 51,
@@ -85,6 +93,10 @@ MILESTONE.agh = {
 			unl: _ => hasAGHMilestone(11),
 			req: 66,
 			desc: `Unlock a 'Headstart' formation.`,
+		}, {
+			unl: _ => hasAGHMilestone(11),
+			req: 72,
+			desc: `Unlock the Stellar Obelisk and Planetary Trials.`,
 		}
 	]
 }

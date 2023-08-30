@@ -171,28 +171,19 @@ const UPGS = {
 
 		ctn: [
 			{
-				max: 100,
-
-				costOnce: true,
-
 				title: "Value Perk",
-				desc: `Increase Grass gain by <b class="green">+50%</b> per level.`,
+				desc: `Increase Grass gain by <b class="green">+100%</b> per level.`,
 
 				res: "perk",
 				icon: ['Curr/Grass'],
 				
 				cost: i => 1,
-				bulk: i => i,
-
-				effect(i) {
-					return i/2+1
-				},
-				effDesc: x => format(x,1)+"x",
-			},{
-				max: 5,
-
 				costOnce: true,
+				max: 100,
 
+				effect: i => i+1,
+				effDesc: x => format(x,0)+"x",
+			},{
 				title: "Cap Perk",
 				desc: `Increase grass cap by <b class="green">+20</b> per level.`,
 
@@ -200,19 +191,12 @@ const UPGS = {
 				icon: ['Icons/MoreGrass'],
 				
 				cost: i => 1,
-				bulk: i => i,
+				costOnce: true,
+				max: 5,
 
-				effect(i) {
-					let x = i*20
-
-					return x
-				},
+				effect: i => i*20,
 				effDesc: x => "+"+format(x,0),
 			},{
-				max: 10,
-
-				costOnce: true,
-
 				title: "Grow Speed Perk",
 				desc: `Increase grass grow speed by <b class="green">+25%</b> per level.`,
 
@@ -220,84 +204,55 @@ const UPGS = {
 				icon: ['Icons/Speed'],
 				
 				cost: i => 1,
-				bulk: i => i,
+				costOnce: true,
+				max: 10,
 
-				effect(i) {
-					let x = 1+i/4
-
-					return x
-				},
+				effect: i => i/4+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 50,
-
-				costOnce: true,
-
+				unl: _=>player.pTimes,
 				title: "XP Perk",
 				desc: `Increase XP gain by <b class="green">+50%</b> per level.`,
 
 				res: "perk",
 				icon: ['Icons/XP'],
 
-				unl: _=>player.pTimes,
 				cost: i => 1,
-				bulk: i => i,
-
-				effect(i) {
-					let x = Decimal.mul(i,0.5).add(1)
-
-					return x
-				},
-				effDesc: x => x.format()+"x",
-			},{
-				max: 5,
-
 				costOnce: true,
+				max: 50,
 
+				effect: i => i/2+1,
+				effDesc: x => format(x)+"x",
+			},{
+				unl: _=>player.pTimes,
 				title: "Range Perk",
 				desc: `Increase grass cut range by <b class="green">10</b> per level.`,
 
 				res: "perk",
 				icon: ['Icons/Range'],
 
-				unl: _=>player.pTimes,
 				cost: i => 3,
-				bulk: i => Math.floor(i/3),
+				costOnce: true,
+				max: 5,
 
-				effect(i) {
-					let x = i*10
-
-					return x
-				},
+				effect: i => i*10,
 				effDesc: x => "+"+format(x,0),
 			},{
-				max: 1,
-
-				costOnce: true,
-
+				unl: _=>player.pTimes,
 				title: "Grow Amount Perk",
-				desc: `Increase the grass grow amount by <b class="green">1</b>.`,
+				desc: `Increase the grass grow amount by <b class="green">+1</b>.`,
 
 				res: "perk",
 				icon: ['Icons/MoreGrass', "Icons/StarSpeed"],
  
-				unl: _=>player.pTimes,
 				cost: i => 10,
-				bulk: i => Math.floor(i/10),
+				costOnce: true,
+				max: 1,
 
-				effect(i) {
-					let x = i
-
-					return x
-				},
+				effect: i => i,
 				effDesc: x => "+"+format(x,0),
 			},{
-				max: 50,
-
 				unl: _=>player.cTimes>0,
-
-				costOnce: true,
-
 				title: "PP Perk",
 				desc: `Increase PP gain by <b class="green">+50%</b> per level.`,
 
@@ -305,20 +260,13 @@ const UPGS = {
 				icon: ['Curr/Prestige'],
 				
 				cost: i => 10,
-				bulk: i => Math.floor(i/10),
-
-				effect(i) {
-					let x = E(i/2+1)
-
-					return x
-				},
-				effDesc: x => x.format()+"x",
-			},{
+				costOnce: true,
 				max: 50,
 
+				effect: i => i/2+1,
+				effDesc: x => format(x)+"x",
+			},{
 				unl: _=>player.cTimes>0,
-
-				costOnce: true,
 
 				title: "TP Perk",
 				desc: `Increase TP gain by <b class="green">+50%</b> per level.`,
@@ -327,21 +275,13 @@ const UPGS = {
 				icon: ['Icons/TP'],
 				
 				cost: i => 15,
-				bulk: i => Math.floor(i/15),
-
-				effect(i) {
-					let x = E(i/2+1)
-
-					return x
-				},
-				effDesc: x => x.format()+"x",
-			},{
+				costOnce: true,
 				max: 50,
 
+				effect: i => i/2+1,
+				effDesc: x => format(x)+"x",
+			},{
 				unl: _=>grassHopped(),
-
-				costOnce: true,
-
 				title: "Crystal Perk",
 				desc: `Increase Crystal gain by <b class="green">+25%</b> per level.`,
 
@@ -349,14 +289,11 @@ const UPGS = {
 				icon: ['Curr/Crystal'],
 				
 				cost: i => 15,
-				bulk: i => Math.floor(i/15),
+				costOnce: true,
+				max: 50,
 
-				effect(i) {
-					let x = E(i/4+1)
-
-					return x
-				},
-				effDesc: x => x.format()+"x",
+				effect: i => i/4+1,
+				effDesc: x => format(x)+"x",
 			},
 		],
 	},
@@ -843,7 +780,7 @@ function getUpgradeBulk(id, x, amt) {
 
 	let lvl = 0
 	let min = getUpgradeLvl(id, x)
-	if (upg.costOnce) lvl = Math.floor(res / tu.cost[x]) + min
+	if (upg.costOnce) lvl = tu.noSpend ? Infinity : Math.floor(res / tu.cost[x]) + min
 	else if (E(res).gte(tu.cost[x])) lvl = upg.bulk(E(res))
 	else lvl = min
 
@@ -945,11 +882,11 @@ function updateUpgradesHTML(id) {
 	let tu = tmp.upgs[id]
 	let ch = tmp.upg_ch[0] == id ? tmp.upg_ch[1] : -1
 
-	let unl = compute(upgs.unl, true)
+	let unl = compute(upgs.unl)
 	tmp.el["upgs_div_"+id].setDisplay(unl)
 
 	if (unl) {
-		let req = compute(upgs.req, true)
+		let req = compute(upgs.req)
 		tmp.el["upg_req_div_"+id].setDisplay(!req)
 
 		if (req) {
@@ -1004,7 +941,7 @@ function updateUpgradesHTML(id) {
 					let div_id = "upg_ctn_"+id+x
 					let amt = getUpgradeLvl(id, x)
 
-					let unlc = compute(upg.unl, true) && (player.options.hideUpgOption ? amt < tu.max[x] : true)
+					let unlc = compute(upg.unl) && (player.options.hideUpgOption ? amt < tu.max[x] : true)
 					tmp.el[div_id].setDisplay(unlc)
 
 					if (!unlc) continue
@@ -1112,9 +1049,9 @@ el.update.upgs = _=>{
 		tmp.el.wipeBtn.setDisplay(player.pTimes)
 		tmp.el.sciBtn.setDisplay(player.pTimes)
 		tmp.el.scientific.setTxt(player.options.scientific?"ON":"OFF")
-		tmp.el.hideCapBtn.setDisplay(player.cTimes)
+		tmp.el.hideCapBtn.setDisplay(tmp.unRes.habit != undefined)
 		tmp.el.capOpt.setTxt(player.options.lowGrass?250:"∞")
-		tmp.el.hideMaxBtn.setDisplay(player.cTimes)
+		tmp.el.hideMaxBtn.setDisplay(tmp.unRes.habit != undefined)
 		tmp.el.hideMax.setTxt(player.options.hideUpgOption?"Hidden":"Shown")
 		tmp.el.hideMilestoneBtn.setDisplay(grassHopped())
 		tmp.el.hideMilestone.setTxt(player.options.hideMilestone?"Unobtained":"All")

@@ -219,7 +219,7 @@ function convertStringToDecimal() {
 	retrieveData("planetoid", setupPlanetoid)
 }
 
-function cannotSave() { return false }
+function cannotSave() { return CHEAT }
 
 let saveInterval
 function save() {
@@ -231,10 +231,8 @@ function save() {
 }
 
 function resetSaveInterval() {
-	clearInterval = saveInterval
-	saveInterval = setInterval(function() {
-		if (!CHEAT) save()
-	}, 30000)
+	clearInterval(saveInterval)
+	saveInterval = setInterval(save, 30000)
 }
 
 function load(str) {
@@ -243,14 +241,12 @@ function load(str) {
 	if (data && safecheckSave(data)) loadPlayer(data)
 	else newPlayer()
 
-	resetSaveInterval()
 	resetMap()
 	resetTemp()
-	for (let x = 0; x < 50; x++) updateTemp()
+	updateTemp()
 
-	let now = Date.now()
-	if (player.lastTick > 0) tmp.offline = (now - player.lastTick) / 1e3
-	player.lastTick = now
+	player.lastTick = Date.now()
+	resetSaveInterval()
 }
 
 function exporty() {

@@ -1,11 +1,10 @@
 MAIN.sac = {
 	dmGain() {
-		let x = player.gal.stars.div(1e6).pow(.1)
+		let x = player.gal.stars.div(1e10).pow(1/4)
 
 		x = x.mul(upgEffect('momentum', 11))
 		x = x.mul(upgEffect('moonstone', 7))
 		x = x.mul(upgEffect('np', 2))
-		x = x.pow(upgEffect('ring', 6))
 		return x.floor()
 	},
 	did() {
@@ -15,8 +14,8 @@ MAIN.sac = {
 
 RESET.sac = {
 	unl: _ => hasAGHMilestone(7),
-	req: _ => player.gal.stars.gte(1e9),
-	reqDesc: _ => `Reach ${format(1e9)} stars.`,
+	req: _ => player.gal.stars.gte(1e11),
+	reqDesc: _ => `Reach ${format(1e11)} stars.`,
 
 	resetDesc: `Reset everything Galactic does, and so Stars, Astral, Grass-Skips, and Funify.`,
 	resetGain: _ => `<b>+${tmp.gal.dmGain.format(0)}</b> Dark Matters`,
@@ -90,8 +89,8 @@ UPGS.dm = {
 			icon: ["Curr/Charge", "Icons/StarProgression"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(2,i+4).ceil(),
-			bulk: i => i.log(2).sub(4).floor().toNumber()+1,
+			cost: i => Decimal.pow(2,i+2).ceil(),
+			bulk: i => i.log(2).sub(2).floor().toNumber()+1,
 
 			effect: i => i,
 			effDesc: x => format(E(10).pow(x))+"x",
@@ -103,8 +102,8 @@ UPGS.dm = {
 			icon: ["Curr/Momentum"],
 
 			unl: _ => tmp.rocket_upgraded,
-			cost: i => Decimal.pow(5,i**1.25+3).ceil(),
-			bulk: i => i.log(5).sub(3).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,(i+3)**1.25).ceil(),
+			bulk: i => i.log(5).root(1.25).sub(3).floor().toNumber()+1,
 			max: Infinity,
 
 			effect: i => E(2).pow(i),
@@ -117,24 +116,24 @@ UPGS.dm = {
 			icon: ["Curr/Star"],
 
 			max: Infinity,
-			cost: i => Decimal.pow(5,i).mul(15),
-			bulk: i => i.div(15).log(5).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,i+2),
+			bulk: i => i.log(5).sub(2).floor().toNumber()+1,
 
 			effect: i => E(2).pow(i),
 			effDesc: x => format(x)+"x",
 		}, {
 			title: "Dark Powers",
-			desc: `Raise Astral XP effect by <b class="green">^+0.1</b>.`,
+			desc: `<b class='green'>Double</b> XP.`,
 		
 			res: "dm",
-			icon: ["Icons/SP"],
+			icon: ["Icons/XP"],
 
-			max: 10,
-			cost: i => Decimal.pow(3,i**1.25+3).ceil(),
-			bulk: i => i.log(3).sub(3).root(1.25).floor().toNumber()+1,
+			max: Infinity,
+			cost: i => Decimal.pow(10,i+2).ceil(),
+			bulk: i => i.log(10).sub(2).floor().toNumber()+1,
 
-			effect: i => i/10+1,
-			effDesc: x => "^"+format(x),
+			effect: i => E(2).pow(i),
+			effDesc: x => format(x)+"x",
 		}, {
 			title: "Dark Moonstone",
 			desc: `Gain <b class="green">+1x</b> more Moonstone.<br>This is <b class="green">doubled</b> for every <b class="yellow">25</b> levels.`,
@@ -142,11 +141,11 @@ UPGS.dm = {
 			res: "dm",
 			icon: ["Curr/Moonstone"],
 
-			cost: i => Decimal.pow(1.2,i).mul(100).ceil(),
-			bulk: i => i.div(100).log(1.2).floor().toNumber()+1,
-			max: 1e4,
+			max: Infinity,
+			cost: i => Decimal.pow(1.5,i).mul(100).ceil(),
+			bulk: i => i.div(100).log(1.5).floor().toNumber()+1,
 		
-			effect: i => 2 ** Math.floor(i/25) * i,
+			effect: i => E(2).pow(Math.floor(i/25)).mul(i),
 			effDesc: x => "+"+format(x,0),
 		}, {
 			title: "Super Cool",
@@ -155,8 +154,8 @@ UPGS.dm = {
 			res: "dm",
 			icon: ["Curr/SuperFun"],
 
-			cost: i => Decimal.pow(10,i**1.25).ceil(),
-			bulk: i => i.log(10).root(1.25).floor().toNumber()+1,
+			cost: i => Decimal.pow(15,(i+1)**1.25).ceil(),
+			bulk: i => i.log(15).root(1.25).floor().toNumber(),
 			max: 10,
 
 			effect: i => i/20+1,
