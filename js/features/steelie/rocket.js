@@ -41,9 +41,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Grass'],
 
-			cost: i => 1,
-			costOnce: true,
 			max: 50,
+			cost: 1,
 
 			effect: i/20+1,
 			effDesc: x => format(x)+"x",
@@ -54,9 +53,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Icons/XP'],
 
-			cost: i => 1,
-			costOnce: true,
 			max: 50,
+			cost: 1,
 
 			effect: i/20+1,
 			effDesc: x => format(x)+"x",
@@ -67,9 +65,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Icons/TP'],
 
-			cost: i => 2,
-			costOnce: true,
 			max: 50,
+			cost: 2,
 
 			effect: i/10+1,
 			effDesc: x => format(x)+"x",
@@ -80,31 +77,22 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Prestige'],
 
-			cost: i => 1,
-			costOnce: true,
 			max: 50,
+			cost: 1,
 
 			effect: i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
-			max: 50,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Crystals",
 			desc: `Increase crystal gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Crystal'],
-			
-			cost: i => 1,
-			bulk: i => i,
 
-			effect(i) {
-				let x = E(i*0.05+1)
+			max: 50,
+			cost: 1,
 
-				return x
-			},
+			effect: i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Foundry",
@@ -113,9 +101,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Steel'],
 
-			cost: i => 2,
-			costOnce: true,
 			max: 50,
+			cost: 2,
 
 			effect: i/20+1,
 			effDesc: x => format(x)+"x",
@@ -126,9 +113,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Icons/Charge'],
 
-			cost: i => 2,
-			costOnce: true,
 			max: 50,
+			cost: 2,
 
 			effect: i/20+1,
 			effDesc: x => format(x)+"x",
@@ -139,9 +125,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Anonymity'],
 
-			cost: i => 1,
-			costOnce: true,
 			max: 50,
+			cost: 1,
 
 			effect: i/20+1,
 			effDesc: x => format(x)+"x",
@@ -152,9 +137,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Oil'],
 
-			cost: i => 1,
-			costOnce: true,
 			max: 50,
+			cost: 1,
 
 			effect: i/20+1,
 			effDesc: x => format(x)+"x",
@@ -170,9 +154,8 @@ UPGS.rocket = {
 			icon: ['Icons/Speed'],
 			tier: 2,
 
-			cost: i => 10,
-			costOnce: true,
 			max: 50,
+			cost: 10,
 
 			effect: i/10+1,
 			effDesc: x => format(x)+"x",
@@ -184,9 +167,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Icons/XP'],
 			tier: 2,
-			
-			cost: i => 30,
-			bulk: i => i/30,
+
+			cost: 30,
 
 			effect: i => i/5+1,
 			effDesc: x => format(x)+"x",
@@ -198,9 +180,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Prestige'],
 
-			cost: i => 30,
-			costOnce: true,
 			max: 50,
+			cost: 30,
 
 			effect: i/10+1,
 			effDesc: x => format(x)+"x",
@@ -212,9 +193,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Steel'],
 
-			cost: i => 30,
-			costOnce: true,
 			max: 50,
+			cost: 30,
 
 			effect: i/10+1,
 			effDesc: x => format(x)+"x",
@@ -226,9 +206,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Icons/Charge'],
 
-			cost: i => 30,
-			costOnce: true,
 			max: 50,
+			cost: 30,
 
 			effect: i/10+1,
 			effDesc: x => format(x)+"x",
@@ -240,9 +219,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Anonymity'],
 
-			cost: i => 30,
-			costOnce: true,
 			max: 50,
+			cost: 30,
 
 			effect: i/10+1,
 			effDesc: x => format(x)+"x",
@@ -254,9 +232,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Oil'],
 
-			cost: i => 30,
-			costOnce: true,
 			max: 50,
+			cost: 30,
 
 			effect: i/10+1,
 			effDesc: x => format(x)+"x",
@@ -280,18 +257,14 @@ UPGS.rocket = {
 			unl: _ => hasStarTree("progress", 1),
 			tier: 3,
 
-			max: 100,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Grass II",
 			desc: `Increase grass gain by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Curr/Grass'],
-			
-			cost: i => 500,
-			bulk: i => i/500,
+
+			max: 100,
+			cost: 500,
 
 			effect(i) {
 				let x = E(i*0.05+1)
@@ -302,10 +275,6 @@ UPGS.rocket = {
 		},{
 			unl: _ => hasStarTree("progress", 1),
 			tier: 3,
-
-			max: 200,
-
-			costOnce: true,
 
 			title: "Rocket Fueled Foundry III",
 			desc: `Increase steel gain by <b class="green">+5%</b> per level.`,
@@ -313,8 +282,8 @@ UPGS.rocket = {
 			res: "rf",
 			icon: ['Curr/Steel'],
 			
-			cost: i => 200,
-			bulk: i => i/200,
+			max: 200,
+			cost: 200,
 
 			effect(i) {
 				let x = E(i*0.05+1)
@@ -326,18 +295,14 @@ UPGS.rocket = {
 			unl: _ => hasStarTree("progress", 1),
 			tier: 3,
 
-			max: 200,
-
-			costOnce: true,
-
 			title: "Rocket Fueled Charge III",
 			desc: `Increase charge rate by <b class="green">+5%</b> per level.`,
 
 			res: "rf",
 			icon: ['Icons/Charge'],
-			
-			cost: i => 200,
-			bulk: i => i/200,
+
+			max: 200,
+			cost: 200,
 
 			effect(i) {
 				let x = E(i*0.05+1)
@@ -448,90 +413,80 @@ UPGS.momentum = {
 
 			res: "momentum",
 			icon: ['Curr/Grass'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Gotta Grow Fast",
 			desc: `Grass grows 3x faster.`,
 
 			res: "momentum",
 			icon: ['Icons/Speed'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Gas Gas Gas",
 			desc: `Multiply XP gain by 3x.`,
 
 			res: "momentum",
 			icon: ['Icons/XP'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "In Tiers",
 			desc: `Multiply TP gain by 3x.`,
 
 			res: "momentum",
 			icon: ['Icons/TP'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Popular",
 			desc: `Multiply PP gain by 3x.`,
 
 			res: "momentum",
 			icon: ['Curr/Prestige'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Shine Bright",
 			desc: `Multiply Crystal gain by 3x.`,
 
 			res: "momentum",
 			icon: ['Curr/Crystal'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Steel Going?",
 			desc: `Multiply steel gain by 3x.`,
 
 			res: "momentum",
 			icon: ['Curr/Steel'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Powerful",
 			desc: `Multiply charge rate by 3x.`,
 
 			res: "momentum",
 			icon: ['Icons/Charge'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Quickly Forgettable",
 			desc: `Multiply AP gain by 3x.`,
 
 			res: "momentum",
 			icon: ['Curr/Anonymity'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Fracking",
 			desc: `Multiply oil gain by 3x.`,
 
 			res: "momentum",
 			icon: ['Curr/Oil'],
-			
-			cost: i => E(1),
-			bulk: i => 1
+
+			cost: 1
 		},{
 			title: "Unnatural Momentum",
 			desc: `<b class="green">+1</b> to Unnatural Healing.`,
@@ -540,9 +495,9 @@ UPGS.momentum = {
 			icon: ['Curr/UnnaturalGrass'],
 			
 			unl: _ => tmp.rocket_upgraded,
+			max: Infinity,
 			cost: i => E(5).pow(i+1),
 			bulk: i => E(i).log(5).floor().toNumber(),
-			max: Infinity,
 
 			effect: i => i,
 			effDesc: x => "+"+format(x),
@@ -554,9 +509,9 @@ UPGS.momentum = {
 			icon: ['Curr/DarkMatter'],
 
 			unl: _ => tmp.rocket_upgraded,
+			max: Infinity,
 			cost: i => E(8).pow(i+1),
 			bulk: i => E(i).log(8).floor().toNumber(),
-			max: Infinity,
 
 			effect: i => i/2+1,
 			effDesc: x => format(x,1)+"x",
@@ -568,9 +523,9 @@ UPGS.momentum = {
 			icon: ['Icons/SP'],
 			
 			unl: _ => hasStarTree("progress", 11),
+			max: Infinity,
 			cost: i => E(10).pow(i+1),
 			bulk: i => E(i).log(10).floor().toNumber(),
-			max: Infinity,
 
 			effect: i => i+1,
 			effDesc: x => format(x)+"x",
@@ -582,9 +537,9 @@ UPGS.momentum = {
 			icon: ['Curr/Normality'],
 			
 			unl: _ => hasStarTree("progress", 11),
+			max: Infinity,
 			cost: i => E(5).pow(i).mul(25),
 			bulk: i => E(i).div(25).log(5).floor().toNumber()+1,
-			max: Infinity,
 
 			effect: i => i+1,
 			effDesc: x => format(x)+"x",
@@ -616,11 +571,12 @@ function updateRocketTemp() {
 	if (!player.aRes) return
 
 	//Rocket Fuel
+	let mult = 1
+	mult += getGSEffect(3, 0)
+	mult += getAstralEff('rf', 0)
+	mult += upgEffect('moonstone', 1, 0)
 	tmp.rf_base_mult = E(player.rocket.part).mul(0.5).add(1)
-	tmp.rf_gain_mult = 1
-	tmp.rf_gain_mult += getGSEffect(3, 0)
-	tmp.rf_gain_mult += getAstralEff('rf', 0)
-	tmp.rf_gain_mult += upgEffect('moonstone', 1, 0)
+	tmp.rf_gain_mult = mult
 
 	let rf = player.rocket.total_fp
 	tmp.rf_cost = [ROCKET.cost(rf, 1e20), ROCKET.cost(rf, 100)]

@@ -42,7 +42,8 @@ MAIN.grass = {
 		return r
 	},
 	auto() {
-		let interval = upgEffect('auto',0,0)/upgEffect('plat',0,0)
+		let interval = upgEffect('auto',0,0) 
+		interval /= upgEffect('plat',0)
 		interval /= starTreeEff("auto",7)
 		if (inDecel()) interval *= 10 / upgEffect('aAuto', 0)
 		if (inRecel()) interval = 0.5

@@ -421,8 +421,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ["Curr/Grass","Icons/Infinite"],
 						
-			cost: i => E(1e8),
-			bulk: i => 1,
+			cost: 1e8
 		},{
 			title: "Prestige Upgrades EL",
 			desc: `Prestige Upgrades no longer spend PP.`,
@@ -430,8 +429,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ["Curr/Prestige","Icons/Infinite"],
 						
-			cost: i => E(1e10),
-			bulk: i => 1,
+			cost: 1e10
 		},{
 			title: "Crystal Upgrades EL",
 			desc: `Crystal Upgrades no longer spend Crystals.`,
@@ -439,8 +437,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ["Curr/Crystal","Icons/Infinite"],
 
-			cost: i => E(1e12),
-			bulk: i => 1,
+			cost: 1e12
 		},{
 			title: "Perk Autobuy",
 			desc: `Automate Perk Upgrades.`,
@@ -448,8 +445,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ['Curr/Perks','Icons/Automation'],
 
-			cost: i => E(1e13),
-			bulk: i => 1,
+			cost: 1e13
 		},{
 			title: "Perk Save GH",
 			desc: `Keep perks on Grasshop.`,
@@ -457,8 +453,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ['Curr/Perks','Icons/StarProgression'],
 
-			cost: i => E(1e11),
-			bulk: i => 1,
+			cost: 1e11
 		},{
 			max: 10,
 
@@ -471,9 +466,7 @@ UPGS.assembler = {
 			cost: i => E(10).pow((i/2+15)**1.5),
 			bulk: i => Math.floor(E(i).log10().root(1.5).sub(15).mul(2).toNumber())+1,
 
-			effect(i) {
-				return i
-			},
+			effect: i => i,
 			effDesc: x => "Up to "+format(x,0)+" completions",
 		},{
 			max: 7,
@@ -487,9 +480,7 @@ UPGS.assembler = {
 			cost: i => E(10).pow(i/2+15),
 			bulk: i => Math.floor(E(i).log10().sub(15).mul(2).toNumber())+1,
 
-			effect(i) {
-				return i
-			},
+			effect: i => i,
 			effDesc: x => "Up to "+format(x,0)+" completions",
 		},{
 			title: "Challenge Save G",
@@ -498,9 +489,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ['Icons/Challenge','Icons/StarProgression'],
 
-			cost: i => E(1e8),
-			bulk: i => 1,
-
+			cost: 1e8
 		},{
 			max: 5,
 
@@ -513,9 +502,7 @@ UPGS.assembler = {
 			cost: i => E(1e10).mul(E(1e3).pow(i)),
 			bulk: i => E(i).div(1e10).log(1e3).add(1).floor(),
 
-			effect(i) {
-				return 30 / i
-			},
+			effect: i => 30 / i,
 			effDesc: x => (hasUpgrade("assembler", 8) ? "+1 per "+format(x,0)+" seconds" : "Manual only"),
 		},{
 			title: "Challenge Bulk",
@@ -524,8 +511,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ['Icons/Challenge','Icons/Multiply'],
 
-			cost: i => E(1e7),
-			bulk: i => 1,
+			cost: 1e7
 		},{
 			unl: _ => player.rocket.part > 0 || galUnlocked(),
 			title: "Quick Foundry",
@@ -534,8 +520,7 @@ UPGS.assembler = {
 			res: "steel",
 			icon: ['Icons/Foundry','Icons/Automation'],
 
-			cost: i => E(1e24),
-			bulk: i => 1,
+			cost: 1e24
 		}
 	],
 }

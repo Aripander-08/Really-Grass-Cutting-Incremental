@@ -230,7 +230,7 @@ unMAIN.habit = {
 
 tmp_update.push(_=>{
 	let data = tmp.unRes
-	data.habitAuto = 1
+	data.habitAuto = E(1)
 	if (!player.unRes) return
 
 	data.healing = upgEffect('momentum', 10, 0) + upgEffect("sfrgt", 5, 0) + getAstralEff("uh", 0)

@@ -76,8 +76,7 @@ UPGS.dm = {
 			res: "dm",
 			icon: ['Icons/TP', 'Icons/StarProgression'],
 
-			cost: i => E(10),
-			bulk: i => 1,
+			cost: 10,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"

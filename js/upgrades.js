@@ -177,8 +177,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Curr/Grass'],
 				
-				cost: i => 1,
-				costOnce: true,
+				cost: 1,
 				max: 100,
 
 				effect: i => i+1,
@@ -189,10 +188,9 @@ const UPGS = {
 
 				res: "perk",
 				icon: ['Icons/MoreGrass'],
-				
-				cost: i => 1,
-				costOnce: true,
+
 				max: 5,
+				cost: 1,
 
 				effect: i => i*20,
 				effDesc: x => "+"+format(x,0),
@@ -203,8 +201,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Icons/Speed'],
 				
-				cost: i => 1,
-				costOnce: true,
+				cost: 1,
 				max: 10,
 
 				effect: i => i/4+1,
@@ -217,8 +214,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Icons/XP'],
 
-				cost: i => 1,
-				costOnce: true,
+				cost: 1,
 				max: 50,
 
 				effect: i => i/2+1,
@@ -231,8 +227,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Icons/Range'],
 
-				cost: i => 3,
-				costOnce: true,
+				cost: 3,
 				max: 5,
 
 				effect: i => i*10,
@@ -245,8 +240,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Icons/MoreGrass', "Icons/StarSpeed"],
  
-				cost: i => 10,
-				costOnce: true,
+				cost: 10,
 				max: 1,
 
 				effect: i => i,
@@ -259,8 +253,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Curr/Prestige'],
 				
-				cost: i => 10,
-				costOnce: true,
+				cost: 10,
 				max: 50,
 
 				effect: i => i/2+1,
@@ -274,8 +267,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Icons/TP'],
 				
-				cost: i => 15,
-				costOnce: true,
+				cost: 15,
 				max: 50,
 
 				effect: i => i/2+1,
@@ -288,8 +280,7 @@ const UPGS = {
 				res: "perk",
 				icon: ['Curr/Crystal'],
 				
-				cost: i => 15,
-				costOnce: true,
+				cost: 15,
 				max: 50,
 
 				effect: i => i/4+1,
@@ -369,8 +360,7 @@ const UPGS = {
 				res: "pp",
 				icon: ['Curr/Grass','Icons/Automation'],
 							
-				cost: i => E(1e6),
-				bulk: i => 1,
+				cost: 1e6
 			},{
 				unl: _=>player.cTimes>0,
 
@@ -380,8 +370,7 @@ const UPGS = {
 				res: "pp",
 				icon: ['Curr/Perks','Icons/StarProgression'],
 							
-				cost: i => E(1e10),
-				bulk: i => 1,
+				cost: 1e10
 			},{
 				unl: _=>player.cTimes>0,
 
@@ -390,9 +379,8 @@ const UPGS = {
 			
 				res: "crystal",
 				icon: ['Curr/Prestige','Icons/Automation'],
-							
-				cost: i => E(1e5),
-				bulk: i => 1,
+
+				cost: 1e5
 			},{
 				unl: _=>grassHopped(),
 
@@ -401,9 +389,8 @@ const UPGS = {
 			
 				res: "crystal",
 				icon: ['Curr/Perks','Icons/StarProgression'],
-							
-				cost: i => E(1e7),
-				bulk: i => 1,
+
+				cost: 1e7
 			},{
 				unl: _=>grassHopped(),
 
@@ -413,8 +400,7 @@ const UPGS = {
 				res: "crystal",
 				icon: ['Curr/Crystal','Icons/Automation'],
 							
-				cost: i => E(1e8),
-				bulk: i => 1,
+				cost: 1e8
 			},{
 				unl: _=>player.sTimes>0,
 
@@ -469,70 +455,43 @@ const UPGS = {
 
 		ctn: [
 			{
-				max: 20,
-
-				costOnce: true,
-
 				title: "Starter AC",
 				desc: `Grass automatically cuts <b class="green">+0.1x</b> faster.`,
 
 				res: "plat",
 				icon: ['Curr/Grass','Icons/Automation'],
-				
-				cost: i => 5,
-				bulk: i => Math.floor(i/5),
 
-				effect(i) {
-					let x = i/10+1
-					return x
-				},
+				max: 20,
+				cost: 5,
+
+				effect: i => i/10+1,
 				effDesc: x => format(x, 1)+"x",
 			},{
-				max: 10,
-
-				costOnce: true,
-
 				title: "Starter XP",
 				desc: `Increase XP gain by <b class="green">+50%</b> per level.`,
 
 				res: "plat",
 				icon: ['Icons/XP'],
-				
-				cost: i => 3,
-				bulk: i => Math.floor(i/3),
 
-				effect(i) {
-					let x = E(i/2+1)
+				max: 10,
+				cost: 3,
 
-					return x
-				},
+				effect: i => i/2+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 10,
-
-				costOnce: true,
-
 				title: "Starter Grass",
 				desc: `Increase grass gain by <b class="green">+50%</b> per level.`,
 
 				res: "plat",
 				icon: ['Curr/Grass'],
 				
-				cost: i => 3,
-				bulk: i => Math.floor(i/3),
+				max: 10,
+				cost: 3,
 
-				effect(i) {
-					let x = E(i/2+1)
-
-					return x
-				},
+				effect: i => i/2+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 40,
-
 				unl: _=>player.cTimes>0,
-
-				costOnce: true,
 
 				title: "Plat PP",
 				desc: `Increase PP gain by <b class="green">+25%</b> per level.`,
@@ -540,61 +499,41 @@ const UPGS = {
 				res: "plat",
 				icon: ['Curr/Prestige'],
 				
-				cost: i => 50,
-				bulk: i => Math.floor(i/50),
+				max: 40,
+				cost: 50,
 
-				effect(i) {
-					let x = E(i/4+1)
-
-					return x
-				},
+				effect: i => i/4+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 10,
-
 				unl: _=>player.cTimes>0,
-
-				costOnce: true,
 
 				title: "Plat TP",
 				desc: `Increase TP gain by <b class="green">+50%</b> per level.`,
 
 				res: "plat",
 				icon: ['Icons/TP'],
-				
-				cost: i => 100,
-				bulk: i => Math.floor(i/100),
 
-				effect(i) {
-					return E(i/2+1)
-				},
+				max: 10,
+				cost: 100,
+
+				effect: i => i/2+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 10,
-
 				unl: _=>player.cTimes>0,
-
-				costOnce: true,
 
 				title: "Plat Crystal",
 				desc: `Increase Crystal gain by <b class="green">+50%</b> per level.`,
 
 				res: "plat",
 				icon: ['Curr/Crystal'],
-				
-				cost: i => 100,
-				bulk: i => Math.floor(i/100),
 
-				effect(i) {
-					return E(i/2+1)
-				},
+				max: 10,
+				cost: 100,
+
+				effect: i => i/2+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 100,
-
 				unl: _=>player.sTimes>0,
-
-				costOnce: true,
 
 				title: "Plat Steel",
 				desc: `Increase steel gain by <b class="green">+50%</b> per level.`,
@@ -602,109 +541,58 @@ const UPGS = {
 				res: "plat",
 				icon: ['Curr/Steel'],
 				
-				cost: i => 100,
-				bulk: i => Math.floor(i/100),
+				max: 100,
+				cost: 100,
 
-				effect(i) {
-					let x = E(i/2+1)
-
-					return x
-				},
+				effect: i => i/2+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 100,
 
 				unl: _=>hasUpgrade('factory',2),
-
-				costOnce: true,
 
 				title: "Plat Charge",
 				desc: `Increase charge rate by <b class="green">+50%</b> per level.`,
 
 				res: "plat",
 				icon: ['Curr/Charge'],
-				
-				cost: i => 500,
-				bulk: i => Math.floor(i/500),
 
-				effect(i) {
-					let x = E(i/2+1)
+				max: 100,
+				cost: 500,
 
-					return x
-				},
+				effect: i => i/2+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 100,
-
 				unl: _=>player.aRes?.aTimes,
-
-				costOnce: true,
 
 				title: "Plat Anonymity",
 				desc: `Increase AP gain by <b class="green">+20%</b> per level.`,
 
 				res: "plat",
 				icon: ['Curr/Anonymity'],
-				
-				cost: i => 1e3,
-				bulk: i => Math.floor(i/1e3),
 
-				effect(i) {
-					let x = E(i*0.2+1)
+				max: 100,
+				cost: 1e3,
 
-					return x
-				},
+				effect: i => i/5+1,
 				effDesc: x => format(x)+"x",
 			},{
-				max: 10,
-
 				unl: _=>player.aRes?.lTimes,
-
-				costOnce: true,
 
 				title: "Platinum Oil",
 				desc: `Increase Oil gain by <b class="green">+20%</b> per level.`,
 
 				res: "plat",
 				icon: ['Curr/Oil'],
-				
-				cost: i => 2e3,
-				bulk: i => Math.floor(i/2e3),
 
-				effect(i) {
-					let x = E(i/5+1)
+				max: 10,
+				cost: 2e3,
 
-					return x
-				},
+				effect: i => i/5+1,
 				effDesc: x => format(x)+"x",
 			}
 		],
 	},
 }
-
-// <b class="green"></b>
-// <b class="yellow"></b>
-
-/*
-{
-	title: "Placeholder",
-	desc: `Placeholder.`,
-
-	res: "grass",
-				
-	cost: i => Decimal.pow(1.15,i).mul(10).ceil(),
-	bulk: i => i.div(10).max(1).log(1.15).floor().toNumber()+1,
-
-	effect(i) {
-		let x = E(1)
-
-		return x
-	},
-	effDesc: x => format(x)+"x",
-},
-*/
-
-const UPGS_SCOST = {}
 
 function chosenUpgrade(id, x) {
 	let ch = tmp.upg_ch
@@ -736,7 +624,7 @@ function buyUpgrade(id, x, type = "once", amt) {
 	if (!tu.noSpend) {
 		let res = upg.res
 		let num = isResNumber.includes(res)
-		let cost = upg.costOnce ? tu.cost[x] * (bulk - lvl) : upg.cost(bulk - 1)
+		let cost = tu.costOnce[x] ? tu.cost[x] * (bulk - lvl) : upg.cost(bulk - 1)
 		let r = UPG_RES[res][1]()
 
 		if (r[2]) {
@@ -780,7 +668,7 @@ function getUpgradeBulk(id, x, amt) {
 
 	let lvl = 0
 	let min = getUpgradeLvl(id, x)
-	if (upg.costOnce) lvl = tu.noSpend ? Infinity : Math.floor(res / tu.cost[x]) + min
+	if (tu.costOnce[x]) lvl = tu.noSpend ? Infinity : Math.floor(res / tu.cost[x]) + min
 	else if (E(res).gte(tu.cost[x])) lvl = upg.bulk(E(res))
 	else lvl = min
 
@@ -802,7 +690,8 @@ function updateUpgTemp(id) {
 		let res = tmp.upg_res[upg.res]
 
 		tu.max[x] = compute(upg.max, 1)
-		tu.cost[x] = upg.cost(amt)
+		tu.costOnce[x] = typeof upg.cost != "function"
+		tu.cost[x] = tu.costOnce[x] ? upg.cost : upg.cost(amt)
 		tu.bulk[x] = getUpgradeBulk(id, x)
 
 		if (amt < tu.max[x]) ul++
@@ -914,8 +803,8 @@ function updateUpgradesHTML(id) {
 				if (amt < max) {
 					h += `<br><span class="${canBuy?"green":"red"}">Cost: ${format(tu.cost[ch],0)} ${dis}</span>`
 
-					let cost2 = upg.costOnce?Decimal.mul(tu.cost[ch],25-amt%25):upg.cost((Math.floor(amt/25)+1)*25-1)
-					let cost3 = upg.costOnce?Decimal.mul(tu.cost[ch],max-amt):upg.cost(max-1)
+					let cost2 = tu.costOnce[ch]?Decimal.mul(tu.cost[ch],25-amt%25):upg.cost((Math.floor(amt/25)+1)*25-1)
+					let cost3 = tu.costOnce[ch]?Decimal.mul(tu.cost[ch],max-amt):upg.cost(max-1)
 					if (hasBuy25) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost2)?"green":"red"}">Next 25: ${format(cost2,0)} ${dis}</span>`
 					else if (hasMax) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost3)?"green":"red"}">Max: ${format(cost3,0)} ${dis}</span>`
 

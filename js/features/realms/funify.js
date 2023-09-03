@@ -116,9 +116,8 @@ UPGS.funMachine = {
 		
 			res: "fun",
 			icon: ["Icons/Charger"],
-						
-			cost: i => E(1e6),
-			bulk: i => 1,
+
+			cost: 1e6,
 		},{
 			unl: _ => MAIN.sac.did(),
 			title: "Recelerator",
@@ -127,8 +126,7 @@ UPGS.funMachine = {
 			res: "fun",
 			icon: ["Icons/Recelerator"],
 						
-			cost: i => E(1e13),
-			bulk: i => 1,
+			cost: 1e13,
 		}
 	],
 }

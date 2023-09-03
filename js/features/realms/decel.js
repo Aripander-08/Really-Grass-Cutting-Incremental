@@ -195,9 +195,8 @@ UPGS.aGrass = {
 
 			res: "aGrass",
 			icon: ['Curr/Grass', 'Icons/StarSpeed'],
-			
-			cost: i => E(500),
-			bulk: i => 1,
+
+			cost: 500,
 
 			effect(i) {
 				return E(player.chargeRate).div(1e3).add(1).root(4)
@@ -209,13 +208,10 @@ UPGS.aGrass = {
 
 			res: "aGrass",
 			icon: ['Icons/XP', 'Icons/StarSpeed'],
-			
-			cost: i => E(100),
-			bulk: i => 1,
 
-			effect(i) {
-				return E(player.chargeRate).div(1e3).add(1).root(4)
-			},
+			cost: 100,
+
+			effect: _ => E(player.chargeRate).div(1e3).add(1).root(4),
 			effDesc: x => x.format()+"x",
 		},{
 			unl: _ => player.aRes?.aTimes,
@@ -283,9 +279,8 @@ UPGS.aAuto = {
 		
 			res: "oil",
 			icon: ['Curr/AntiGrass','Icons/Automation'],
-						
-			cost: i => E(100),
-			bulk: i => 1,
+
+			cost: 100,
 		},{
 			unl: _=>player.rocket.part>0 || galUnlocked(),
 
@@ -295,8 +290,7 @@ UPGS.aAuto = {
 			res: "rf",
 			icon: ['Curr/Anonymity','Icons/Automation'],
 						
-			cost: i => E(50),
-			bulk: i => 1,
+			cost: 50,
 		},{
 			unl: _=>galUnlocked(),
 
@@ -305,9 +299,8 @@ UPGS.aAuto = {
 		
 			res: "rf",
 			icon: ['Curr/Oil','Icons/Automation'],
-						
-			cost: i => E(200),
-			bulk: i => 1,
+
+			cost: 200,
 		},{
 			unl: _=>galUnlocked(),
 
@@ -321,11 +314,7 @@ UPGS.aAuto = {
 						
 			cost: i => Decimal.pow(3,i).mul(1e12).ceil(),
 			bulk: i => i.div(1e12).max(1).log(3).floor().toNumber()+1,
-			effect(i) {
-				let x = i/1e3
-		
-				return x
-			},
+			effect: i => i/1e3,
 			effDesc: x => "+"+formatPercent(x,1)+"/s",
 		},{
 			unl: _=>galUnlocked(),

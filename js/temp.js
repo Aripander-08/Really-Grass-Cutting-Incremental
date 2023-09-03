@@ -51,6 +51,7 @@ function resetTemp() {
 		tmp.upgs[x] = {
 			unlLength: 0,
 			max: [],
+			costOnce: [],
 			cost: [],
 			bulk: [],
 			eff: [],

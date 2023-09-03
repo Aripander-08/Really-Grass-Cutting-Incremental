@@ -274,8 +274,7 @@ UPGS.ring = {
 			icon: ['Curr/Fun', 'Icons/Plus'],
 
 			max: 5,
-			costOnce: true,
-			cost: i => 1,
+			cost: 1,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -287,8 +286,7 @@ UPGS.ring = {
 			icon: ['Curr/Planetarium'],
 
 			max: 5,
-			costOnce: true,
-			cost: i => 2,
+			cost: 2,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -352,8 +350,7 @@ UPGS.ring = {
 			icon: ['Icons/SP'],
 
 			max: 5,
-			costOnce: true,
-			cost: i => 100,
+			cost: 100,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -365,8 +362,7 @@ UPGS.ring = {
 			icon: ['Curr/Momentum'],
 
 			max: 5,
-			costOnce: true,
-			cost: i => 1e3,
+			cost: 1e3,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -378,8 +374,7 @@ UPGS.ring = {
 			icon: ['Curr/Normality'],
 
 			max: 5,
-			costOnce: true,
-			cost: i => 1e4,
+			cost: 1e4,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -391,8 +386,7 @@ UPGS.ring = {
 			icon: ['Curr/Astrolabe'],
 
 			max: 5,
-			costOnce: true,
-			cost: i => 1e5,
+			cost: 1e5,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -405,8 +399,7 @@ UPGS.ring = {
 			icon: ['Curr/Measure'],
 
 			max: 5,
-			costOnce: true,
-			cost: i => 1e6,
+			cost: 1e6,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x"
@@ -418,8 +411,7 @@ UPGS.ring = {
 			res: "ring",
 			icon: ['Curr/Cloud', 'Icons/StarProgression'],
 
-			cost: i => 1e12,
-			bulk: i => 1
+			cost: 1e12
 		}, {
 			title: "I feel Foggy...",
 			desc: `<b class='green'>Double</b> Cloud production gain.`,
@@ -428,8 +420,7 @@ UPGS.ring = {
 			res: "ring",
 			icon: ['Curr/Cloud', 'Icons/StarProgression'],
 
-			cost: i => 1e20,
-			bulk: i => 1
+			cost: 1e20
 		}
 	],
 }
@@ -541,8 +532,7 @@ UPGS.obs = {
 			icon: ['Curr/Planetarium'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => 2,
+			cost: 2,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
@@ -554,8 +544,7 @@ UPGS.obs = {
 			icon: ['Icons/Cosmic'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => 3,
+			cost: 3,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
@@ -567,8 +556,7 @@ UPGS.obs = {
 			icon: ['Icons/Compaction'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => 5,
+			cost: 5,
 
 			effect: i => i/5+1,
 			effDesc: x => format(x,1)+"x",
@@ -580,8 +568,7 @@ UPGS.obs = {
 			icon: ['Icons/Speed'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => 10,
+			cost: 10,
 
 			effect: i => i/5,
 			effDesc: x => "+"+format(x,1)+"x",
@@ -593,8 +580,7 @@ UPGS.obs = {
 			res: "obs",
 			icon: ['Curr/Astrolabe'],
 
-			costOnce: true,
-			cost: i => 15,
+			cost: 15,
 
 			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
@@ -608,9 +594,7 @@ UPGS.obs = {
 			icon: ['Icons/Speed'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => 1e5,
-			bulk: i => Math.floor(i/1e5),
+			cost: 1e5,
 
 			effect: i => 1.1**i,
 			effDesc: x => format(x,1)+"x",
@@ -623,8 +607,7 @@ UPGS.obs = {
 			icon: ['Curr/Measure'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => 500,
+			cost: 500,
 
 			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
@@ -642,13 +625,12 @@ UPGS.res = {
 	ctn: [
 		{
 			title: "Part Assembler",
-			desc: `Automate <b class='green'>Rocket Part</b>.`,
+			desc: `Automate <b class='green'>Rocket Part</b>. [soon]`,
 
 			res: "res",
 			icon: ['Curr/RocketFuel','Icons/Automation'],
 
-			cost: i => E(100),
-			bulk: i => 1
+			cost: Infinity
 		}, {
 			title: "Funspansion",
 			desc: `Unlock new <b class='green'>SFRGT</b> upgrades.`,
@@ -656,8 +638,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/SuperFun','Icons/StarProgression'],
 
-			cost: i => E(100),
-			bulk: i => 1
+			cost: 100
 		}, {
 			title: "Dark Matter Generator",
 			desc: `Passively generate <b class='green'>+0.1%</b> Dark Matter per second.`,
@@ -678,8 +659,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/UnnaturalGrass','Icons/Automation2'],
 
-			cost: i => E(500),
-			bulk: i => 1
+			cost: 500
 		}, {
 			title: "Habit II!",
 			desc: `Automatically cut grass at <b class='green'>+0.5%</b> of Habitability max value per level.`,
@@ -701,8 +681,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Icons/Compaction','Icons/Plus'],
 
-			cost: i => E(1e6),
-			bulk: i => 1
+			cost: 1e6
 		}, {
 			title: "A Normal Generator",
 			desc: `Passively generate <b class='green'>+0.1%</b> Normality Points per second.`,
@@ -711,12 +690,9 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Normality','Icons/Plus'],
 
-			cost: i => E(1e9),
-			bulk: i => 1,
+			cost: 1e9,
 
-			effect(i) {
-				return i/1e3
-			},
+			effect: i => i/1e3,
 			effDesc: x => "+"+formatPercent(x)+"/s"
 		}, {
 			title: "A Normal Automation",
@@ -726,8 +702,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Normality','Icons/Automation2'],
 
-			cost: i => E(1e5),
-			bulk: i => 1
+			cost: 1e5
 		}, {
 			title: "Foggy Generator",
 			desc: `Automatically increase Cloud production to <b class='green'>0.1%</b> gain.`,
@@ -736,8 +711,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Cloud','Icons/Plus'],
 
-			cost: i => E(1e20),
-			bulk: i => 1
+			cost: 1e20
 		}, {
 			title: "Foggy Automation",
 			desc: `Automate <b class='green'>Cloudy</b> Upgrades. They don't spend anything.`,
@@ -746,8 +720,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Cloud','Icons/Automation2'],
 
-			cost: i => E(1e15),
-			bulk: i => 1
+			cost: 1e15
 		}, {
 			title: "Multi-Grassjump",
 			desc: `You can bulk <b class='green'>Grass-Jump</b>.`,
@@ -756,8 +729,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Icons/Placeholder','Icons/Multiply'],
 
-			cost: i => E(1e100),
-			bulk: i => 1
+			cost: 1e100
 		}, {
 			title: "Auto-Grassjump",
 			desc: `Automate <b class='green'>Grass-Jump</b>.`,
@@ -766,8 +738,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Icons/Placeholder','Icons/Automation'],
 
-			cost: i => E(1e100),
-			bulk: i => 1
+			cost: 1e100
 		}, {
 			title: "Planetarium Automation",
 			desc: `Automate <b class='green'>Planetarium</b> Upgrades.`,
@@ -775,8 +746,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Planetarium','Icons/Automation'],
 
-			cost: i => E(1e3),
-			bulk: i => 1
+			cost: 1e3
 		}, {
 			title: "Observatory Luck",
 			desc: `<b class='green'>+1%</b> chance to Observatorium.`,
@@ -798,8 +768,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Observatorium','Icons/Automation2'],
 
-			cost: i => E(1e5),
-			bulk: i => 1
+			cost: 1e5
 		}, {
 			title: "Astro Generator",
 			desc: `Passively generate <b class='green'>+0.1%</b> Astrolabe per second.`,
@@ -809,8 +778,7 @@ UPGS.res = {
 			icon: ['Curr/Astrolabe','Icons/Plus'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => E(1e5),
+			cost: 1e5,
 
 			effect: i => i/1e3,
 			effDesc: x => "+"+formatPercent(x)+"/s"
@@ -822,8 +790,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Astrolabe','Icons/Automation'],
 
-			cost: i => E(1e6),
-			bulk: i => 1
+			cost: 1e6
 		}, {
 			title: "Astro No-Spend",
 			desc: `<b class='green'>Astrolabe</b> Upgrades don't spend anything.`,
@@ -832,8 +799,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Astrolabe','Icons/Automation2'],
 
-			cost: i => E(1e7),
-			bulk: i => 1
+			cost: 1e7
 		}, {
 			title: "Quadrant Generator",
 			desc: `Passively generate <b class='green'>+0.1%</b> Measure per second.`,
@@ -843,8 +809,7 @@ UPGS.res = {
 			icon: ['Curr/Measure','Icons/Plus'],
 
 			max: 10,
-			costOnce: true,
-			cost: i => E(1e12),
+			cost: 1e12,
 
 			effect: i => i/1e3,
 			effDesc: x => "+"+formatPercent(x)+"/s"
@@ -856,8 +821,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Measure','Icons/Automation'],
 
-			cost: i => E(1e13),
-			bulk: i => 1
+			cost: 1e13
 		}, {
 			title: "Quadrant No-Spend",
 			desc: `<b class='green'>Quadrant</b> Upgrades don't spend anything.`,
@@ -866,8 +830,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Measure','Icons/Automation2'],
 
-			cost: i => E(1e14),
-			bulk: i => 1
+			cost: 1e14
 		}, {
 			title: "Planetoid Pause",
 			desc: `You can <b class='green'>pause</b> Planetoid runs.`,
@@ -876,8 +839,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Planetarium','Icons/Plus'],
 
-			cost: i => E(1e6),
-			bulk: i => 1
+			cost: 1e6
 		}, {
 			title: "Planetoid Intermission",
 			desc: `You can exit the Planetoid while paused.`,
@@ -886,8 +848,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Planetarium','Icons/StarProgression'],
 
-			cost: i => E(1e9),
-			bulk: i => 1
+			cost: 1e9
 		}, {
 			title: "Planetoid Timer",
 			desc: `Planetoid Timer is increased by <b class='green'>+10s</b>.`,
@@ -910,8 +871,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Astrolabe','Icons/StarProgression'],
 
-			cost: i => E(1e8),
-			bulk: i => 1
+			cost: 1e8
 		}, {
 			title: "Planetoid Headstart",
 			desc: `Start with <b class='green'>+1 level</b> of "Astrolabe" upgrade.`,
@@ -920,9 +880,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Measure','Icons/Plus'],
 
-			max: Infinity,
-			cost: i => E(1e100),
-			bulk: i => 1
+			cost: 1e100
 		}, {
 			title: "Planetoid Stability",
 			desc: `Quadrant reduces <b class='green'>Astrolabe</b> instead.`,
@@ -931,8 +889,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Measure','Icons/StarProgression'],
 
-			cost: i => E(1e100),
-			bulk: i => 1
+			cost: 1e100
 		}
 	],
 }
@@ -1239,7 +1196,7 @@ MILESTONE.pt = {
 	milestone: [
 		{
 			req: 5,
-			desc: `[ Alpha 6 Endgame! ]`
+			desc: `[ Alpha 7 Endgame! ]`
 		}, {
 			req: 10,
 			desc: `[ Unlock Grass-Jumps: Soon ]`

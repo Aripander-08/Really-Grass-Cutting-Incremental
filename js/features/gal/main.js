@@ -205,12 +205,9 @@ UPGS.moonstone = {
 			res: "moonstone",
 			icon: ["Curr/Platinum"],
 			
-			cost: i => 2,
-			bulk: i => i/2,
+			cost: 2,
 
-			effect(i) {
-				return i
-			},
+			effect: i => i,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			max: 10,
@@ -222,13 +219,10 @@ UPGS.moonstone = {
 
 			res: "moonstone",
 			icon: ["Curr/RocketFuel"],
-			
-			cost: i => 10,
-			bulk: i => Math.floor(i/10),
 
-			effect(i) {
-				return i/2
-			},
+			cost: 10,
+
+			effect: i => i/2,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			max: 4,
@@ -241,12 +235,9 @@ UPGS.moonstone = {
 			res: "moonstone",
 			icon: ["Icons/SP"],
 			
-			cost: i => 5,
-			bulk: i => Math.floor(i/5),
+			cost: 5,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			costOnce: true,
@@ -258,12 +249,9 @@ UPGS.moonstone = {
 			icon: ["Curr/Star"],
 			
 			max: 4,
-			cost: i => 7,
-			bulk: i => Math.floor(i/7),
+			cost: 7,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			unl: _ => player.aRes?.fTimes,
@@ -276,12 +264,9 @@ UPGS.moonstone = {
 			icon: ["Curr/Fun"],
 			
 			max: 15,
-			cost: i => 5,
-			bulk: i => Math.floor(i/5),
+			cost: 5,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			unl: _ => player.aRes?.fTimes,
@@ -294,12 +279,9 @@ UPGS.moonstone = {
 			icon: ["Curr/SuperFun"],
 
 			max: 5,
-			cost: i => 10,
-			bulk: i => Math.floor(i/10),
+			cost: 10,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			unl: _ => hasAGHMilestone(7),
@@ -312,12 +294,9 @@ UPGS.moonstone = {
 			icon: ["Icons/Foundry"],
 
 			max: 5,
-			cost: i => 30,
-			bulk: i => Math.floor(i/30),
+			cost: 30,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			unl: _ => hasAGHMilestone(7),
@@ -331,12 +310,9 @@ UPGS.moonstone = {
 			icon: ["Curr/DarkMatter"],
 
 			max: 2,
-			cost: i => 2e3,
-			bulk: i => Math.floor(i/2e3),
+			cost: 2e3,
 
-			effect(i) {
-				return i+1
-			},
+			effect: i => i+1,
 			effDesc: x => format(x,0)+"x",
 		}, {
 			title: "Moon Platinum II",

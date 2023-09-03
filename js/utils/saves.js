@@ -176,7 +176,6 @@ function loadPlayer(data) {
 		resetUpgrades("np")
 		resetUpgrades("ring")
 		resetUpgrades("res")
-		//RESET.sac.doReset(true)
 	}
 	player.tb_ver = TB_VER
 }
@@ -245,7 +244,10 @@ function load(str) {
 	resetTemp()
 	updateTemp()
 
-	player.lastTick = Date.now()
+	let now = Date.now()
+	//if (player.lastTick > 0) tmp.offline = (now - player.lastTick) / 1e3
+	player.lastTick = now
+
 	resetSaveInterval()
 }
 
@@ -293,11 +295,6 @@ function importy() {
 }
 
 function loadGame(start=true, gotNaN=false) {
-	for (let x in UPGS) {
-		UPGS_SCOST[x] = []
-		for (let y in UPGS[x].ctn) UPGS_SCOST[x][y] = UPGS[x].ctn[y].cost(0)
-	}
-
 	load(localStorage.getItem(TB_SAVE))
 
 	setupHTML()
