@@ -153,7 +153,10 @@ function drawGrass() {
 					range_pos.y < y + G_SIZE &&
 					tmp.rangeCut + range_pos.y > y) {
 						if (tmp.unRes?.habit?.on) {
-							if (!g.habit) g.habit = tmp.unRes.habit.start
+							if (!g.habit) {
+								g.habit = tmp.unRes.habit.start
+								g.og = 0
+							}
 						} else {
 							removeGrass(i)
 							i--

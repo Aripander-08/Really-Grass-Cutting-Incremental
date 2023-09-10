@@ -119,10 +119,10 @@ function galTick(dt) {
 
 	if (RESET.gal.req()) player.gal.stars = player.gal.stars.add(tmp.gal.star_gain.mul(tmp.gal.star_gain_p*dt))
 	if (RESET.gal.req()) player.gal.neg = Math.max(player.gal.neg, tmp.gal.agh.neg)
-
 	if (hasStarTree("auto", 10)) for (let i = 0; i <= 13; i++) buyMaxSCUpgrade("progress", i)
 
 	if (RESET.sac.req()) player.gal.dm = tmp.gal.dmGain.mul(dt*tmp.gal.dmGainP).add(player.gal.dm)
+	if (lunarUnl()) calcLunar(dt)
 }
 
 function galUnlocked() {
@@ -130,7 +130,7 @@ function galUnlocked() {
 }
 
 function setupGal() {
-	return {
+	let s = {
 		time: 0,
 		times: 0,
 
@@ -154,7 +154,14 @@ function setupGal() {
 		dm: E(0),
 		sacTime: 0,
 		sacTimes: 0,
+
+		lunar: {
+			active: [],
+			power: []
+		},
 	}
+	for (let i = 0; i < LUNAR_OB.length; i++) s.lunar.power.push(E(0))
+	return s
 }
 
 //HTML

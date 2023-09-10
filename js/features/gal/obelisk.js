@@ -14,7 +14,7 @@ RESET.astral_pres = {
 	reqDesc: _ => ``,
 
 	resetDesc: `
-		Reset your astral to power your Astral bonuses, but also scale Astral.<br><br>
+		Reset Astral to power Astral bonuses, but also scale Astral.<br><br>
 		<span id='nextAPBonus' class='green'></span>
 	`,
 	resetGain: _=> `Astral: ${format(player.gal.astral, 0)} / ${ASTRAL_PRESTIGE.req}`,
@@ -32,44 +32,44 @@ RESET.astral_pres = {
 	},
 }
 
-const AP_BONUS = ["Planetarium", "Clouds", "Momentum", "Tier Base", "Lunar Power"]
+const AP_BONUS = ["Cosmic", "Clouds", "Momentum", "Lunar Power", "Tier Base"]
 
-/*
 const LUNAR_OB = [
-	['Grass Value','Curr/Grass',10,1.1,0.001],
+	['Tier Points','Icons/TP'],
+	['Space Points','Icons/SP'],
+	['Clouds','Curr/Cloud'],
+	['Cosmic','Icons/Cosmic'],
+	['Rings','Curr/Ring'],
 ]
-const LUNAR_OB_MODE = ['x','^']
 
 tmp_update.push(_=>{
-	let x = 1
+	if (!lunarUnl()) return
 
-	tmp.LPgain = x
-	tmp.lunar_max_active = 1
+	let lt = tmp.gal.lp = {}
+	lt.gain = E(1e-3).mul(getAstralEff("lp"))
+	if (hasMilestone("pt", 6)) lt.gain = lt.gain.mul(2)
 
-	for (let i = 0; i < LUNAR_OB.length; i++) {
-		let l = LUNAR_OB[i]
-
-		tmp.lunar_next[i] = Decimal.mul(l[3],player.lunar.level[i]).add(l[2])
-		tmp.lunar_eff[i] = player.lunar.level[i] * l[4] + 1
-	}
+	lt.max = 3
+	if (hasMilestone("pt", 7)) lt.max++
+	
+	lt.eff = []
+	for (let i = 0; i < LUNAR_OB.length; i++) lt.eff.push(player.gal.lunar.power[i].add(1).sqrt())
 })
 
-function getLPLevel(i, lp = player.lunar.lp[i]) {
-	let l = LUNAR_OB[i], b = l[3], s = l[2], x = 0
+function lunarUnl() { return hasMilestone("pt", 5) }
 
-	let d = lp.mul(8*b).add((2*s-b)**2)
-	x = d.sqrt().sub(2*s-b).div(2*b)
-
-	return x.floor().toNumber()
+function calcLunar(dt) {
+	for (let i of player.gal.lunar.active) player.gal.lunar.power[i] = player.gal.lunar.power[i].add(tmp.gal.lp.gain.mul(dt))
 }
 
-function getLEffect(i) { return tmp.lunar_eff[i]||1 }
+function lunarEff(i) { return tmp.gal?.lp?.eff[i] || 1 }
 
 function chooseLA(i) {
-	if (player.lunar.active.includes(i)) player.lunar.active.splice(player.lunar.active.indexOf(i),1)
+	let lsa = player.gal.lunar.active
+	if (lsa.includes(i)) lsa.splice(lsa.indexOf(i),1)
 	else {
-		if (player.lunar.active.length >= tmp.lunar_max_active) player.lunar.active.splice(randint(0,player.lunar.active.length-1),1)
-		player.lunar.active.push(i)
+		if (lsa.length >= tmp.gal.lp.max) lsa.splice(randint(0,lsa.length-1),1)
+		lsa.push(i)
 	}
 }
 
@@ -84,11 +84,7 @@ el.setup.obelisk = _ => {
 		<div>
 			<div class="lop_btn" id='lop${i}_btn' onclick='chooseLA(${i})'>
 				<img src="images/${l[1]}.png">
-				<div id='lop${i}_lvl'>
-					The J
-				</div>
-			</div><div class="lop_progress" id="lop${i}_amt">
-				0 / 0
+				<div id='lop${i}_lp'></div>
 			</div>
 		</div>
 		`
@@ -97,40 +93,33 @@ el.setup.obelisk = _ => {
 	el.setHTML(h)
 }
 
-for (let i = 0; i < LUNAR_OB.length; i++) {
-	if (player.lunar.active.includes(i)) player.lunar.lp[i] = player.lunar.lp[i].add(tmp.LPgain.mul(dt))
-	if (player.lunar.lp[i].gte(tmp.lunar_next[i])) player.lunar.level[i] = Math.max(player.lunar.level[i],getLPLevel(i))
-}*/
-
 el.update.obelisk = _ => {
 	if (mapID == 'ap') {
 		let bonus = AP_BONUS[player.gal.astral_pres]
-		tmp.el.nextAPBonus.setHTML(bonus ? `You'll unlock the ${bonus} astral bonus.` : ``)
+		tmp.el.nextAPBonus.setHTML(bonus ? `You'll unlock ${bonus} bonus.` : ``)
 		updateResetHTML("astral_pres")
 		tmp.el.reset_btn_astral_pres.setClasses({locked: player.gal.astral < 100})
 
-		/*let unl = player.grassjump>=5
+		let unl = lunarUnl()
 		tmp.el.lunar_obelisk_div.setDisplay(unl)
 
 		if (unl) {
-			tmp.el.lp_gain.setHTML(tmp.LPgain.format()+"/s")
-			tmp.el.lp_active.setHTML(player.lunar.active.length+" / "+tmp.lunar_max_active)
+			let ls = player.gal.lunar, lt = tmp.gal.lp
+
+			tmp.el.lp_gain.setHTML(format(lt.gain,3)+"/s")
+			tmp.el.lp_active.setHTML(ls.active.length+" / "+lt.max)
 
 			for (let i = 0; i < LUNAR_OB.length; i++) {
-				let id = 'lop'+i+'_', l = LUNAR_OB[i], lvl = player.lunar.level[i]
+				let id = 'lop'+i+'_', l = LUNAR_OB[i]
 
-				tmp.el[id+'lvl'].setHTML(`
+				tmp.el[id+'lp'].setHTML(`
 				<div class='cyan'>${l[0]}</div>
-				<div class='yellow'>Level ${format(lvl,0)}</div>
-				<div class='green'>${LUNAR_OB_MODE[l[5]]+format(tmp.lunar_eff[i],3)} <i style='font-size: 12px; color: grey'>(+${format(l[4],3)})</i></div>
+				<div class='yellow'>${format(ls.power[i])} Power</div>
+				<div class='green'>${formatMult(lt.eff[i])}</div>
 				`)
 
-				let nl = tmp.lunar_next[i]
-				let p = l[5]==0?Decimal.pow(lvl,2).sub(lvl).mul(l[3]/2).add(l[2]*lvl):Decimal.pow(l[3],lvl).sub(1).mul(l[2]/(l[3]-1))
-
-				tmp.el[id+'amt'].setHTML(`${player.lunar.lp[i].sub(p).max(0).min(nl).format(0)} / ${nl.format(0)}`)
-				tmp.el[id+'btn'].changeStyle('border-color',player.lunar.active.includes(i)?'lime':'white')
+				tmp.el[id+'btn'].changeStyle('border-color',ls.active.includes(i)?'lime':'white')
 			}
-		}*/
+		}
 	}
 }

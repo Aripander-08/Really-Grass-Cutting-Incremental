@@ -341,7 +341,8 @@ let ROCKET_PART = {
 		r = r.mul(upgEffect('np', 3))
 		r = r.mul(upgEffect("sfrgt", 6))
 		r = r.mul(upgEffect("ring", 7))
-		r = r.mul(getAstralEff("mn"))
+		r = r.mul(upgEffect("ring", 13))
+		if (hasMilestone("pt", 0)) r = r.mul(getMilestoneEff("pt", 0))
 		return r
 	}
 }

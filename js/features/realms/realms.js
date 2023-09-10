@@ -62,6 +62,7 @@ let REALMS = {
 			if (hasUpgrade('momentum', 3)) x = x.mul(3)
 			x = x.mul(getAstralEff('tp'))
 			x = x.mul(upgEffect("dm",0))
+			x = x.mul(lunarEff(0))
 			return x
 		}
 	},

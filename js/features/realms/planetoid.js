@@ -20,6 +20,7 @@ function setupPlanetoid() {
 
 		trial: {
 			gain: 0,
+			best: 0,
 			lvl: 0
 		}
 	}
@@ -28,12 +29,12 @@ REALMS.planetoid = {
 	on: r => r == 3,
 	grass() {
 		let x = E(0.01)
-		x = x.mul(upgEffect("cloud", 2))
 		x = x.mul(upgEffect('planetarium', 0))
 		x = x.mul(upgEffect('obs', 0))
 		x = x.mul(upgEffect("astro", 0))
 		x = x.mul(upgEffect("ring", 1))
 		x = x.mul(getAstralEff("pl"))
+		if (hasGJMilestone(4)) x = x.mul(getGJEffect(4))
 
 		if (inFormation("sp")) x = x.mul(3)
 		if (inFormation("cm")) x = x.mul(Math.log10(player.planetoid.combo + 10))
@@ -46,6 +47,8 @@ REALMS.planetoid = {
 		x = x.mul(upgEffect('obs', 1))
 		x = x.mul(upgEffect("ring", 0))
 		x = x.mul(upgEffect("astro", 1))
+		x = x.mul(lunarEff(3))
+		if (hasGJMilestone(5)) x = x.mul(getGJEffect(5))
 
 		if (inFormation("sp")) x = x.mul(3)
 		if (inFormation("gd")) x = player.planetoid.xp.max(1).div(5).min(x.pow(1.1))
@@ -65,6 +68,7 @@ REALMS.planetoid = {
 		x = x.mul(upgEffect("astro", 2))
 		x = x.mul(upgEffect('measure', 2))
 		x = x.mul(getAstralEff("rg"))
+		x = x.mul(lunarEff(4))
 		return x.floor()
 	}
 }
@@ -136,7 +140,7 @@ UPGS.planetarium = {
 			cost: i => Decimal.pow(1.25,i).mul(50).ceil(),
 			bulk: i => i.div(50).log(1.25).floor().toNumber()+1,
 
-			effect: i => E(1.15).pow(i),
+			effect: i => E(1.15+upgEffect("cloud", 2, 0)).pow(i),
 			effDesc: x => x.format()+"x",
 		}, {
 			title: "Cosmic",
@@ -149,7 +153,7 @@ UPGS.planetarium = {
 			cost: i => Decimal.pow(1.25,i).mul(100).ceil(),
 			bulk: i => i.div(100).log(1.25).floor().toNumber()+1,
 
-			effect: i => E(1.15).pow(i),
+			effect: i => E(1.15+upgEffect("cloud", 3, 0)).pow(i),
 			effDesc: x => x.format()+"x",
 		}, {
 			title: "Rings",
@@ -179,15 +183,15 @@ UPGS.planetarium = {
 			effDesc: x => "+"+format(x,1)+"x",
 		}, {
 			title: "Astrolabe",
-			desc: `Gain <b class="green">+1x</b> more Astrolabe.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+			desc: `<b class="green">Double</b> Astrolabe.`,
 			unl: _ => player.planetoid?.aTimes,
 
 			res: "planetarium",
 			icon: ['Curr/Astrolabe'],
 
 			max: Infinity,
-			cost: i => Decimal.pow(50,i).mul(1e8).ceil(),
-			bulk: i => i.div(1e8).log(50).floor().toNumber()+1,
+			cost: i => Decimal.pow(200,i).mul(1e8).ceil(),
+			bulk: i => i.div(1e8).log(200).floor().toNumber()+1,
 
 			effect: i => E(2).pow(Math.floor(i/25)).mul(i+1),
 			effDesc: x => x.format()+"x",
@@ -253,6 +257,7 @@ function endPlanetoidTrial() {
 	let trial = player.planetoid.trial
 	if (trial.unl) {
 		trial.lvl = Math.max(trial.lvl, trial.gain)
+		trial.best = 0
 		trial.gain = 0
 	}
 }
@@ -298,8 +303,8 @@ UPGS.ring = {
 			icon: ['Icons/Compaction'],
 
 			max: Infinity,
-			cost: i => E(5).pow(i+1),
-			bulk: i => i.log(5).floor().toNumber()+1,
+			cost: i => E(10).pow(i+1),
+			bulk: i => i.log(10).floor().toNumber()+1,
 
 			effect: i => i+1,
 			effDesc: x => format(x)+"x"
@@ -411,16 +416,40 @@ UPGS.ring = {
 			res: "ring",
 			icon: ['Curr/Cloud', 'Icons/StarProgression'],
 
-			cost: 1e12
+			max: Infinity,
+			cost: i => E(10).pow(i+12),
+			bulk: i => i.log10().sub(12).floor().toNumber()+1,
+
+			effect: i => i+1,
+			effDesc: x => format(x,0)+"x"
 		}, {
-			title: "I feel Foggy...",
-			desc: `<b class='green'>Double</b> Cloud production gain.`,
+			title: "Master of Ring",
+			desc: `<b class='green'>Raise</b> Astral XP effect.`,
 			unl: _ => player.unRes?.vTimes,
 
 			res: "ring",
-			icon: ['Curr/Cloud', 'Icons/StarProgression'],
+			icon: ['Icons/XP', 'Icons/StarProgression'],
 
-			cost: 1e20
+			max: 5,
+			cost: i => E(10).pow(i+15),
+			bulk: i => i.log10().sub(15).floor().toNumber()+1,
+
+			effect: i => i/25+1,
+			effDesc: x => "^"+format(x)
+		}, {
+			title: "Prociency of Ring",
+			desc: `<b class='green'>Double</b> Momentum.`,
+			unl: _ => player.unRes?.vTimes,
+
+			res: "ring",
+			icon: ['Curr/Momentum', 'Icons/StarProgression'],
+
+			max: Infinity,
+			cost: i => E(10).pow(i*1.5+16),
+			bulk: i => i.log10().sub(16).div(1.5).floor().toNumber()+1,
+
+			effect: i => E(2).pow(i),
+			effDesc: x => format(x)+"x"
 		}
 	],
 }
@@ -507,7 +536,6 @@ el.setup.formation = _=>{
 plMAIN.obs = {
 	gain() {
 		let r = E(0.01)
-		r = r.mul(upgEffect("cloud", 3))
 		r = r.add(upgEffect('measure', 1, 0))
 		if (inFormation("sp")) r = r.mul(3)
 		return r
@@ -690,7 +718,7 @@ UPGS.res = {
 			res: "res",
 			icon: ['Curr/Normality','Icons/Plus'],
 
-			cost: 1e9,
+			cost: 1e8,
 
 			effect: i => i/1e3,
 			effDesc: x => "+"+formatPercent(x)+"/s"
@@ -772,12 +800,11 @@ UPGS.res = {
 		}, {
 			title: "Astro Generator",
 			desc: `Passively generate <b class='green'>+0.1%</b> Astrolabe per second.`,
-			unl: _ => false,
+			unl: _ => player.planetoid?.trial.unl,
 
 			res: "res",
 			icon: ['Curr/Astrolabe','Icons/Plus'],
 
-			max: 10,
 			cost: 1e5,
 
 			effect: i => i/1e3,
@@ -794,7 +821,7 @@ UPGS.res = {
 		}, {
 			title: "Astro No-Spend",
 			desc: `<b class='green'>Astrolabe</b> Upgrades don't spend anything.`,
-			unl: _ => false,
+			unl: _ => player.planetoid?.qTimes,
 
 			res: "res",
 			icon: ['Curr/Astrolabe','Icons/Automation2'],
@@ -816,21 +843,21 @@ UPGS.res = {
 		}, {
 			title: "Quadrant Automation",
 			desc: `Automate <b class='green'>Quadrant</b> Upgrades.`,
-			unl: _ => false,
+			unl: _ => player.planetoid?.trial.unl,
 
 			res: "res",
 			icon: ['Curr/Measure','Icons/Automation'],
 
-			cost: 1e13
+			cost: 1e9
 		}, {
 			title: "Quadrant No-Spend",
 			desc: `<b class='green'>Quadrant</b> Upgrades don't spend anything.`,
-			unl: _ => false,
+			unl: _ => player.planetoid?.trial.unl,
 
 			res: "res",
 			icon: ['Curr/Measure','Icons/Automation2'],
 
-			cost: 1e14
+			cost: 1e10
 		}, {
 			title: "Planetoid Pause",
 			desc: `You can <b class='green'>pause</b> Planetoid runs.`,
@@ -858,8 +885,8 @@ UPGS.res = {
 			icon: ['Curr/Astrolabe','Icons/Plus'],
 
 			max: 6,
-			cost: i => E(1e3).pow(i+5),
-			bulk: i => i.log(1e3).sub(3).floor().toNumber()+1,
+			cost: i => E(10).pow(i+8),
+			bulk: i => i.log(10).sub(8).floor().toNumber()+1,
 
 			effect: i => i * 10,
 			effDesc: x => "+"+format(x,0)+" seconds"
@@ -975,7 +1002,7 @@ UPGS.astro = {
 		}, {
 			title: "Astro Cosmic",
 			tier: 2,
-			desc: `Gain <b class="green">+1x</b> more Cosmic.`,
+			desc: `Gain <b class="green">+1x</b> more Cosmic.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
 
 			res: "astro",
 			icon: ['Icons/Cosmic'],
@@ -984,7 +1011,7 @@ UPGS.astro = {
 			cost: i => Decimal.pow(1.5,i).mul(10).ceil(),
 			bulk: i => i.div(10).log(1.5).floor().toNumber()+1,
 
-			effect: i => i+1,
+			effect: i => E(2).pow(Math.floor(i/25)).mul(i+1),
 			effDesc: x => format(x,0)+"x"
 		}, {
 			title: "Astro Rings",
@@ -1028,7 +1055,7 @@ RESET.quadrant = {
 
 	title: `Quadrant`,
 	resetBtn: `Use the Quadrant`,
-	hotkey: `P`,
+	hotkey: `C`,
 
 	reset() {
 		if (!this.req()) return
@@ -1059,16 +1086,16 @@ UPGS.measure = {
 		{
 			title: "Quad. Cosmic",
 			tier: 3,
-			desc: `Gain <b class="green">+1x</b> more Cosmic.<br>This is <b class="green">decupled</b> every <b class="yellow">25</b> levels.`,
+			desc: `<b class="green">Double</b> Cosmic.`,
 
 			res: "measure",
 			icon: ['Icons/Cosmic'],
 
 			max: Infinity,
-			cost: i => Decimal.pow(1.15,i).mul(5).ceil(),
-			bulk: i => i.div(5).max(1).log(1.15).floor().toNumber()+1,
+			cost: i => Decimal.pow(3,i).mul(5).ceil(),
+			bulk: i => i.div(5).max(1).log(3).floor().toNumber()+1,
 
-			effect: i => Decimal.pow(10,Math.floor(i/25)).mul(i+1),
+			effect: i => Decimal.pow(2,i),
 			effDesc: x => x.format()+"x",
 		}, {
 			title: "Telescope",
@@ -1100,16 +1127,16 @@ UPGS.measure = {
 		}, {
 			title: "Quad. Astro",
 			tier: 2,
-			desc: `Gain <b class="green">+1x</b> more Astrolabe.<br>This is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+			desc: `<b class='green'>Double</b> Astrolabe.`,
 
 			res: "measure",
 			icon: ['Curr/Astrolabe'],
 
 			max: Infinity,
-			cost: i => Decimal.pow(1.15,i).mul(20).ceil(),
-			bulk: i => i.div(20).max(1).log(1.15).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,i).mul(20).ceil(),
+			bulk: i => i.div(20).max(1).log(5).floor().toNumber()+1,
 
-			effect: i => Decimal.pow(2,Math.floor(i/25)).mul(i+1),
+			effect: i => Decimal.pow(2,i),
 			effDesc: x => x.format()+"x",
 		}
 	],
@@ -1129,7 +1156,7 @@ tmp_update.push(_=>{
 	let i = 0
 	while (player.planetoid.tSpent >= TRIAL.time.threshold[i]) i++
 	data.trial_left = TRIAL.time.threshold[i]
-	data.trial_gain = 5 - i
+	data.trial_gain = TRIAL.time.threshold.length - i
 })
 
 //Planetary Trials
@@ -1137,10 +1164,16 @@ const TRIAL = {
 	step: x => x >= 200 ? Math.floor((x / 10 - 20) ** 0.8 + 1) : 0,
 	next: x => Math.ceil(x ** 1.25 * 10 + 200),
 	onLevel(old, lvl) {
-		player.planetoid.trial.gain += (this.step(lvl) - this.step(old)) * tmp.plRes.trial_gain
+		let ts = player.planetoid.trial
+		if (lvl < ts.best) return
+
+		old = Math.max(old, ts.best)
+		ts.best = lvl
+
+		ts.gain += (this.step(lvl) - this.step(old)) * tmp.plRes.trial_gain
 	},
 	time: {
-		threshold: [30,60,120,180,1/0],
+		threshold: [5,10,30,60,120,180,1/0],
 		set(x) {
 			player.planetoid.time = Math.min(player.planetoid.time, x)
 		}
@@ -1195,12 +1228,39 @@ MILESTONE.pt = {
 
 	milestone: [
 		{
-			req: 5,
-			desc: `[ Alpha 7 Endgame! ]`
+			req: 2,
+			desc: `Every 5 tiers in Unnatural Realm (at Tier 10), Tier base <b class='green'>multiplies</b> Momentum.`,
+
+			eff(i) {
+				if (player.unRes.tier < 10) return E(1)
+				return E(MAIN.tier.base(2)).pow(Math.floor((player.unRes.tier - 10) / 5 + 1))
+			},
+			effDesc: x => format(x) + "x"			
+		}, {
+			req: 4,
+			desc: `Unnatural Healing <b class='green'>boosts</b> XP.`
+		}, {
+			req: 6,
+			desc: `<b class='green'>Double</b> Cloud production gain.`
+		}, {
+			req: 8,
+			desc: `<b class='green'>Unlock</b> Grass-Jumps.`
 		}, {
 			req: 10,
-			desc: `[ Unlock Grass-Jumps: Soon ]`
-		}, 
+			desc: `<b class='green'>Quadruple</b> Space Power.`,	
+		}, {
+			req: 12,
+			desc: `<b class='green'>Unlock</b> the Lunar Obelisk.`
+		}, {
+			req: 14,
+			desc: `<b class='green'>Double</b> Lunar Power.`,
+		}, {
+			req: 17,
+			desc: `<b class='green'>+1</b> Lunar Power active slot.`	
+		}, {
+			req: 20,
+			desc: `<b class='green'>Unlock</b> Constellations. [Soon!]`
+		},
 	],
 }
 

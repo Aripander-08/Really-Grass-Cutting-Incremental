@@ -30,6 +30,9 @@ const ASTRAL = {
 		r = r.mul(upgEffect('sfrgt', 2))
 		r = r.mul(upgEffect("unGrass", 3))
 		r = r.mul(upgEffect("ring", 6))
+		r = r.mul(lunarEff(1))
+		if (hasGJMilestone(0)) r = r.mul(getGJEffect(0))
+		if (hasMilestone("pt", 4)) r = r.mul(4)
 
 		if (player.gal.astral_pres) r = r.root(tmp.gal.astral.scale).div(E(1e3).pow(player.gal.astral_pres))
 
@@ -70,7 +73,7 @@ EFFECT.astral = {
 		},
 		xp: {
 			unl: _ => hasAGHMilestone(4),
-			eff: a => E(1.2).pow(a.lvl - 10).max(1),
+			eff: a => E(1.2).pow((a.lvl - 10) * upgEffect("ring", 12, 0)).max(1),
 			desc: x => `<b class="magenta">${format(x)}x</b> to XP`
 		},
 		tp: {
@@ -125,30 +128,35 @@ EFFECT.astral = {
 		},
 
 		//Prestiges
+		ap_header: {
+			unl: _ => hasAGHMilestone(20),
+			eff: a => 0,
+			desc: x => `<hr><h3>Prestiges</h3>`
+		},
 		pl: {
 			unl: _ => player.gal.astral_pres >= 1,
 			eff: a => E(5).pow(a.pres),
-			desc: x => `<b class="magenta">${format(x)}x</b> to Planetarium`
+			desc: x => `<b class="cyan">${format(x)}x</b> to Planetarium`
 		},
 		cl: {
 			unl: _ => player.gal.astral_pres >= 2,
-			eff: a => E(2).pow(a.pres - 1),
-			desc: x => `<b class="magenta">${format(x)}x</b> to Clouds`
+			eff: a => E(3).pow(a.pres - 1),
+			desc: x => `<b class="cyan">${format(x)}x</b> to Clouds`
 		},
 		mn: {
 			unl: _ => player.gal.astral_pres >= 3,
-			eff: a => E(5).pow(a.pres - 2),
-			desc: x => `<b class="magenta">${format(x)}x</b> to Momentum`
-		},
-		tb: {
-			unl: _ => player.gal.astral_pres >= 4,
-			eff: a => (a.pres - 3) / 20,
-			desc: x => `<b class="magenta">+${format(x)}x</b> to Tier Base`
+			eff: a => E(3).pow(a.pres - 2),
+			desc: x => `<b class="cyan">${format(x)}x</b> to Momentum`
 		},
 		lp: {
+			unl: _ => player.gal.astral_pres >= 4,
+			eff: a => E(2).pow(a.pres - 3),
+			desc: x => `<b class="cyan">${format(x)}x</b> to Lunar Power`
+		},
+		tb: {
 			unl: _ => player.gal.astral_pres >= 5,
-			eff: a => E(2).pow(a.pres - 4),
-			desc: x => `<b class="magenta">${format(x)}x</b> to Lunar Power`
+			eff: a => (a.pres - 4) / 20,
+			desc: x => `<b class="cyan">+${format(x)}x</b> to Tier Base`
 		},
 	},
 }

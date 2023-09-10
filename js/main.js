@@ -61,7 +61,7 @@ const MAIN = {
 			let x = realm ? 2.25 : upgEffect('crystal', 3, 2.25)
 			if (player.grasshop >= 5) x += 0.1
 			if (realm < 2) x += getChargeEff(4, 0)
-			x += getAstralEff("mn", 0)
+			x += getAstralEff("tb", 0)
 			return x
 		},
 		mult(i, realm = player.decel) {
@@ -164,14 +164,17 @@ window.addEventListener('keydown', function(event) {
 	if (event.keyCode == 16) shiftDown = true;
 	switch (event.key.toLowerCase()) {
 		case "p":
-			if (shiftDown) RESET.rocket_part.reset();
-			else if (player.decel == 2) RESET.np.reset();
-			else if (player.decel == 1) RESET.ap.reset();
-			else RESET.pp.reset();
+			if (shiftDown) RESET.rocket_part.reset()
+			else if (inPlanetoid()) RESET.astro.reset()
+			else if (inRecel()) RESET.np.reset()
+			else if (inDecel()) RESET.ap.reset()
+			else RESET.pp.reset()
 			break;
 		case "c":
-			if (inDecel()) RESET.oil.reset();
-			else RESET.crystal.reset();
+			if (inPlanetoid()) RESET.quadrant.reset()
+			else if (inRecel()) RESET.vapor.reset()
+			else if (inDecel()) RESET.oil.reset()
+			else RESET.crystal.reset()
 			break;
 		case "g":
 			if (shiftDown) RESET.gal.reset();

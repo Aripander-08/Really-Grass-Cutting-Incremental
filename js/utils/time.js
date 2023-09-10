@@ -28,6 +28,7 @@ el.update.stats = _=>{
 		if (unStatsShown) {
 			tmp.el.unStatsHeader.setDisplay(player.options.allStats)
 			tmp.el.nTimes.setHTML(player.unRes.nTimes ? "You did " + player.unRes.nTimes + " <b style='color: #bf3'>Normality</b> resets.<br>Time: " + formatTime(player.unRes.nTime) : "")
+			tmp.el.vTimes.setHTML(player.unRes.vTimes ? "You did " + player.unRes.vTimes + " <b style='color: white'>Vaporize</b> resets.<br>Time: " + formatTime(player.unRes.vTime) : "")
 		}
 
 		let gStats = inSpace()

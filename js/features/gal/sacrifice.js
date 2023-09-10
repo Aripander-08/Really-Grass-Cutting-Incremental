@@ -95,18 +95,18 @@ UPGS.dm = {
 			effDesc: x => format(E(10).pow(x))+"x",
 		}, {
 			title: "Dark Momentum",
-			desc: `<b class="green">Double</b> Momentum.`,
+			desc: `Gain <b class="green">+1x</b> more Momentum.`,
 		
 			res: "dm",
 			icon: ["Curr/Momentum"],
 
 			unl: _ => tmp.rocket_upgraded,
-			cost: i => Decimal.pow(5,(i+3)**1.25).ceil(),
-			bulk: i => i.log(5).root(1.25).sub(3).floor().toNumber()+1,
+			cost: i => Decimal.pow(5,i+3).ceil(),
+			bulk: i => i.log(5).sub(3).floor().toNumber()+1,
 			max: Infinity,
 
-			effect: i => E(2).pow(i),
-			effDesc: x => format(x)+"x",
+			effect: i => i+1,
+			effDesc: x => format(x,0)+"x",
 		}, {
 			title: "Dark Stars",
 			desc: `<b class="green">Double</b> Stars.`,

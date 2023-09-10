@@ -1,6 +1,6 @@
 const VER = 0.0404
 const EX_COMMIT = 11.08
-const TB_VER = 1.073
+const TB_VER = 1.074
 const TB_SAVE = "rgci_tb_test"
 
 function getPlayerData() {
@@ -65,12 +65,6 @@ function getPlayerData() {
 			part: 0,
 			momentum: E(0),
 		},
-
-        /*lunar: {
-            active: [],
-            level: new Array(LUNAR_OB.length).fill(0),
-            lp: new Array(LUNAR_OB.length).fill(E(0)),
-        },*/
 
 		time: 0,
 		map_notify: {},
@@ -177,6 +171,11 @@ function loadPlayer(data) {
 		resetUpgrades("ring")
 		resetUpgrades("res")
 	}
+	if (player.tb_ver < 1.074 && player.planetoid?.trial) {
+		resetUpgrades("np")
+		resetUpgrades("cloud")
+		player.planetoid.trial.lvl = 0		
+	}
 	player.tb_ver = TB_VER
 }
 
@@ -245,7 +244,7 @@ function load(str) {
 	updateTemp()
 
 	let now = Date.now()
-	//if (player.lastTick > 0) tmp.offline = (now - player.lastTick) / 1e3
+	if (player.lastTick > 0) tmp.offline = (now - player.lastTick) / 1e3
 	player.lastTick = now
 
 	resetSaveInterval()
