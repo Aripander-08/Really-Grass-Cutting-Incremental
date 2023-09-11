@@ -11,12 +11,16 @@
 
     text-shadow: #000 0px 0px 1px, #000 0px 0px 1px,
     #000 0px 0px 2px, #000 0px 0px 2px,
-    #000 0px 0px 3px, #000 0px 0px 3px
+    #000 0px 0px 3px, #000 0px 0px 3px;
+    -webkit-font-smoothing: antialiased;
+
+	scrollbar-color: auto !important;
+	scrollbar-width: auto !important;
 }
 
 body {
     color: white;
-    background-color: #0052af;
+    background: #0052af;
 	overflow: hidden;
 	margin: 0px;
 	user-select: none;
@@ -208,7 +212,7 @@ button * {
 
 #grass_div {
     position: relative;
-    width: 550px;
+    width: 700px;
     border: solid 2px #0003;
     background-color: #29b146;
     height: 45px;
@@ -509,6 +513,23 @@ button * {
     background-color: #0fe;
 }
 
+.reset_div.constellation,
+.reset_req.constellation,
+.upg_desc.constellation,
+.upgs_div.constellation {
+    background-color: #7700ff;
+    box-shadow: inset 0px 0px 30px #e1b3ff, inset 0px 0px 30px #e1b3ff;
+    border-color: #e1b3ff;
+}
+
+.upg_desc.stardust,
+.upgs_div.stardust,
+.upg_desc.star,
+.upgs_div.star {
+    border-color: #57005a;
+    background-color: #290044;
+}
+
 .upgs_ctn {
     height: calc(100% - 84px);
     width: calc(100% - 24px);
@@ -620,7 +641,8 @@ button * {
 
 .red,
 .upg_cost.locked,
-.scu_cost.locked {
+.scu_cost.locked,
+.su_cost.locked {
     color: red;
 }
 
@@ -750,6 +772,12 @@ button * {
 .upg_desc.sfrgt,
 .upgs_div.sfrgt {
     background-color: #bfff79;
+}
+
+.reset_div.supernova,
+.reset_req.supernova {
+    background: radial-gradient(circle, #ffa500 0%, #ffc65c 25%, #ffa500 50%, #ffc65c 75%, #ffa500 100%);
+    border-color: #ff6;
 }
 
 .milestone_ctns {
@@ -1047,4 +1075,353 @@ button * {
     width: calc(100% - 120px);
     font-size: 16px;
     transform: translateY(-50%)
+}
+
+/* MIGRATED FROM RGCI 0.5 */
+#constellation_grid > .table_center {
+    margin: auto;
+    width: 630px;
+}
+
+.cs-grid {
+    position: relative;
+    width: 86px;
+    height: 86px;
+    border: solid 2px #00439b;
+    background-color: black;
+
+    font-size: 12px;
+}
+
+.cs-grid > img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.cs-grid > div {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+#cs_btn_table {
+    width: 100%;
+    height: 50px;
+    background-color: #0006;
+    overflow-y: scroll;
+}
+
+#cs_btn_table > button {
+    font-size: 16px;
+    padding: 2px;
+    border-width: 1px;
+    width: 40px;
+}
+
+#cs_build_table {
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow-y: scroll;
+}
+
+.cs-building {
+    position: relative;
+    width: calc(100% - 20px);
+    height: 100px;
+    margin: 5px 10px;
+    background-color: #0004;
+}
+
+.cs-building > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    cursor: pointer;
+}
+
+.cs-building > div {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    width: calc(100% - 100px);
+    min-height: 100px;
+}
+
+#constellation_select > img {
+    width: 75px;
+    height: 75px;
+}
+
+#cs_effects,
+#cs_presets,
+#cs_dark {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.cs-preset {
+    position: relative;
+    width: calc(100% - 20px);
+    min-height: 120px;
+    margin: 5px 10px;
+    background-color: #0004;
+}
+
+.cs-preset > button {
+    font-size: 16px;
+}
+
+.solar-upgs-bg {
+    position: relative;
+
+    border: solid 4px #ff0;
+    box-shadow: inset 0px 0px 20px #ff0;
+    padding: 4px;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    background: linear-gradient(90deg, #ff0 0%, #fa0 60px, #000 150px, #000 100%);
+
+    display: flex;
+}
+
+#map_div_star > .solar-upgs-bg > div {
+    position: relative;
+    height: 100%;
+}
+
+.solar-tab-btn {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0px; padding: 0px;
+}
+
+.stb-img-icon {
+    position: absolute;
+    top: 0px; left: 0px;
+    width: 100%; height: 100%;
+
+    background-size: 100px;
+    background-position: center;
+}
+
+.solar-tab-btn.locked > .stb-img-icon {
+    display: none;
+}
+
+.stb-img-locked {
+    position: absolute;
+    display: none;
+    top: 0px; left: 0px;
+    width: 100%; height: 100%;
+
+    background-image: url(images/Icons/Lock.png);
+    background-size: 100%;
+
+    color: red;
+    font-weight: bold;
+
+    z-index: 1;
+}
+
+.solar-tab-btn.locked > .stb-img-locked {
+    display: initial;
+}
+
+.solar_upg_div {
+    position: relative;
+    margin: 3px;
+    width: 180px;
+    height: 180px;
+}
+
+.solar_upg_ctn {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.solar_upg_ctn.locked {
+    cursor: default;
+}
+
+.solar_upg_ctn:not(.choosed):not(.locked):hover > img.img_desc {
+    transform: translateX(-50%) scale(1.06);
+}
+
+.solar_upg_ctn.choosed > img.img_desc {
+    transform: translateX(-50%) scale(1.2);
+}
+
+.solar_upg_ctn > img.img_desc {
+    position: absolute;
+    top: 13%;
+    width: 80%;
+    height: 80%;
+    left: 50%;
+
+    transform: translateX(-50%);
+    transition: transform 0.2s;
+
+    pointer-events: none;
+}
+
+.solar_upg_ctn > img.img_res {
+    position: absolute;
+    bottom: 10%;
+    width: 30%;
+    height: 30%;
+    left: 10%;
+
+    transition: transform 0.2s;
+
+    pointer-events: none;
+}
+
+.solar_upg_ctn.locked > img.img_res,
+.solar_upg_ctn.locked > .su_cost,
+.solar_upg_ctn.locked > .su_amt {
+    display: none;
+}
+
+.solar_upg_ctn.locked > img.img_lock,
+.solar_upg_ctn.locked > .su_req {
+    display: initial;
+}
+
+.solar_upg_ctn > img.img_lock {
+    display: none;
+
+    position: absolute;
+    bottom: 0px;
+    width: 85%;
+    height: 85%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    pointer-events: none;
+}
+
+.su_cost {
+    font-weight: bold;
+    position: absolute;
+    bottom: 0%;
+    left: 50%;
+    width: 100%;
+    font-size: 18px;
+    transform: translateX(-50%);
+    color: lime;
+    pointer-events: none;
+}
+
+.su_amt {
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    width: 100%;
+    font-size: 24px;
+    transform: translateX(-50%);
+    color: yellow;
+    pointer-events: none;
+}
+
+.su_req {
+    display: none;
+
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 100%;
+    font-size: 36px;
+    transform: translateX(-50%);
+    color: red;
+    pointer-events: none;
+    font-weight: bold;
+}
+
+#solar_upgs_res {
+    position: absolute;
+    top: 0px;
+    left: 5px;
+    font-size: 16px;
+    text-align: left;
+}
+
+#su_desc_div {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    background-color: #fff1;
+    padding: 5px 0;
+    margin-bottom: 3px;
+    font-size: 16px;
+}
+
+#sn_tier_div {
+    position: relative;
+    width: 300px;
+    height: 100%;
+    overflow: hidden;
+}
+
+#sn_tier_div > div {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#sn_tier {
+    position: relative;
+
+    width: 160px;
+    height: 160px;
+    background-image: url('images/Bases/SupernovaBase.png');
+    background-size: 160px;
+    margin: auto;
+}
+
+#sn_tier > div {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+
+    font-weight: bold;
+    text-shadow: none;
+    background: -webkit-linear-gradient(#ff0,#ff0,#fa0,#ff0,#ff0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px #000;
+}
+
+#sn_milestones {
+    width: calc(100% - 300px);
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.sn-milestone {
+    width: 100%;
+    background: linear-gradient(45deg, #10004b, #000);
+    margin: 3px 0;
+    padding: 5px 0;
+    font-size: 16px;
+}
+
+.sn-milestone > h3 {
+    text-shadow: none;
+    background: -webkit-linear-gradient(left,#00ffbf,#ff0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

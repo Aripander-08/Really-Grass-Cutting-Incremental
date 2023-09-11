@@ -1,12 +1,10 @@
-var mapID = 'g'
-var mapLoc = "Grass Field"
-
-var mapPos
+var mapID = 'g', mapLoc = "Grass Field", mapPos
 function resetMap() {
 	mapPos = {
 		earth: [1,1],
 		space: [1,1],
-		planetoid: [1,1]
+		planetoid: [1,1],
+		star: [3,3],
 	}
 
 	onSwitchDim(inPlanetoid() ? "planetoid" : "earth")
@@ -28,18 +26,27 @@ const MAP = {
 	earth: [
 		['time','opt',null,  'fd','rf' ],
 		['upg', 'g',  'pc',  'gh','gal'],
-		['auto',null, 'chal','dc','dim_space'],
+		['auto',null, 'chal','dc','dim_space','dim_star'],
 	],
 	space: [
-		['time', 'opt'],
+		['time', 'opt', null, null, 'dim_star'],
 		['gal',  'sc', 'at'  ,'sac','ap'],
 		['dim_earth', null, 'chal', 'dim_planetoid']
 	],
 	planetoid: [
-		[null, 'opt'],
+		[null, 'opt', null, 'sd', 'dim_star'],
 		["dim_space", "ring", 'g', 'astro'],
-		[null, 'trial']
+		[null, 'trial', null, 'cs']
 	],
+	star: [
+		[null,null,null,null,null,null,null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,'cs',null,null,null],
+		[null,null,null,'solar','sm',null,null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,null,null,null,null],
+	]
 }
 
 const MAP_UNLS = {
@@ -72,6 +79,12 @@ const MAP_UNLS = {
 	ring: _ => player.planetoid != undefined,
 	astro: _ => player.planetoid != undefined,
 	trial: _ => hasAGHMilestone(14),
+	cs: _ => false,
+	sd: _ => false,
+
+	//Star
+	dim_star: _ => false
+	//soon
 }
 
 const MAP_IDS = (_=>{
@@ -194,6 +207,11 @@ const MAP_COLORS = {
 	ring: "sac",
 	astro: "sac",
 	trial: "sac",
+	cs: "sac",
+	sd: "sac",
+
+	//Star
+	//soon
 }
 
 //Locations
@@ -224,6 +242,11 @@ const MAP_CATEGORIES = {
 	ring: "Planetoid",
 	astro: "Planetoid",
 	trial: "Planetoid",
+	cs: "Planetoid",
+	sd: "Planetoid",
+
+	//Star
+	//soon
 }
 
 let locTimeout
@@ -268,6 +291,11 @@ const GO_TO_NAMES = {
 	ring: "Ring Chart",
 	astro: "Upgrades",
 	trial: "The Trial",
+	cs: "Constellation",
+	sd: "Stardustry",
+
+	//Star
+	//soon
 }
 
 function openMap() {

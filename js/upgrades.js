@@ -27,6 +27,9 @@ const UPG_RES = {
 	astro: ["Astrolabe",_=>[player.planetoid,"astro"],'AstroBase','Curr/Astrolabe'],
 	measure: ["Measure",_=>[player.planetoid,"measure"],'MeasureBase','Curr/Measure'],
 	ring: ["Ring",_=>[player.planetoid,"ring"],'ObsBase','Curr/Ring'],
+	line: ["Line",()=>[player.planetoid,"line"],'ConstellationBase','Curr/Lines'],
+	arc: ["Arc",()=>[player.planetoid,"arc"],'ConstellationBase','Curr/Arcs'],
+	stardust: ["Stardust",()=>[player.planetoid,"stardust"],'NebulaBase','Curr/Stardust'],
 }
 
 const isResNumber = ['perk','chrona']

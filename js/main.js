@@ -72,7 +72,7 @@ const MAIN = {
 		let src = getRealmSrc(realm)
 		src.level = Math.max(src.level, MAIN.level.bulk(src.xp, realm))
 		if (src.tier !== undefined) src.tier = Math.max(src.tier, MAIN.tier.bulk(src.tp, realm))
-	}, 
+	}
 }
 
 el.update.main = _=>{

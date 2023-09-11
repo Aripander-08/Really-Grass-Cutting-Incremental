@@ -6,6 +6,9 @@ function calc(dt) {
 	}
 	player.time += dt
 
+	//SUPERNOVA
+	//soon
+
 	//GALACTIC
 	if (galUnlocked()) galTick(dt)
 	if (player.planetoid?.started && !player.planetoid?.pause) planetoidTick(dt)
@@ -97,4 +100,53 @@ function calc(dt) {
 		let g = grass[r]
 		if (g && !g.habit) removeGrass(r, Math.max(auto_cut / 100, 1))
 	}
+
+    player.maxPerk = Math.max(player.maxPerk, tmp.perks)
+
+    /*if (tmp.ringGen > 0) player.planetoid.ring = player.planetoid.ring.add(tmp.ringGain.mul(dt*tmp.ringGen))
+
+    if (tmp.aGen > 0) {
+        player.planetoid.astro = player.planetoid.astro.add(tmp.astroGain.mul(dt*tmp.aGen))
+        player.planetoid.bestAstro = player.planetoid.bestAstro.max(player.planetoid.astro)
+    }
+
+    if (tmp.measureGen > 0) {
+        player.planetoid.measure = player.planetoid.measure.add(tmp.measureGain.mul(dt*tmp.measureGen))
+        player.planetoid.bestMeasure = player.planetoid.bestMeasure.max(player.planetoid.measure)
+    }
+
+    if (tmp.planetGen > 0) {
+        player.planetoid.planet = player.planetoid.planet.add(tmp.planetGain.mul(dt*tmp.planetGen))
+        player.planetoid.bestPlanet = player.planetoid.bestPlanet.max(player.planetoid.planet)
+    }
+
+    if (tmp.dmGen > 0) player.dm = player.dm.add(tmp.dmGain.mul(dt*tmp.dmGen))
+
+    for (let i = 0; i < LUNAR_OB.length; i++) {
+        if (player.lunar.active.includes(i) || hasSolarUpgrade(2,4)) player.lunar.lp[i] = player.lunar.lp[i].add(tmp.LPgain.mul(dt))
+        if (player.lunar.lp[i].gte(tmp.lunar_next[i])) player.lunar.level[i] = Math.max(player.lunar.level[i],getLPLevel(i))
+    }
+
+    if (player.constellation.unl) {
+        player.constellation.line = player.constellation.line.add(tmp.lineGain.mul(dt))
+        player.constellation.arc = player.constellation.arc.add(tmp.arcGain.mul(dt))
+
+        player.constellation.arcUnl = player.constellation.arcUnl || player.constellation.arc.gt(0)
+    }
+
+    if (player.grassjump>=16) {
+        player.darkCharge = player.darkCharge.add(tmp.darkChargeRate.mul(dt))
+    }
+
+    if (player.grassjump>=30) {
+        player.stardust = player.stardust.add(tmp.stardustGain.mul(dt))
+        player.stargrowth = player.stargrowth.add(tmp.growSpeed.mul(dt))
+    }
+
+    player.planetoid.bestPm = player.planetoid.bestPm.max(player.planetoid.pm)
+
+    if (hasSolarUpgrade(0,4)) {
+       if (recel) player.grassjump = Math.max(player.grassjump,MAIN.gj.bulk())
+    }
+    calcSupernova(dt)*/
 }

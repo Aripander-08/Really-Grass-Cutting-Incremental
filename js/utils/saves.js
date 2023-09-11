@@ -244,7 +244,7 @@ function load(str) {
 	updateTemp()
 
 	let now = Date.now()
-	if (player.lastTick > 0) tmp.offline = (now - player.lastTick) / 1e3
+	//if (player.lastTick > 0) tmp.offline = (now - player.lastTick) / 1e3
 	player.lastTick = now
 
 	resetSaveInterval()

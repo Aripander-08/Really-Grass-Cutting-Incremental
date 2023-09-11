@@ -1229,13 +1229,13 @@ MILESTONE.pt = {
 	milestone: [
 		{
 			req: 2,
-			desc: `Every 5 tiers in Unnatural Realm (at Tier 10), Tier base <b class='green'>multiplies</b> Momentum.`,
+			desc: `Every 5 tiers in Unnatural Realm (at Tier 10), <b class='green'>Triple</b> Momentum.`,
 
 			eff(i) {
 				if (player.unRes.tier < 10) return E(1)
-				return E(MAIN.tier.base(2)).pow(Math.floor((player.unRes.tier - 10) / 5 + 1))
+				return E(3).pow(Math.floor((player.unRes.tier - 10) / 5 + 1))
 			},
-			effDesc: x => format(x) + "x"			
+			effDesc: x => format(x, 0) + "x"			
 		}, {
 			req: 4,
 			desc: `Unnatural Healing <b class='green'>boosts</b> XP.`

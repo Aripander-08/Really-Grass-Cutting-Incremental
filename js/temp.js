@@ -4,6 +4,8 @@ var tmp_update = []
 function resetTemp() {
 	keep = []
 	tmp = {
+        pass: 0,
+
 		el: tmp.el,
 		map_notify: {},
 
@@ -44,6 +46,17 @@ function resetTemp() {
 			gj: {}
 		},
 		plRes: {}
+
+        /*darkChargeEffs: {},
+
+        reservConvert: 0,
+
+        solar_upgs_effect: [],
+
+        minStats: {
+            gh: 0,
+            gs: 0,
+        },*/
 	}
 
 	for (let x in UPG_RES) tmp.upg_res[x] = E(0)
@@ -57,12 +70,11 @@ function resetTemp() {
 			eff: [],
 		}
 	}
+
+    //for (let x in SOLAR_UPGS) tmp.solar_upgs_effect[x] = []
 }
 
 function updateTemp() {
 	updateRealmTemp()
-    //tmp.lunarUnl = player.grassjump>=5
-    //tmp.total_astral = player.astral+100*player.astralPrestige
-
 	for (let x = 0; x < tmp_update.length; x++) tmp_update[x]()
 }
