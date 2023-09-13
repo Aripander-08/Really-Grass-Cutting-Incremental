@@ -22,7 +22,8 @@ MAIN.grass = {
 		if (hasUpgrade('momentum', 1)) x /= 3
 		if (hasUpgrade('rocket', 16)) x = 1 / (1 / x + upgEffect('rocket', 16))
 		if (inPlanetoid()) {
-			if (!player.planetoid.started || player.planetoid.pause || inFormation("fz")) return
+			if (!inPlanetoidTrial()) return
+			if (inFormation("fz")) return
 
 			let div = 1
 			div += upgEffect("planetarium", 3)

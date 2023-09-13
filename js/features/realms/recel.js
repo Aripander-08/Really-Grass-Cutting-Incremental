@@ -467,7 +467,7 @@ UPGS.cloud = {
 	req: _=>player.unRes?.vTimes > 0,
 	reqDesc: `Vaporize once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('cloud') + gainHTML(1, tmp.unRes.clGain),
+	underDesc: _=>getUpgResTitle('cloud') + gainHTML(1, player.unRes.cloudProd),
 
 	autoUnl: _=>hasUpgrade('res', 9),
 	noSpend: _=>hasUpgrade('res', 9),
@@ -585,10 +585,7 @@ MILESTONE.gj = {
 			effDesc: x => format(x, 0) + "x"
 		}, {
 			req: 6,
-			desc: `<b class='green'>+1x</b> Cosmic per Grass-Jump.`,
-
-			eff: i => i + 1,
-			effDesc: x => format(x, 0) + "x"
+			desc: `<b class='green'>+0.25%</b> to Cosmic compounding effect.`
 		}
 	],
 }

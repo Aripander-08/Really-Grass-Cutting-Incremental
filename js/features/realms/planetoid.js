@@ -80,7 +80,7 @@ RESET.planetoid = {
 	req: _=>hasAGHMilestone(13),
 	reqDesc: _=>"Get 45 Negative Energy.",
 
-	resetDesc: `Travel to the hazardous Planetoid, and leave resources behind until return.`,
+	resetDesc: `Travel to Planetoid. Your progress will be saved.`,
 	resetGain: _=> ``,
 	hotkey: `N`,
 
@@ -99,10 +99,10 @@ RESET.planetoid_earth = RESET.planetoid
 RESET.planetoid_exit = {
 	unl: _=>inPlanetoid(),
 
-	req: _=>!player.planetoid.started||CHEAT||hasUpgrade('res', 22),
+	req: _=>canGoAnywhere(),
 	reqDesc: _=>"You can't return during the trial!",
 
-	resetDesc: `Traverse back to the Earth. You'll gain reaccess to Earth and Space content.`,
+	resetDesc: `Traverse back to the Earth.`,
 	resetGain: _=> ``,
 	hotkey: `N`,
 
@@ -119,7 +119,7 @@ function inPlanetoid() {
 	return player.decel == 3
 }
 function canGoAnywhere() {
-	return mapPos.dim != "planetoid" || hasUpgrade('res', 22) || CHEAT || !player.planetoid.started
+	return hasUpgrade('res', 22) || !inPlanetoidTrial()
 }
 
 UPGS.planetarium = {
@@ -153,7 +153,7 @@ UPGS.planetarium = {
 			cost: i => Decimal.pow(1.25,i).mul(100).ceil(),
 			bulk: i => i.div(100).log(1.25).floor().toNumber()+1,
 
-			effect: i => E(1.15+upgEffect("cloud", 3, 0)).pow(i),
+			effect: i => E(tmp.plRes.cosmicCompounding || 1).pow(i),
 			effDesc: x => x.format()+"x",
 		}, {
 			title: "Rings",
@@ -200,10 +200,8 @@ UPGS.planetarium = {
 }
 
 function planetoidTick(dt) {
-	if (!inFormation("fz") && !CHEAT) {
-		player.planetoid.time -= dt * (inFormation("sp") ? 3 : 1)
-		player.planetoid.tSpent += dt * (inFormation("sp") ? 3 : 1)
-	}
+	if (!inFormation("fz") && !CHEAT) player.planetoid.time -= dt * (inFormation("sp") ? 3 : 1)
+	player.planetoid.tSpent += dt * (inFormation("sp") ? 3 : 1)
 	player.planetoid.combo /= Math.pow(1.5, dt)
 
 	if (RESET.astro.req()) player.planetoid.astro = tmp.plRes.aGain.mul(tmp.plRes.aGainP*dt).add(player.planetoid.astro)
@@ -220,12 +218,12 @@ RESET.planetoid_trial = {
 	req: _=>true,
 	reqDesc: _=>"",
 
-	resetDesc: `You have <span id='planetoid_trial'></span> to reach Level 10 for Rings.<br>
-		<b class='red'>Ending the trial will reset Planetarium, Cosmic, Observatory, and resets!</b>`,
+	resetDesc: `You have <span id='planetoid_trial'></span> to reach Level 10. Offline progress doesn't work.<br>
+		<b class='red'>Ending resets Planetarium, Cosmic, Observatory, and resets!</b>`,
 	resetGain: _=> player.planetoid.started ? `+${format(REALMS.planetoid.ring(),0)} Rings` : ``,
 	hotkey: `N`,
 
-	title: `Hazard Warning...`,
+	title: `Hazard!`,
 	btns: `<button id="planetoid_pause" onclick="pausePlanetoidTrial()"></button>`,
 	resetBtn: ``,
 
@@ -235,7 +233,7 @@ RESET.planetoid_trial = {
 	},
 }
 function getPlanetoidTrialTime() {
-	return CHEAT ? 1e300 : 300 + upgEffect("res", 23, 0)
+	return 300 + upgEffect("res", 23, 0)
 }
 function startPlanetoidTrial() {
 	player.planetoid.started = true
@@ -264,6 +262,9 @@ function endPlanetoidTrial() {
 		trial.best = 0
 		trial.gain = 0
 	}
+}
+function inPlanetoidTrial() {
+	return player.planetoid?.started && !player.planetoid?.pause
 }
 
 UPGS.ring = {
@@ -414,7 +415,7 @@ UPGS.ring = {
 			effDesc: x => format(x,0)+"x"
 		}, {
 			title: "I feel Cloudy...",
-			desc: `<b class='green'>Double</b> Cloud production gain.`,
+			desc: `<b class='green'>+1x</b> more Cloud production gain.`,
 			unl: _ => player.unRes?.vTimes,
 
 			res: "ring",
@@ -864,7 +865,7 @@ UPGS.res = {
 			cost: 1e10
 		}, {
 			title: "Planetoid Pause",
-			desc: `You can <b class='green'>pause</b> Planetoid runs.`,
+			desc: `You can <b class='green'>pause</b> Planetoid runs. Pausing allows you to exit.`,
 			unl: _ => player.planetoid?.qTimes,
 
 			res: "res",
@@ -873,7 +874,7 @@ UPGS.res = {
 			cost: 1e6
 		}, {
 			title: "Planetoid Intermission",
-			desc: `You can exit the Planetoid while paused.`,
+			desc: `You can exit the Planetoid anytime.`,
 			unl: _ => player.planetoid?.qTimes,
 
 			res: "res",
@@ -1150,6 +1151,11 @@ tmp_update.push(_=>{
 	if (!player.planetoid) return
 
 	let data = tmp.plRes
+	data.cosmicCompounding = 1.15
+	if (hasUpgrade("cloud", 3)) data.cosmicCompounding += upgEffect("cloud", 3, 0)
+	if (hasGJMilestone(5)) data.cosmicCompounding += 0.025
+	data.cosmicCompounding += getAstralEff("cc", 0)
+
 	data.aGain = plMAIN.reset.aGain()
 	data.aGainP = upgEffect("res", 15, 0)
 

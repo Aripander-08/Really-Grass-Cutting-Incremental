@@ -32,7 +32,7 @@ RESET.astral_pres = {
 	},
 }
 
-const AP_BONUS = ["Cosmic", "Clouds", "Momentum", "Lunar Power", "Tier Base"]
+const AP_BONUS = ["Planetarium", "Clouds", "Lunar Power", "Tier Base", "Cosmic compounding"]
 
 const LUNAR_OB = [
 	['Tier Points','Icons/TP'],

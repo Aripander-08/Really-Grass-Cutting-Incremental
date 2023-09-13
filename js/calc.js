@@ -1,4 +1,7 @@
 function calc(dt) {
+	let trial = inPlanetoidTrial()
+
+	if (trial) tmp.offline = 0
 	if (tmp.offline > 0) {
 		let dt_add = Math.min(Math.max(tmp.offline / 50, dt), tmp.offline)
 		tmp.offline -= dt_add
@@ -8,7 +11,10 @@ function calc(dt) {
 
 	//GALACTIC
 	if (galUnlocked()) galTick(dt)
-	if (player.planetoid?.started && !player.planetoid?.pause) planetoidTick(dt)
+	if (trial) {
+		planetoidTick(dt)
+		return
+	}
 
 	//UNNATURAL REALM
 	if (player.unRes) {
