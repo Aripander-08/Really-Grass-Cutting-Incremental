@@ -200,15 +200,22 @@ UPGS.planetarium = {
 }
 
 function planetoidTick(dt) {
-	if (!inFormation("fz") && !CHEAT) player.planetoid.time -= dt * (inFormation("sp") ? 3 : 1)
-	player.planetoid.tSpent += dt * (inFormation("sp") ? 3 : 1)
-	player.planetoid.combo /= Math.pow(1.5, dt)
+	let ps = player.planetoid, pt = tmp.plRes
 
-	if (RESET.astro.req()) player.planetoid.astro = tmp.plRes.aGain.mul(tmp.plRes.aGainP*dt).add(player.planetoid.astro)
-	if (RESET.quadrant.req()) player.planetoid.measure = tmp.plRes.mGain.mul(tmp.plRes.mGainP*dt).add(player.planetoid.measure)
-	if (player.planetoid.level >= 200) player.planetoid.trial.unl = true
+	if (!inFormation("fz") && !CHEAT) ps.time -= dt * (inFormation("sp") ? 3 : 1)
+	if (ps.time <= 0) endPlanetoidTrial()
+	ps.tSpent += dt * (inFormation("sp") ? 3 : 1)
+	ps.combo /= Math.pow(1.5, dt)
 
-	if (player.planetoid.time <= 0) endPlanetoidTrial()
+	if (RESET.astro.req()) ps.astro = pt.aGain.mul(pt.aGainP*dt).add(ps.astro)
+	if (RESET.quadrant.req()) ps.measure = pt.mGain.mul(pt.mGainP*dt).add(ps.measure)
+
+	let ts = ps.trial, lvl = ps.level
+	if (lvl >= 200) ts.unl = true
+	if (ts.unl && lvl > ts.best) {
+		ts.gain += (TRIAL.step(lvl) - TRIAL.step(ts.best)) * pt.trial_gain
+		ts.best = lvl
+	}
 }
 
 //Trial: Rings
@@ -1173,15 +1180,6 @@ tmp_update.push(_=>{
 const TRIAL = {
 	step: x => x >= 200 ? Math.floor((x / 10 - 20) ** 0.8 + 1) : 0,
 	next: x => Math.ceil(x ** 1.25 * 10 + 200),
-	onLevel(old, lvl) {
-		let ts = player.planetoid.trial
-		if (lvl < ts.best) return
-
-		old = Math.max(old, ts.best)
-		ts.best = lvl
-
-		ts.gain += (this.step(lvl) - this.step(old)) * tmp.plRes.trial_gain
-	},
 	time: {
 		threshold: [5,10,30,60,120,180,1/0],
 		set(x) {
@@ -1265,10 +1263,10 @@ MILESTONE.pt = {
 			req: 14,
 			desc: `<b class='green'>Double</b> Lunar Power.`,
 		}, {
-			req: 17,
+			req: 18,
 			desc: `<b class='green'>+1</b> Lunar Power active slot.`	
 		}, {
-			req: 20,
+			req: 22,
 			desc: `<b class='green'>Unlock</b> Constellations. [Soon!]`
 		},
 	],

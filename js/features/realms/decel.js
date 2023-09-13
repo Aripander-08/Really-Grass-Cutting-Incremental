@@ -793,31 +793,16 @@ RESET.gs = {
 	hotkey: `G`,
 
 	reset(force=false) {
-		if (!force) {
-			if (!this.req()) return
-			if (player.aRes.level < aMAIN.gs.req()) return
-		}
+		if (!this.req()) return
+		if (player.aRes.level < aMAIN.gs.req()) return
 
-		if (force || player.gal.sacTimes) {
-			this.gainAndReset()
-		} else if (!tmp.gh.running) {
-			tmp.gh.running = true
-			document.body.style.animation = "implode 2s 1"
-			setTimeout(_=>{
-				this.gainAndReset()
-			},1000)
-			setTimeout(_=>{
-				document.body.style.animation = ""
-				tmp.aRes.gs.running = false
-			},2000)
-		}
+		if (player.gal.sacTimes) this.gainAndReset()
+		else MAIN.gh.animation("gs")
 	},
 
 	gainAndReset() {
-		let res = aMAIN.gs.bulk()
-		if (!player.gsMult) res = Math.min(res, player.aRes.grassskip + 1)
-
-		player.aRes.grassskip = res
+		if (player.gsMult) player.aRes.grassskip = aMAIN.gs.bulk()
+		else player.aRes.grassskip++
 		this.doReset()
 	},
 

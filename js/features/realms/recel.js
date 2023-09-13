@@ -20,6 +20,8 @@ function setupRecel() {
 		cloudProd: E(0),
 		vTimes: 0,
 		vTime: 0,
+
+		grassjump: 0
 	}
 }
 
@@ -437,7 +439,7 @@ RESET.vapor = {
 
 	title: `Vaporize`,
 	resetBtn: `Evaporate...`,
-	hotkey: `P`,
+	hotkey: `C`,
 
 	reset(force=false) {
 		if (!force) {
@@ -613,31 +615,15 @@ RESET.gj = {
 	hotkey: `G`,
 
 	reset(force=false) {
-		if (!force) {
-			if (!this.req()) return
-			if (player.unRes.level < unMAIN.gj.req()) return
-		}
+		if (!this.req()) return
+		if (player.unRes.level < unMAIN.gj.req()) return
 
-		if (force) {
-			this.gainAndReset()
-		} else if (!tmp.gh.running) {
-			tmp.gh.running = true
-			document.body.style.animation = "implode 2s 1"
-			setTimeout(_=>{
-				this.gainAndReset()
-			},1000)
-			setTimeout(_=>{
-				document.body.style.animation = ""
-				tmp.unRes.gj.running = false
-			},2000)
-		}
+		MAIN.gh.animation("gj")
 	},
 
 	gainAndReset() {
-		let res = unMAIN.gj.bulk()
-		if (!player.gjMult) res = Math.min(res, player.unRes.grassjump + 1)
-
-		player.unRes.grassjump = res
+		if (player.gjMult) player.unRes.grassjump = unMAIN.gj.bulk()
+		else player.unRes.grassjump++
 		this.doReset()
 	},
 

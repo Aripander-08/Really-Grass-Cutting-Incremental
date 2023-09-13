@@ -176,13 +176,14 @@ window.addEventListener('keydown', function(event) {
 			else RESET.crystal.reset()
 			break;
 		case "g":
-			if (shiftDown) RESET.gal.reset();
-			else if (inDecel()) RESET.gs.reset();
-			else RESET.gh.reset();
+			if (shiftDown) RESET.gal.reset()
+			else if (inRecel()) RESET.gj.reset()
+			else if (inDecel()) RESET.gs.reset()
+			else RESET.gh.reset()
 			break;
 		case "s":
-			if (shiftDown && player.decel) RESET.fun.reset();
-			else if (shiftDown) RESET.steel.reset();
+			if (shiftDown && player.decel == 1) RESET.fun.reset()
+			if (shiftDown && player.decel == 0) RESET.steel.reset()
 			break;
 		case "f":
 			ROCKET.create()
@@ -190,6 +191,9 @@ window.addEventListener('keydown', function(event) {
 		case "t":
 			if (shiftDown) RESET.recel.reset()
 			else RESET.decel.reset()
+			break;
+		case "m":
+			openMap()
 			break;
 		case "n":
 			RESET[inPlanetoid() ? "planetoid_exit" : "planetoid"].reset()

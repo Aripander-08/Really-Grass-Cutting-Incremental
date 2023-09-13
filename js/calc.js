@@ -1,7 +1,7 @@
 function calc(dt) {
 	let trial = inPlanetoidTrial()
-
 	if (trial) tmp.offline = 0
+
 	if (tmp.offline > 0) {
 		let dt_add = Math.min(Math.max(tmp.offline / 50, dt), tmp.offline)
 		tmp.offline -= dt_add
@@ -11,10 +11,7 @@ function calc(dt) {
 
 	//GALACTIC
 	if (galUnlocked()) galTick(dt)
-	if (trial) {
-		planetoidTick(dt)
-		return
-	}
+	if (trial) planetoidTick(dt)
 
 	//UNNATURAL REALM
 	if (player.unRes) {
@@ -37,7 +34,6 @@ function calc(dt) {
 			if (tmp.aRes.apGainP > 0 && player.aRes.level >= 30) player.aRes.ap = player.aRes.ap.add(tmp.aRes.apGain.mul(dt*tmp.aRes.apGainP))
 			if (tmp.aRes.oilGainP > 0 && player.aRes.level >= 100) player.aRes.oil = player.aRes.oil.add(tmp.aRes.oilGain.mul(dt*tmp.aRes.oilGainP))
 			if (tmp.aRes.funGainP > 0 && player.aRes.level >= 270) player.aRes.fun = player.aRes.fun.add(tmp.aRes.funGain.mul(dt*tmp.aRes.funGainP))
-			//if (hasStarTree('auto', 10)) ROCKET.create()
 		}
 		if (tmp.m_prod > 0) player.rocket.momentum = player.rocket.momentum.add(ROCKET_PART.m_gain().mul(dt*tmp.m_prod))
 		if (hasUpgrade('funMachine', 1)) player.aRes.sfrgt = player.aRes.sfrgt.add(tmp.aRes.SFRGTgain.mul(dt))
@@ -75,11 +71,7 @@ function calc(dt) {
 	}
 
 	//START
-	for (const i of tmp.realm.in) {
-		let oldLvl = getRealmSrc(i).level
-		MAIN.levelUp(i)
-		if (i == 3 && hasAGHMilestone(20)) TRIAL.onLevel(oldLvl, getRealmSrc(i).level)
-	}
+	for (const i of tmp.realm.in) MAIN.levelUp(i)
 	player.maxPerk = Math.max(player.maxPerk, tmp.perks)
 	for (let x in UPGS) if (tmp.upgs[x].autoUnl && player.autoUpg[x]) buyAllUpgrades(x,true)
 
