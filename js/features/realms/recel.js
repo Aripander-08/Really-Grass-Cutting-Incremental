@@ -309,6 +309,7 @@ RESET.np = {
 		player.gal.astral = 0
 
 		resetUpgrades('unGrass')
+		resetGrasses()
 		updateTemp()
 	},
 }
@@ -320,7 +321,7 @@ UPGS.np = {
 	req: _=>player.unRes?.nTimes > 0,
 	reqDesc: `Normality once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('np'),
+	underDesc: _=>getUpgResTitle('np') + gainHTML(tmp.unRes.nGainP, tmp.unRes.nGain),
 
 	autoUnl: _=>hasUpgrade('res', 7),
 	noSpend: _=>hasUpgrade('res', 7),
@@ -466,7 +467,7 @@ UPGS.cloud = {
 	req: _=>player.unRes?.vTimes > 0,
 	reqDesc: `Vaporize once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('cloud'),
+	underDesc: _=>getUpgResTitle('cloud') + gainHTML(1, tmp.unRes.clGain),
 
 	autoUnl: _=>hasUpgrade('res', 9),
 	noSpend: _=>hasUpgrade('res', 9),

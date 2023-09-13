@@ -81,7 +81,7 @@ UPGS.pp = {
 	req: _=>player.pTimes > 0,
 	reqDesc: `Prestige once to unlock.`,
 
-	underDesc: _ => getUpgResTitle('pp') + (tmp.ppGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.pp,tmp.ppGain.mul(tmp.ppGainP))+"</span>" : ""),
+	underDesc: _ => getUpgResTitle('pp') + gainHTML(tmp.ppGainP, tmp.ppGain),
 
 	ctn: [
 		{

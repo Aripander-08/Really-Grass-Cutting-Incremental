@@ -312,7 +312,7 @@ const UPGS = {
 					let x = 1.5-Math.max(i-1,0)/10
 					return x
 				},
-				effDesc: x => format(tmp.autocut)+" seconds",
+				effDesc: x => tmp.autocut ? format(tmp.autocut)+" seconds" : "Not unlocked",
 			},{
 				unl: _=>player.pTimes>0,
 				max: 5,
@@ -326,11 +326,7 @@ const UPGS = {
 				cost: i => Decimal.pow(10,i).mul(200).ceil(),
 				bulk: i => i.div(200).max(1).log(10).floor().toNumber()+1,
 			
-				effect(i) {
-					let x = E(i+1)
-			
-					return x
-				},
+				effect: i => i+1,
 				effDesc: x => format(x)+"x",
 			},{
 				unl: _=>player.cTimes>0,

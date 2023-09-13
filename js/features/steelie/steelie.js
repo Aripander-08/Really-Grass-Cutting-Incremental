@@ -75,7 +75,7 @@ UPGS.factory = {
 	req: _=>player.sTimes > 0,
 	reqDesc: `Steelie once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('steel')+(tmp.steelGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.steel,tmp.steelGain.mul(tmp.steelGainP))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('steel') + gainHTML(tmp.steelGainP, tmp.steelGain),
 
 	ctn: [
 		{
@@ -538,7 +538,7 @@ el.update.factory = _=>{
 		let unl = MAIN.charger.unl()
 		tmp.el.charger_div.setDisplay(unl)
 		if (unl) {
-			tmp.el.charge_upper.setHTML("<b class='yellow'>Temp. Charge:</b> "+player.chargeRate.format(0)+" <span class='smallAmt'>"+player.chargeRate.formatGain(tmp.charge.gain)+"</span>")
+			tmp.el.charge_upper.setHTML("<b class='yellow'>Temp. Charge:</b> "+player.chargeRate.format(0)+gainHTML(1, tmp.charge.gain))
 			tmp.el.charge_under.setHTML("<b class='yellow'>Best Charge:</b> "+player.bestCharge.format(0))
 			updateEffectHTML("charger")
 		}

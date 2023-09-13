@@ -44,7 +44,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 1,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Levels",
@@ -56,7 +56,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 1,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Tiers",
@@ -68,7 +68,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 2,
 
-			effect: i/10+1,
+			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Prestiges",
@@ -80,7 +80,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 1,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Crystals",
@@ -92,7 +92,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 1,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Foundry",
@@ -104,7 +104,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 2,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Charge",
@@ -116,7 +116,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 2,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Anonymity",
@@ -128,7 +128,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 1,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			title: "Rocket Fueled Pumpjacks",
@@ -140,7 +140,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 1,
 
-			effect: i/20+1,
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},
 
@@ -157,7 +157,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 10,
 
-			effect: i/10+1,
+			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
@@ -183,7 +183,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 30,
 
-			effect: i/10+1,
+			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
@@ -196,7 +196,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 30,
 
-			effect: i/10+1,
+			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
@@ -209,7 +209,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 30,
 
-			effect: i/10+1,
+			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
@@ -222,7 +222,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 30,
 
-			effect: i/10+1,
+			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
@@ -235,7 +235,7 @@ UPGS.rocket = {
 			max: 50,
 			cost: 30,
 
-			effect: i/10+1,
+			effect: i => i/10+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 0),
@@ -266,11 +266,7 @@ UPGS.rocket = {
 			max: 100,
 			cost: 500,
 
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 1),
@@ -285,11 +281,7 @@ UPGS.rocket = {
 			max: 200,
 			cost: 200,
 
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},{
 			unl: _ => hasStarTree("progress", 1),
@@ -304,11 +296,7 @@ UPGS.rocket = {
 			max: 200,
 			cost: 200,
 
-			effect(i) {
-				let x = E(i*0.05+1)
-
-				return x
-			},
+			effect: i => i/20+1,
 			effDesc: x => format(x)+"x",
 		},
 	],
@@ -403,7 +391,7 @@ UPGS.momentum = {
 	req: _=>player.rocket.part>0||hasStarTree("progress",10),
 	reqDesc: `Get a Rocket Part to unlock.`,
 
-	underDesc: _=>getUpgResTitle('momentum')+(tmp.m_prod > 0 ? " <span class='smallAmt'>"+formatGain(player.rocket.momentum,ROCKET_PART.m_gain().mul(tmp.m_prod))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('momentum') + gainHTML(tmp.m_prod, ROCKET_PART.m_gain()),
 
 	autoUnl: _=>hasStarTree('auto',2),
 

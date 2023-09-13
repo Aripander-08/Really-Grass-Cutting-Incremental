@@ -406,7 +406,7 @@ UPGS.ap = {
 	req: _=>player.aRes?.aTimes,
 	reqDesc: `Anonymity once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('ap')+(tmp.aRes.apGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.ap,tmp.aRes.apGain.mul(tmp.aRes.apGainP))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('ap') + gainHTML(tmp.aRes.apGainP, tmp.aRes.apGain),
 
 	autoUnl: _=>hasUpgrade('aAuto',2),
 	noSpend: _=>hasStarTree("qol", 3),
@@ -567,7 +567,7 @@ UPGS.oil = {
 	req: _=>player.aRes?.lTimes,
 	reqDesc: `Liquefy once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('oil')+(tmp.aRes.oilGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.oil,tmp.aRes.oilGain.mul(tmp.aRes.oilGainP))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('oil') + gainHTML(tmp.aRes.oilGainP, tmp.aRes.oilGain),
 
 	autoUnl: _=>hasUpgrade('aAuto',3),
 	noSpend: _=>hasStarTree("qol", 3),

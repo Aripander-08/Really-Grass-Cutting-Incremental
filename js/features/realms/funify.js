@@ -79,7 +79,7 @@ UPGS.funMachine = {
 	req: _ => player.aRes?.fTimes > 0,
 	reqDesc: `Funify once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('fun')+(tmp.aRes.funGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.fun,tmp.aRes.funGain.mul(tmp.aRes.funGainP))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('fun') + gainHTML(tmp.aRes.funGainP, tmp.aRes.funGain),
 
 	ctn: [
 		{
@@ -208,7 +208,7 @@ UPGS.sfrgt = {
 	autoUnl: _ => hasStarTree("auto", 11),
 	noSpend: _ => hasStarTree("auto", 11),
 
-	underDesc: _=>getUpgResTitle('sfrgt')+` <span class='smallAmt'>${player.aRes.sfrgt.formatGain(tmp.aRes.SFRGTgain)}</span>`,
+	underDesc: _=>getUpgResTitle('sfrgt') + gainHTML(1, tmp.aRes.SFRGTgain),
 
 	ctn: [
 		{

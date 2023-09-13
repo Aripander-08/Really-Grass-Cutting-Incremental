@@ -226,7 +226,7 @@ RESET.planetoid_trial = {
 	hotkey: `N`,
 
 	title: `Hazard Warning...`,
-	btns: `<button id="planetoid_pause" onclick="player.planetoid.pause = !player.planetoid.pause"></button>`,
+	btns: `<button id="planetoid_pause" onclick="pausePlanetoidTrial()"></button>`,
 	resetBtn: ``,
 
 	reset(force=false) {
@@ -241,6 +241,10 @@ function startPlanetoidTrial() {
 	player.planetoid.started = true
 	player.planetoid.pause = false
 	player.planetoid.time = getPlanetoidTrialTime()
+}
+function pausePlanetoidTrial() {
+	player.planetoid.pause = !player.planetoid.pause
+	resetGrasses()
 }
 function endPlanetoidTrial() {
 	player.planetoid.ring = player.planetoid.ring.add(REALMS.planetoid.ring())
@@ -470,7 +474,7 @@ plMAIN.form = {
 	},
 	fz: {
 		title: "Freeze",
-		desc: "Freeze time. <b class='magenta'>Gain grass freely.</b>"
+		desc: "Planetoid time freezes, but grass won't spawn. <b class='magenta'>Cut grass freely.</b>"
 	},
 	sp: {
 		title: "Speed",
@@ -492,14 +496,14 @@ plMAIN.form = {
 	},
 	gd: {
 		title: "Greedy",
-		desc: "Only XP gives XP gain. <b class='magenta'>Greedy is a flaw.</b>",
+		desc: "Only Cosmic boosts itself. <b class='magenta'>The sole source.</b>",
 
 		req: _ => player.gal.neg >= 57,
 		reqDesc: `Get 57 Negative Energy.`,
 	},
 	cm: {
 		title: "Combo",
-		desc: "Cutting gives more value, but dynamicly reduces. <b class='magenta'>You are dynamic.</b>",
+		desc: "Cutting gives more value, but dynamicly reduces. <b class='magenta'>Much in one.</b>",
 
 		req: _ => player.gal.neg >= 60,
 		reqDesc: `Get 60 Negative Energy.`,
@@ -975,7 +979,7 @@ RESET.astro = {
 }
 UPGS.astro = {
 	title: "Astrolabe Upgrades",
-	underDesc: _=>getUpgResTitle('astro'),
+	underDesc: _=>getUpgResTitle('astro') + gainHTML(tmp.plRes.aGainP, tmp.plRes.aGain),
 
 	unl: _=>inPlanetoid(),
 	autoUnl: _=>hasUpgrade('res', 16),
@@ -1073,7 +1077,7 @@ RESET.quadrant = {
 }
 UPGS.measure = {
 	title: "Quadrant Upgrades",
-	underDesc: _=>getUpgResTitle('measure'),
+	underDesc: _=>getUpgResTitle('measure') + gainHTML(tmp.plRes.mGainP, tmp.plRes.mGain),
 
 	unl: _=>inPlanetoid() && player.planetoid.aTimes,
 	autoUnl: _=>hasUpgrade('res', 19),
@@ -1229,13 +1233,13 @@ MILESTONE.pt = {
 	milestone: [
 		{
 			req: 2,
-			desc: `Every 5 tiers in Unnatural Realm (at Tier 10), Tier base <b class='green'>multiplies</b> Momentum.`,
+			desc: `Every 5 tiers in Unnatural Realm (at Tier 10), <b class='green'>Triple</b> Momentum.`,
 
 			eff(i) {
 				if (player.unRes.tier < 10) return E(1)
-				return E(MAIN.tier.base(2)).pow(Math.floor((player.unRes.tier - 10) / 5 + 1))
+				return E(3).pow(Math.floor((player.unRes.tier - 10) / 5 + 1))
 			},
-			effDesc: x => format(x) + "x"			
+			effDesc: x => format(x, 0) + "x"			
 		}, {
 			req: 4,
 			desc: `Unnatural Healing <b class='green'>boosts</b> XP.`

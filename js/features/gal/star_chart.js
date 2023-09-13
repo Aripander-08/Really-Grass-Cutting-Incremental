@@ -805,7 +805,7 @@ function updateStarChart() {
 	let ch = tmp.gal.sc.choosed
 
 	tmp.el.starAmt.setTxt(star.format(0))
-	tmp.el.starProd.setHTML(tmp.gal.star_gain_p > 0 ? " <span class='smallAmt'>"+formatGain(player.gal.stars,tmp.gal.star_gain.mul(tmp.gal.star_gain_p))+"</span>" : "")
+	tmp.el.starProd.setHTML(gainHTML(tmp.gal.star_gain_p, tmp.gal.star_gain))
 
 	tmp.el.sc_desc_div.setDisplay(ch[0])
 	if (ch[0]) {

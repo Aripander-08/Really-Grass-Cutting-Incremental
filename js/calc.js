@@ -78,17 +78,21 @@ function calc(dt) {
 	for (let x in UPGS) if (tmp.upgs[x].autoUnl && player.autoUpg[x]) buyAllUpgrades(x,true)
 
 	//GRASS
-	tmp.spawn_time += dt
-	if (hasUpgrade("auto", 0)) tmp.autocutTime += dt
-	if (isNaN(tmp.grassSpawn) || tmp.grassSpawn == 0 || tmp.grassSpawn == Infinity) return
+	let auto_spawn = 0
+	if (tmp.grassSpawn) {
+		tmp.spawn_time += dt
+		auto_spawn = Math.floor(tmp.spawn_time / tmp.grassSpawn)
+		tmp.spawn_time -= auto_spawn * tmp.grassSpawn
+		auto_spawn *= tmp.spawnAmt
+	}
 
-	let auto_spawn = Math.floor(tmp.spawn_time / tmp.grassSpawn)
-	let auto_cut = Math.floor(tmp.autocutTime / tmp.autocut)
-
-	tmp.spawn_time -= auto_spawn * tmp.grassSpawn
-	tmp.autocutTime -= auto_cut * tmp.autocut
-	auto_spawn *= tmp.spawnAmt
-	auto_cut *= tmp.autocutAmt
+	let auto_cut = 0
+	if (tmp.autocut) {
+		tmp.autocutTime += dt
+		auto_cut = Math.floor(tmp.autocutTime / tmp.autocut)
+		tmp.autocutTime -= auto_cut * tmp.autocut
+		auto_cut *= tmp.autocutAmt
+	}
 
 	let grass = tmp.grasses
 	for (let i = 0; i < Math.min(auto_spawn, 100); i++) createGrass()

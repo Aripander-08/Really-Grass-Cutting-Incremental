@@ -22,13 +22,13 @@ MAIN.grass = {
 		if (hasUpgrade('momentum', 1)) x /= 3
 		if (hasUpgrade('rocket', 16)) x = 1 / (1 / x + upgEffect('rocket', 16))
 		if (inPlanetoid()) {
-			x = (player.planetoid.started && !player.planetoid.pause && !inFormation("fz") ? 3 : 1/0)
+			if (!player.planetoid.started || player.planetoid.pause || inFormation("fz")) return
 
 			let div = 1
 			div += upgEffect("planetarium", 3)
 			div += upgEffect("obs", 3)
 			div *= upgEffect("obs", 5)
-			x /= div
+			x = 3 / div
 		}
 		return x
 	},
@@ -42,7 +42,9 @@ MAIN.grass = {
 		return r
 	},
 	auto() {
-		let interval = upgEffect('auto',0,0) 
+		if (!hasUpgrade("auto", 0)) return
+
+		let interval = upgEffect('auto', 0) 
 		interval /= upgEffect('plat',0)
 		interval /= starTreeEff("auto",7)
 		if (inDecel()) interval *= 10 / upgEffect('aAuto', 0)
@@ -86,7 +88,7 @@ function removeGrass(i, auto) {
 
 	let v = auto ? tmp.unRes.habitAuto.mul(auto) : E(tg.habit ?? 1)
 	let av = tv = E(v)
-	if (auto) av = tmp.autocutBonus.mul(av)
+	if (auto) av = v.mul(tmp.autocutBonus)
 	if (tg.nt) tv = MAIN.tier.base()
 
 	for (const i of tmp.realm.in) cutRealmGrass(i, v, tv)

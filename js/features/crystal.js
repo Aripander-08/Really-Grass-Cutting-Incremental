@@ -67,7 +67,7 @@ UPGS.crystal = {
 	req: _=>player.cTimes > 0,
 	reqDesc: `Crystalize once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('crystal')+(tmp.crystalGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.crystal,tmp.crystalGain.mul(tmp.crystalGainP))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('crystal') + gainHTML(tmp.crystalGainP, tmp.crystalGain),
 
 	autoUnl: _=>hasUpgrade('auto',7),
 	noSpend: _=>hasUpgrade('assembler',2),

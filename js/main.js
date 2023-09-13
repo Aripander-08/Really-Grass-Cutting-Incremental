@@ -81,7 +81,7 @@ el.update.main = _=>{
 
 	let g = tmp.realm.src.grass
 	tmp.el.grassAmt.setHTML(g.format(0))
-	tmp.el.grassGain.setHTML(tmp.autoCutUnlocked ? formatGain(g,tmp.grassGain.div(tmp.autocut).mul(tmp.autocutBonus).mul(tmp.autocutAmt)) : "")
+	tmp.el.grassGain.setHTML(tmp.autocut ? formatGain(tmp.grassGain.mul(tmp.autocutBonus * tmp.autocutAmt / tmp.autocut)) : "")
 
 	let level_unl = player.level || player.pTimes
 	tmp.el.level.setDisplay(level_unl && !inSpace())
@@ -125,7 +125,6 @@ tmp_update.push(_=>{
 	tmp.spawnAmt = 1+upgEffect('perk',5,0)+upgEffect('crystal',5,0)
 
 	tmp.autocut = MAIN.grass.auto()
-	tmp.autoCutUnlocked = hasUpgrade('auto',0)
 	tmp.autocutBonus = upgEffect('auto',1)
 	tmp.autocutAmt = 1+upgEffect('auto',2,0)
 
