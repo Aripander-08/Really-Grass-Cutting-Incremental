@@ -77,12 +77,10 @@ EFFECT.astral = {
 			desc: x => `<b class="magenta">${format(x)}x</b> to XP`
 		},
 		tp: {
-			unl: _ => true,
-			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow(a.lvl ** 0.8) : a + 1,
+			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow(a.lvl ** 0.8) : a.lvl + 1,
 			desc: x => `<b class="magenta">${format(x)}x</b> to TP`
 		},
 		fd: {
-			unl: _ => true,
 			eff: a => (a.lvl / 50 + 1) * upgEffect("ring", 4),
 			desc: x => `<b class="magenta">^${format(x)}</b> to Foundry effect`
 		},
@@ -143,20 +141,20 @@ EFFECT.astral = {
 			eff: a => E(3).pow(a.pres - 1),
 			desc: x => `<b class="cyan">${format(x)}x</b> to Clouds`
 		},
-		mn: {
-			unl: _ => player.gal.astral_pres >= 3,
-			eff: a => E(3).pow(a.pres - 2),
-			desc: x => `<b class="cyan">${format(x)}x</b> to Momentum`
-		},
 		lp: {
-			unl: _ => player.gal.astral_pres >= 4,
-			eff: a => E(2).pow(a.pres - 3),
+			unl: _ => player.gal.astral_pres >= 3,
+			eff: a => E(2).pow(a.pres - 2),
 			desc: x => `<b class="cyan">${format(x)}x</b> to Lunar Power`
 		},
 		tb: {
-			unl: _ => player.gal.astral_pres >= 5,
-			eff: a => (a.pres - 4) / 20,
+			unl: _ => player.gal.astral_pres >= 4,
+			eff: a => (a.pres - 3) / 20,
 			desc: x => `<b class="cyan">+${format(x)}x</b> to Tier Base`
+		},
+		cc: {
+			unl: _ => player.gal.astral_pres >= 5,
+			eff: a => a / 400,
+			desc: x => `<b class='cyan'>+${formatPercent(x)}</b> to Cosmic compounding effect`
 		},
 	},
 }

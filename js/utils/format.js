@@ -62,20 +62,13 @@ function format(ex, acc=2, type) {
 	return neg+FORMATS[type](ex, acc)
 }
 
-function gainHTML(amt, gain, pass=0) {
-    return pass>0?" <span class='smallAmt'>"+formatGain(amt,Decimal.mul(gain,pass))+"</span>":''
+function gainHTML(rate, gain) {
+	let r = Decimal.mul(gain, rate)
+    return r.gt(0) ? " <span class='smallAmt'>" + formatGain(r) + "</span>" : ''
 }
 
-function formatGain(amt, gain) {
-	let next = amt.add(gain)
-	let rate
-	let ooms = next.div(amt)
-	if (ooms.gte(10) && amt.gte(1e100)) {
-		ooms = ooms.log10().mul(20)
-		rate = "(+"+format(ooms) + " OoMs/sec)"
-	}
-	else rate = "(+"+format(gain)+"/sec)"
-	return rate
+function formatGain(gain) {
+	return "(+"+format(gain)+"/s)"
 }
 
 function formatTime(ex,acc=2,type="s") {

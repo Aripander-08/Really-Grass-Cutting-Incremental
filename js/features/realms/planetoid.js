@@ -80,7 +80,7 @@ RESET.planetoid = {
 	req: _=>hasAGHMilestone(13),
 	reqDesc: _=>"Get 45 Negative Energy.",
 
-	resetDesc: `Travel to the hazardous Planetoid, and leave resources behind until return.`,
+	resetDesc: `Travel to Planetoid. Your progress will be saved.`,
 	resetGain: _=> ``,
 	hotkey: `N`,
 
@@ -99,10 +99,10 @@ RESET.planetoid_earth = RESET.planetoid
 RESET.planetoid_exit = {
 	unl: _=>inPlanetoid(),
 
-	req: _=>!player.planetoid.started||CHEAT||hasUpgrade('res', 22),
+	req: _=>canGoAnywhere(),
 	reqDesc: _=>"You can't return during the trial!",
 
-	resetDesc: `Traverse back to the Earth. You'll gain reaccess to Earth and Space content.`,
+	resetDesc: `Traverse back to the Earth.`,
 	resetGain: _=> ``,
 	hotkey: `N`,
 
@@ -119,7 +119,7 @@ function inPlanetoid() {
 	return player.decel == 3
 }
 function canGoAnywhere() {
-	return mapPos.dim != "planetoid" || hasUpgrade('res', 22) || CHEAT || !player.planetoid.started
+	return hasUpgrade('res', 22) || !inPlanetoidTrial()
 }
 
 UPGS.planetarium = {
@@ -153,7 +153,7 @@ UPGS.planetarium = {
 			cost: i => Decimal.pow(1.25,i).mul(100).ceil(),
 			bulk: i => i.div(100).log(1.25).floor().toNumber()+1,
 
-			effect: i => E(1.15+upgEffect("cloud", 3, 0)).pow(i),
+			effect: i => E(tmp.plRes.cosmicCompounding || 1).pow(i),
 			effDesc: x => x.format()+"x",
 		}, {
 			title: "Rings",
@@ -200,17 +200,22 @@ UPGS.planetarium = {
 }
 
 function planetoidTick(dt) {
-	if (!inFormation("fz") && !CHEAT) {
-		player.planetoid.time -= dt * (inFormation("sp") ? 3 : 1)
-		player.planetoid.tSpent += dt * (inFormation("sp") ? 3 : 1)
+	let ps = player.planetoid, pt = tmp.plRes
+
+	if (!inFormation("fz") && !CHEAT) ps.time -= dt * (inFormation("sp") ? 3 : 1)
+	if (ps.time <= 0) endPlanetoidTrial()
+	ps.tSpent += dt * (inFormation("sp") ? 3 : 1)
+	ps.combo /= Math.pow(1.5, dt)
+
+	if (RESET.astro.req()) ps.astro = pt.aGain.mul(pt.aGainP*dt).add(ps.astro)
+	if (RESET.quadrant.req()) ps.measure = pt.mGain.mul(pt.mGainP*dt).add(ps.measure)
+
+	let ts = ps.trial, lvl = ps.level
+	if (lvl >= 200) ts.unl = true
+	if (ts.unl && lvl > ts.best) {
+		ts.gain += (TRIAL.step(lvl) - TRIAL.step(ts.best)) * pt.trial_gain
+		ts.best = lvl
 	}
-	player.planetoid.combo /= Math.pow(1.5, dt)
-
-	if (RESET.astro.req()) player.planetoid.astro = tmp.plRes.aGain.mul(tmp.plRes.aGainP*dt).add(player.planetoid.astro)
-	if (RESET.quadrant.req()) player.planetoid.measure = tmp.plRes.mGain.mul(tmp.plRes.mGainP*dt).add(player.planetoid.measure)
-	if (player.planetoid.level >= 200) player.planetoid.trial.unl = true
-
-	if (player.planetoid.time <= 0) endPlanetoidTrial()
 }
 
 //Trial: Rings
@@ -220,13 +225,13 @@ RESET.planetoid_trial = {
 	req: _=>true,
 	reqDesc: _=>"",
 
-	resetDesc: `You have <span id='planetoid_trial'></span> to reach Level 10 for Rings.<br>
-		<b class='red'>Ending the trial will reset Planetarium, Cosmic, Observatory, and resets!</b>`,
+	resetDesc: `You have <span id='planetoid_trial'></span> to reach Level 10. Offline progress doesn't work.<br>
+		<b class='red'>Ending resets Planetarium, Cosmic, Observatory, and resets!</b>`,
 	resetGain: _=> player.planetoid.started ? `+${format(REALMS.planetoid.ring(),0)} Rings` : ``,
 	hotkey: `N`,
 
-	title: `Hazard Warning...`,
-	btns: `<button id="planetoid_pause" onclick="player.planetoid.pause = !player.planetoid.pause"></button>`,
+	title: `Hazard!`,
+	btns: `<button id="planetoid_pause" onclick="pausePlanetoidTrial()"></button>`,
 	resetBtn: ``,
 
 	reset(force=false) {
@@ -235,12 +240,16 @@ RESET.planetoid_trial = {
 	},
 }
 function getPlanetoidTrialTime() {
-	return CHEAT ? 1e300 : 300 + upgEffect("res", 23, 0)
+	return 300 + upgEffect("res", 23, 0)
 }
 function startPlanetoidTrial() {
 	player.planetoid.started = true
 	player.planetoid.pause = false
 	player.planetoid.time = getPlanetoidTrialTime()
+}
+function pausePlanetoidTrial() {
+	player.planetoid.pause = !player.planetoid.pause
+	resetGrasses()
 }
 function endPlanetoidTrial() {
 	player.planetoid.ring = player.planetoid.ring.add(REALMS.planetoid.ring())
@@ -260,6 +269,9 @@ function endPlanetoidTrial() {
 		trial.best = 0
 		trial.gain = 0
 	}
+}
+function inPlanetoidTrial() {
+	return player.planetoid?.started && !player.planetoid?.pause
 }
 
 UPGS.ring = {
@@ -410,7 +422,7 @@ UPGS.ring = {
 			effDesc: x => format(x,0)+"x"
 		}, {
 			title: "I feel Cloudy...",
-			desc: `<b class='green'>Double</b> Cloud production gain.`,
+			desc: `<b class='green'>+1x</b> more Cloud production gain.`,
 			unl: _ => player.unRes?.vTimes,
 
 			res: "ring",
@@ -470,7 +482,7 @@ plMAIN.form = {
 	},
 	fz: {
 		title: "Freeze",
-		desc: "Freeze time. <b class='magenta'>Gain grass freely.</b>"
+		desc: "Planetoid time freezes, but grass won't spawn. <b class='magenta'>Cut grass freely.</b>"
 	},
 	sp: {
 		title: "Speed",
@@ -492,14 +504,14 @@ plMAIN.form = {
 	},
 	gd: {
 		title: "Greedy",
-		desc: "Only XP gives XP gain. <b class='magenta'>Greedy is a flaw.</b>",
+		desc: "Only Cosmic boosts itself. <b class='magenta'>The sole source.</b>",
 
 		req: _ => player.gal.neg >= 57,
 		reqDesc: `Get 57 Negative Energy.`,
 	},
 	cm: {
 		title: "Combo",
-		desc: "Cutting gives more value, but dynamicly reduces. <b class='magenta'>You are dynamic.</b>",
+		desc: "Cutting gives more value, but dynamicly reduces. <b class='magenta'>Much in one.</b>",
 
 		req: _ => player.gal.neg >= 60,
 		reqDesc: `Get 60 Negative Energy.`,
@@ -860,7 +872,7 @@ UPGS.res = {
 			cost: 1e10
 		}, {
 			title: "Planetoid Pause",
-			desc: `You can <b class='green'>pause</b> Planetoid runs.`,
+			desc: `You can <b class='green'>pause</b> Planetoid runs. Pausing allows you to exit.`,
 			unl: _ => player.planetoid?.qTimes,
 
 			res: "res",
@@ -869,7 +881,7 @@ UPGS.res = {
 			cost: 1e6
 		}, {
 			title: "Planetoid Intermission",
-			desc: `You can exit the Planetoid while paused.`,
+			desc: `You can exit the Planetoid anytime.`,
 			unl: _ => player.planetoid?.qTimes,
 
 			res: "res",
@@ -975,7 +987,7 @@ RESET.astro = {
 }
 UPGS.astro = {
 	title: "Astrolabe Upgrades",
-	underDesc: _=>getUpgResTitle('astro'),
+	underDesc: _=>getUpgResTitle('astro') + gainHTML(tmp.plRes.aGainP, tmp.plRes.aGain),
 
 	unl: _=>inPlanetoid(),
 	autoUnl: _=>hasUpgrade('res', 16),
@@ -1073,7 +1085,7 @@ RESET.quadrant = {
 }
 UPGS.measure = {
 	title: "Quadrant Upgrades",
-	underDesc: _=>getUpgResTitle('measure'),
+	underDesc: _=>getUpgResTitle('measure') + gainHTML(tmp.plRes.mGainP, tmp.plRes.mGain),
 
 	unl: _=>inPlanetoid() && player.planetoid.aTimes,
 	autoUnl: _=>hasUpgrade('res', 19),
@@ -1146,6 +1158,11 @@ tmp_update.push(_=>{
 	if (!player.planetoid) return
 
 	let data = tmp.plRes
+	data.cosmicCompounding = 1.15
+	if (hasUpgrade("cloud", 3)) data.cosmicCompounding += upgEffect("cloud", 3, 0)
+	if (hasGJMilestone(5)) data.cosmicCompounding += 0.025
+	data.cosmicCompounding += getAstralEff("cc", 0)
+
 	data.aGain = plMAIN.reset.aGain()
 	data.aGainP = upgEffect("res", 15, 0)
 
@@ -1163,15 +1180,6 @@ tmp_update.push(_=>{
 const TRIAL = {
 	step: x => x >= 200 ? Math.floor((x / 10 - 20) ** 0.8 + 1) : 0,
 	next: x => Math.ceil(x ** 1.25 * 10 + 200),
-	onLevel(old, lvl) {
-		let ts = player.planetoid.trial
-		if (lvl < ts.best) return
-
-		old = Math.max(old, ts.best)
-		ts.best = lvl
-
-		ts.gain += (this.step(lvl) - this.step(old)) * tmp.plRes.trial_gain
-	},
 	time: {
 		threshold: [5,10,30,60,120,180,1/0],
 		set(x) {
@@ -1255,10 +1263,10 @@ MILESTONE.pt = {
 			req: 14,
 			desc: `<b class='green'>Double</b> Lunar Power.`,
 		}, {
-			req: 17,
+			req: 18,
 			desc: `<b class='green'>+1</b> Lunar Power active slot.`	
 		}, {
-			req: 20,
+			req: 22,
 			desc: `<b class='green'>Unlock</b> Constellations. [Soon!]`
 		},
 	],

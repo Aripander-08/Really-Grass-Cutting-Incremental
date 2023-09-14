@@ -1,52 +1,3 @@
--=- [ Milestones ] -=-
-Grass-Jump Formula: [Unnatural Tier]
-- GJ 1: GJ boosts Tier Power. [+1/GJ]
-- GJ 2: Improve Momentum upgrades.
-- GJ 3: GJ boosts Space Power. [x2/GJ]
-- GJ 4: GJ boosts Unnatural Healing. [+1/GJ]
-- GJ 5: GJ boosts Habitability. [+1/GJ]
-- GJ 6: Double Moonstone chance.
-- GJ 7: GJ boosts Normality Points. [x2/GJ]
-- GJ 8: GJ adds Planetoid Time. [+5/GJ]
-- GJ ?: Double Stability.
-- GJ ?: [ Dark Obelisk stuff ]
-- GJ ?: [ Dark Obelisk stuff ]
-- GJ ?: [ Dark Obelisk stuff ]
-
-Tier Formula: [Total Cosmic]^0.8
-- Tier 1: Unlock the Stellar Obelisk.
-- Tier 2: Unlock Grass-Jumps.
-- Tier 3: +10 Time per Tier.
-- Tier 4: Every 25 Tiers, multiply Momentum by Tier Base.
-- Tier 5: Unlock the Lunar Obelisk.
-- Tier 6: Improve "Weak TP" upgrade.
-- Tier 7: Improve "Flashback IV" upgrade.
-- Tier 8: Double Tier Power.
-- Tier 9: Unlock Constellation.
-- Tier 10: Double Lines.
-- Tier 11: Double Stability.
-- Tier 12: Double Arcs.
-- Tier 13: Unlock the Dark Obelisk.
-- Tier 14: ???
-- Tier 15: ???
-- Tier 16: ???
-- Tier 17: Unlock the Star.
-
--=- [ Stellar Obelisk ] -=-
-- AP 1: Boost Planetarium.
-- AP 2: Boost Clouds.
-- AP 3: Boost Momentum.
-- AP 4: Add Tier Base.
-- AP 5: Boost Lunar Power.
-- AP 6: Boost Stability.
-
--=- [ Lunar Obelisk ] -=-
-- Boost Grass.
-- Boost Oil.
-- Boost Clouds.
-- Boost Planetarium.
-- Boost Cosmic.
-
 -=- [ Constellation Changes ] -=-
 Multipliers can't boost Constellation generators for balancing reasons.
 
@@ -60,6 +11,20 @@ Arc:
 - Crescent [new]: Shares power to adjacent Line Constellations. [maximum]
 Dark:
 - Charge: Now a Dark Constellation.
+
+-=- [ More Ideas ] -=-
+- Solar Grass: Raise Grass by ^1.05.
+- Solar Liquate: Raise Oil by ^1.05.
+- Solar Refine: Double Rocket Fuel.
+- Solar Tiers: Increase Tier base by 5%.
+- Solar Space: Add "Hopped Space" compounding by 2.5%.
+- Solar Power: Reduce "Tiered Space" interval by -2 tiers.
+- Solar Habit: 5x Habitability.
+- Solar Grow: 2x Habitability time and +0.1s overgrow interval.
+- Solar Atmo: +2.5% to Planetarium compounding.
+- Solar Cosmic: +2.5% to Cosmic compounding.
+- Solar Bonus: +1 cap to Planetoid Atmosphere upgrades.
+- Solar Const: Double Constellation resources.
 
 -=- [ Dark Era ] -=-
 I'll put Dark Obelisk as a early replacement to HSJ.

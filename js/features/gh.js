@@ -10,6 +10,18 @@ MAIN.gh = {
 		if (inChal(9)) b = 0
 		return b
 	},
+
+	animation(layer) {
+		if (tmp.gh.running) return
+
+		tmp.gh.running = true
+		document.body.style.animation = "implode 2s 1"
+		setTimeout(_=>{ RESET[layer].gainAndReset() }, 1000)
+		setTimeout(_=>{
+			document.body.style.animation = ""
+			tmp.gh.running = false
+		},2000)
+	}
 }
 
 MILESTONE.gh = {
@@ -106,31 +118,16 @@ RESET.gh = {
 	hotkey: `G`,
 
 	reset(force=false) {
-		if (!force) {
-			if (!this.req()) return
-			if (player.level < MAIN.gh.req()) return
-		}
+		if (!this.req()) return
+		if (player.level < MAIN.gh.req()) return
 
-		if (galUnlocked() || force) {
-			this.gainAndReset()
-		} else if (!tmp.gh.running) {
-			tmp.gh.running = true
-			document.body.style.animation = "implode 2s 1"
-			setTimeout(_=>{
-				this.gainAndReset()
-			},1000)
-			setTimeout(_=>{
-				document.body.style.animation = ""
-				tmp.gh.running = false
-			},2000)
-		}
+		if (galUnlocked()) this.gainAndReset()
+		else MAIN.gh.animation("gh")
 	},
 
 	gainAndReset() {
-		let res = MAIN.gh.bulk()
-		if (!player.ghMult) res = Math.min(res, player.grasshop + 1)
-
-		player.grasshop = res
+		if (player.ghMult) player.grasshop = MAIN.gh.bulk()
+		else player.grasshop++
 		this.doReset()
 	},
 

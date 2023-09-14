@@ -406,7 +406,7 @@ UPGS.ap = {
 	req: _=>player.aRes?.aTimes,
 	reqDesc: `Anonymity once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('ap')+(tmp.aRes.apGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.ap,tmp.aRes.apGain.mul(tmp.aRes.apGainP))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('ap') + gainHTML(tmp.aRes.apGainP, tmp.aRes.apGain),
 
 	autoUnl: _=>hasUpgrade('aAuto',2),
 	noSpend: _=>hasStarTree("qol", 3),
@@ -567,7 +567,7 @@ UPGS.oil = {
 	req: _=>player.aRes?.lTimes,
 	reqDesc: `Liquefy once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('oil')+(tmp.aRes.oilGainP > 0 ? " <span class='smallAmt'>"+formatGain(player.aRes.oil,tmp.aRes.oilGain.mul(tmp.aRes.oilGainP))+"</span>" : ""),
+	underDesc: _=>getUpgResTitle('oil') + gainHTML(tmp.aRes.oilGainP, tmp.aRes.oilGain),
 
 	autoUnl: _=>hasUpgrade('aAuto',3),
 	noSpend: _=>hasStarTree("qol", 3),
@@ -793,31 +793,16 @@ RESET.gs = {
 	hotkey: `G`,
 
 	reset(force=false) {
-		if (!force) {
-			if (!this.req()) return
-			if (player.aRes.level < aMAIN.gs.req()) return
-		}
+		if (!this.req()) return
+		if (player.aRes.level < aMAIN.gs.req()) return
 
-		if (force || player.gal.sacTimes) {
-			this.gainAndReset()
-		} else if (!tmp.gh.running) {
-			tmp.gh.running = true
-			document.body.style.animation = "implode 2s 1"
-			setTimeout(_=>{
-				this.gainAndReset()
-			},1000)
-			setTimeout(_=>{
-				document.body.style.animation = ""
-				tmp.aRes.gs.running = false
-			},2000)
-		}
+		if (player.gal.sacTimes) this.gainAndReset()
+		else MAIN.gh.animation("gs")
 	},
 
 	gainAndReset() {
-		let res = aMAIN.gs.bulk()
-		if (!player.gsMult) res = Math.min(res, player.aRes.grassskip + 1)
-
-		player.aRes.grassskip = res
+		if (player.gsMult) player.aRes.grassskip = aMAIN.gs.bulk()
+		else player.aRes.grassskip++
 		this.doReset()
 	},
 

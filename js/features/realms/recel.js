@@ -20,6 +20,8 @@ function setupRecel() {
 		cloudProd: E(0),
 		vTimes: 0,
 		vTime: 0,
+
+		grassjump: 0
 	}
 }
 
@@ -309,6 +311,7 @@ RESET.np = {
 		player.gal.astral = 0
 
 		resetUpgrades('unGrass')
+		resetGrasses()
 		updateTemp()
 	},
 }
@@ -320,7 +323,7 @@ UPGS.np = {
 	req: _=>player.unRes?.nTimes > 0,
 	reqDesc: `Normality once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('np'),
+	underDesc: _=>getUpgResTitle('np') + gainHTML(tmp.unRes.nGainP, tmp.unRes.nGain),
 
 	autoUnl: _=>hasUpgrade('res', 7),
 	noSpend: _=>hasUpgrade('res', 7),
@@ -436,7 +439,7 @@ RESET.vapor = {
 
 	title: `Vaporize`,
 	resetBtn: `Evaporate...`,
-	hotkey: `P`,
+	hotkey: `C`,
 
 	reset(force=false) {
 		if (!force) {
@@ -466,7 +469,7 @@ UPGS.cloud = {
 	req: _=>player.unRes?.vTimes > 0,
 	reqDesc: `Vaporize once to unlock.`,
 
-	underDesc: _=>getUpgResTitle('cloud'),
+	underDesc: _=>getUpgResTitle('cloud') + gainHTML(1, player.unRes.cloudProd),
 
 	autoUnl: _=>hasUpgrade('res', 9),
 	noSpend: _=>hasUpgrade('res', 9),
@@ -584,10 +587,7 @@ MILESTONE.gj = {
 			effDesc: x => format(x, 0) + "x"
 		}, {
 			req: 6,
-			desc: `<b class='green'>+1x</b> Cosmic per Grass-Jump.`,
-
-			eff: i => i + 1,
-			effDesc: x => format(x, 0) + "x"
+			desc: `<b class='green'>+0.25%</b> to Cosmic compounding effect.`
 		}
 	],
 }
@@ -615,31 +615,15 @@ RESET.gj = {
 	hotkey: `G`,
 
 	reset(force=false) {
-		if (!force) {
-			if (!this.req()) return
-			if (player.unRes.level < unMAIN.gj.req()) return
-		}
+		if (!this.req()) return
+		if (player.unRes.level < unMAIN.gj.req()) return
 
-		if (force) {
-			this.gainAndReset()
-		} else if (!tmp.gh.running) {
-			tmp.gh.running = true
-			document.body.style.animation = "implode 2s 1"
-			setTimeout(_=>{
-				this.gainAndReset()
-			},1000)
-			setTimeout(_=>{
-				document.body.style.animation = ""
-				tmp.unRes.gj.running = false
-			},2000)
-		}
+		MAIN.gh.animation("gj")
 	},
 
 	gainAndReset() {
-		let res = unMAIN.gj.bulk()
-		if (!player.gjMult) res = Math.min(res, player.unRes.grassjump + 1)
-
-		player.unRes.grassjump = res
+		if (player.gjMult) player.unRes.grassjump = unMAIN.gj.bulk()
+		else player.unRes.grassjump++
 		this.doReset()
 	},
 
