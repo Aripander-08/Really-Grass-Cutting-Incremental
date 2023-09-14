@@ -126,7 +126,7 @@ const STAR_CHART = {
 			max: 1,
 
 			title: "Hopped Space",
-			desc: `Each Grass-Hop increases Space Power by 5%. (starting at 50)`,
+			desc: `Gain <b class='green'>5%</b> more Space Power per Grasshop. (starting at 50)`,
 
 			branch: 5,
 			icon: ['Icons/SP','Icons/StarSpeed'],

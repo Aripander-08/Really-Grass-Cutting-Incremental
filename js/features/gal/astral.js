@@ -77,12 +77,10 @@ EFFECT.astral = {
 			desc: x => `<b class="magenta">${format(x)}x</b> to XP`
 		},
 		tp: {
-			unl: _ => true,
-			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow(a.lvl ** 0.8) : a + 1,
+			eff: a => hasUpgrade("dm", 0) ? E(1.2).pow(a.lvl ** 0.8) : a.lvl + 1,
 			desc: x => `<b class="magenta">${format(x)}x</b> to TP`
 		},
 		fd: {
-			unl: _ => true,
 			eff: a => (a.lvl / 50 + 1) * upgEffect("ring", 4),
 			desc: x => `<b class="magenta">^${format(x)}</b> to Foundry effect`
 		},
