@@ -1,7 +1,7 @@
 const VER = 0.0404
 const EX_COMMIT = 11.08
 const TB_VER = 1.074
-const TB_SAVE = "rgci_tb_test"
+const TB_SAVE = "rgci_tb"
 
 function getPlayerData() {
 	let s = {
