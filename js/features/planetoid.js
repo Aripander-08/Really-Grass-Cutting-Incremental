@@ -51,8 +51,16 @@ const PLANETOID = {
         .mul(upgEffect('planet',0))
 
         .mul(getLEffect(6))
+
+        .mul(upgEffect('constellation',0)).mul(upgEffect('constellation',4))
         
         if (player.planetoid.planetTier>=1) x = x.mul(getPTEffect(0))
+
+        if (player.sn.tier.gte(1)) x = x.mul(1e3)
+
+        if (hasSolarUpgrade(2,1)) x = x.mul(solarUpgEffect(2,1))
+
+        x = x.mul(solarUpgEffect(3,5)).mul(solarUpgEffect(1,15))
 
         x = x.pow(starTreeEff('reserv',7))
 
@@ -72,14 +80,17 @@ const PLANETOID = {
         .mul(starTreeEff('ring',17))
         .mul(starTreeEff('ring',21))
         .mul(starTreeEff('ring',26))
+        .mul(starTreeEff('ring',33))
 
         .mul(starTreeEff('reserv',15))
 
-        .mul(getLEffect(3))
+        .mul(getLEffect(3)).mul(tmp.darkChargeEffs.cosmic||1)
 
         if (player.planetoid.planetTier>=1) x = x.mul(getPTEffect(0))
 
-        x = x.pow(starTreeEff('reserv',6))
+        x = x.pow(starTreeEff('reserv',6)).pow(upgEffect('stardust',3))
+        
+        .pow(solarUpgEffect(4,13)).pow(solarUpgEffect(4,18))
 
         if (hasStarTree('reserv',22)) x = x.mul(tmp.compact)
 
@@ -98,7 +109,7 @@ const PLANETOID = {
             if (x.lt(1)) return 0
             x = x.log(tmp.cosmicLevel.threshold).root(.87).scale(200,2,0,true)
 
-            return Math.floor(x.toNumber()+1)
+            return Math.floor(x.add(1))
         },
         cur(i) {
             return i > 0 ? this.req(i-1) : E(0) 
@@ -128,9 +139,13 @@ const PLANETOID = {
 
         .mul(upgEffect('cloud',2))
 
+        .mul(cs_effect.ring)
+
         if (player.lowGH <= -40) x = x.mul(getAGHEffect(17))
 
         x = x.mul(getASEff('ring'))
+
+        if (player.sn.tier.gte(1)) x = x.mul(100)
 
         return x.floor()
     },
@@ -149,7 +164,11 @@ const PLANETOID = {
 
         .mul(upgEffect('planet',1))
 
+        .mul(starTreeEff('ring',43))
+
         if (hasStarTree('reserv',22)) x = x.mul(tmp.compact)
+
+        x = x.mul(solarUpgEffect(3,6)).mul(solarUpgEffect(4,9))
 
         return x.floor()
     },
@@ -170,6 +189,8 @@ const PLANETOID = {
 
         if (player.planetoid.planetTier>=2) x = x.mul(getPTEffect(1))
 
+        x = x.mul(solarUpgEffect(3,7)).mul(solarUpgEffect(1,16))
+
         return x.floor()
     },
     measureGain() {
@@ -188,6 +209,8 @@ const PLANETOID = {
 
         if (player.planetoid.planetTier>=2) x = x.mul(getPTEffect(1))
 
+        x = x.mul(solarUpgEffect(3,8)).mul(solarUpgEffect(1,17))
+
         return x.floor()
     },
     planetary: {
@@ -200,24 +223,36 @@ const PLANETOID = {
 
             tmp.planetGainBase = x
 
+            x = x.mul(solarUpgEffect(3,9)).mul(solarUpgEffect(1,18))
+
             return x.floor()
         },
         tierReq() {
             let p = player.planetoid.planetTier
+
+            if (p >= 30) p = (p/29)**2*29
+
             let x = 200+10*p
 
             return x
+        },
+        tierBulk() {
+            let lvl = player.planetoid.level
+            if (lvl < 200) return 0
+            let p = (lvl - 200) / 10
+            if (p >= 30) p = (p/29)**0.5*29
+            return Math.floor(p)+1
         },
         milestone: [
             {
                 r: 1,
                 desc: `Gain <b class='green'>+200%</b> more Planetarium and Cosmic per planetary tier.`,
-                effect: _=>player.planetoid.planetTier*2+1,
+                effect: ()=>player.planetoid.planetTier*2+1,
                 effDesc: x=> formatMult(x),
             },{
                 r: 2,
                 desc: `Gain <b class='green'>+100%</b> more Astro and Measure per planetary tier.`,
-                effect: _=>player.planetoid.planetTier+1,
+                effect: ()=>player.planetoid.planetTier+1,
                 effDesc: x=> formatMult(x),
             },{
                 r: 5,
@@ -225,19 +260,24 @@ const PLANETOID = {
             },{
                 r: 6,
                 desc: `Gain more XP based on planetary tier.`,
-                effect: _=>Decimal.pow(10,player.planetoid.planetTier**1.75),
+                effect: ()=>Decimal.pow(10,player.planetoid.planetTier**1.75),
                 effDesc: x=> formatMult(x),
             },{
                 r: 10,
                 desc: `You can equip <b class='green'>1</b> more lunar slot per 5 planetary tiers, starting at 10.`,
-                effect: _=>Math.floor(Math.max(player.planetoid.planetTier-5,0)/5),
+                effect: ()=>Math.floor(Math.max(player.planetoid.planetTier-5,0)/5),
                 effDesc: x=>"+"+format(x,0),
+            },{
+                r: 34,
+                desc: `Gain more Stardusts based on planetary tier, starting at 34.`,
+                effect: ()=>Decimal.pow(1.35,player.planetoid.planetTier-33).max(1),
+                effDesc: x=>formatMult(x),
             },
         ],
     },
 }
 
-tmp_update.push(_=>{
+tmp_update.push(()=>{
     tmp.planetiumGain = PLANETOID.planetGain()
     tmp.cosmicGain = PLANETOID.cosmicGain()
 
@@ -285,13 +325,13 @@ tmp_update.push(_=>{
 })
 
 RESET.enterPlanetoid = {
-    unl: _=> player.lowGH<=-32,
+    unl: ()=> player.lowGH<=-32,
 
-    req: _=>true,
-    reqDesc: _=>`how.`,
+    req: ()=>true,
+    reqDesc: ()=>`how.`,
 
     resetDesc: `You may enter or exit the Planetoid. During the Planetoid, pre-planetoid resources' production is paused, wiped by Galactic.`,
-    resetGain: _=> `Exiting the Planetoid will keep its resources.`,
+    resetGain: ()=> `Exiting the Planetoid will keep its resources.`,
 
     title: `Planetoid`,
     resetBtn: `Enter the Planetoid`,
@@ -303,8 +343,9 @@ RESET.enterPlanetoid = {
         player.decel = false
         player.recel = false
 
-        mapPos.earth = [3, 3]
-        goToSpace()
+        player.world = 'ground'
+        mapID = 'g'
+        mapPos = [3,3]
 
         resetGlasses()
 
@@ -313,13 +354,13 @@ RESET.enterPlanetoid = {
 }
 
 RESET.formRing = {
-    unl: _=> player.planetoid.active,
+    unl: ()=> player.planetoid.active,
 
-    req: _=>player.planetoid.level >= 5,
-    reqDesc: _=>`Reach Level 5.`,
+    req: ()=>player.planetoid.level >= 5,
+    reqDesc: ()=>`Reach Level 5.`,
 
-    resetDesc: `To earn rings, reset planetarium, level, astrolabe, and quadrant. Check upgrades in star chart.<br>Gain more rings based on your level and planetarium.`,
-    resetGain: _=> `Gain <b>${tmp.ringGain.format(0)}</b> Rings`+(tmp.reservConvert>0?", <b>"+tmp.reservGain.format(0)+"</b> Reservatorium.":"."),
+    resetDesc: `To earn rings, reset planetarium, level, astrolabe, and quadrant. Check upgrades in star chart.<br>Gain more rings based on your level and planetarium (starting at ${format(1e9,0)}).`,
+    resetGain: ()=> `Gain <b>${tmp.ringGain.format(0)}</b> Rings`+(tmp.reservConvert>0?", <b>"+tmp.reservGain.format(0)+"</b> Reservatorium.":"."),
 
     title: `Form Ring`,
     resetBtn: `Form the Ring`,
@@ -367,10 +408,10 @@ RESET.formRing = {
 }
 
 UPGS.planetarium = {
-    unl: _=> player.planetoid.active,
+    unl: ()=> player.planetoid.active,
 
-    autoUnl: _=>hasStarTree('reserv',9),
-    noSpend: _=>hasStarTree('reserv',9),
+    autoUnl: ()=>hasStarTree('reserv',9),
+    noSpend: ()=>hasStarTree('reserv',9),
 
     title: "Planetarium Upgrades",
 
@@ -385,10 +426,10 @@ UPGS.planetarium = {
             icon: ['Icons/Speed'],
             
             cost: i => Decimal.pow(1.5,i).mul(1000).ceil(),
-            bulk: i => i.div(1000).max(1).log(1.5).floor().toNumber()+1,
+            bulk: i => i.div(1000).max(1).log(1.5).floor().add(1),
 
             effect(i) {
-                let x = i/5+1
+                let x = i+1
 
                 return x
             },
@@ -402,11 +443,11 @@ UPGS.planetarium = {
             res: "pm",
             icon: ['Curr/Planetoid'],
             
-            cost: i => Decimal.pow(1.25,i).mul(5000).ceil(),
-            bulk: i => i.div(5000).max(1).log(1.25).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.15,i).mul(5000).ceil(),
+            bulk: i => i.div(5000).max(1).log(1.15).floor().add(1),
 
             effect(i) {
-                let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+                let x = Decimal.pow(2.25,Math.floor(i/20)).mul(i+4)
 
                 return x
             },
@@ -420,11 +461,11 @@ UPGS.planetarium = {
             res: "pm",
             icon: ['Icons/XP2'],
             
-            cost: i => Decimal.pow(1.25,i).mul(25000).ceil(),
-            bulk: i => i.div(25000).max(1).log(1.25).floor().toNumber()+1,
+            cost: i => Decimal.pow(1.15,i).mul(25000).ceil(),
+            bulk: i => i.div(25000).max(1).log(1.15).floor().add(1),
 
             effect(i) {
-                let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+                let x = Decimal.pow(2.25,Math.floor(i/20)).mul(i+2)
 
                 return x
             },
@@ -439,7 +480,7 @@ UPGS.planetarium = {
             icon: ['Icons/Range'],
             
             cost: i => Decimal.pow(2.5,i).mul(1e5).ceil(),
-            bulk: i => i.div(1e5).max(1).log(2.5).floor().toNumber()+1,
+            bulk: i => i.div(1e5).max(1).log(2.5).floor().add(1),
 
             effect(i) {
                 let x = i*10
@@ -447,20 +488,43 @@ UPGS.planetarium = {
                 return x
             },
             effDesc: x => "+"+format(x,0),
+        },{
+            unl: ()=>player.grassjump>=30,
+
+            max: 1000,
+
+            title: "Planetarium Stardust",
+            desc: `Increase stardust generated by <b class="green">+2.5%</b> compounding per level.`,
+        
+            res: "pm",
+            icon: ["Curr/Stardust"],
+                        
+            cost: i => Decimal.pow(10,i).mul('1e360'),
+            bulk: i => i.div('1e360').max(1).log(10).floor().add(1),
+        
+            effect(i) {
+                let x = Decimal.pow(1.15,i)
+        
+                return x
+            },
+            effDesc: x => formatMult(x),
         },
     ]
 }
 
 UPGS.observ = {
-    unl: _=> player.planetoid.active,
+    unl: ()=> player.planetoid.active,
 
     title: "The Observatory",
 
-    underDesc: _=>`You have ${format(player.planetoid.observ,0)} Observatorium (${formatPercent(tmp.observChance)} grow chance)`,
+    underDesc: ()=>`You have ${format(player.planetoid.observ,0)} Observatorium (${formatPercent(tmp.observChance)} grow chance)`,
+
+    autoUnl: ()=>hasSolarUpgrade(0,11),
+    noSpend: ()=>hasSolarUpgrade(0,11),
 
     ctn: [
         {
-            max: 100,
+            max: 1000,
 
             title: "Planetarium Observation",
             desc: `Increase planetarium gain by <b class="green">+50%</b> per level.`,
@@ -469,8 +533,8 @@ UPGS.observ = {
             icon: ['Curr/Planetoid'],
             costOnce: true,
             
-            cost: i => E(5),
-            bulk: i => i.div(5).floor().toNumber(),
+            cost: i => E(1),
+            bulk: i => i.div(1).floor().toNumber(),
 
             effect(i) {
                 let x = i/2+1
@@ -479,7 +543,7 @@ UPGS.observ = {
             },
             effDesc: x => formatMult(x),
         },{
-            max: 100,
+            max: 1000,
 
             title: "Rings Observation",
             desc: `Increase rings gain by <b class="green">+10%</b> per level.`,
@@ -488,11 +552,11 @@ UPGS.observ = {
             icon: ['Curr/Ring'],
             costOnce: true,
             
-            cost: i => E(8),
-            bulk: i => i.div(8).floor().toNumber(),
+            cost: i => E(1),
+            bulk: i => i.div(1).floor().toNumber(),
 
             effect(i) {
-                let x = i/10+1
+                let x = i/4+1
 
                 return x
             },
@@ -507,8 +571,8 @@ UPGS.observ = {
             icon: ['Icons/XP2'],
             costOnce: true,
             
-            cost: i => E(8),
-            bulk: i => i.div(8).floor().toNumber(),
+            cost: i => E(2),
+            bulk: i => i.div(2).floor().toNumber(),
 
             effect(i) {
                 let x = i/2+1
@@ -517,7 +581,7 @@ UPGS.observ = {
             },
             effDesc: x => formatMult(x),
         },{
-            max: 100,
+            max: 1000,
 
             title: "Grow Speed Observation",
             desc: `Increase grass grow speed by <b class="green">+20%</b> per level.`,
@@ -526,11 +590,11 @@ UPGS.observ = {
             icon: ['Icons/Speed'],
             costOnce: true,
             
-            cost: i => E(15),
-            bulk: i => i.div(15).floor().toNumber(),
+            cost: i => E(4),
+            bulk: i => i.div(4).floor().toNumber(),
 
             effect(i) {
-                let x = i/5+1
+                let x = i/2+1
 
                 return x
             },
@@ -549,7 +613,7 @@ UPGS.observ = {
             bulk: i => i.div(1e3).floor().toNumber(),
 
             effect(i) {
-                let x = i/10+1
+                let x = i/2+1
 
                 return x
             },
@@ -637,13 +701,13 @@ UPGS.observ = {
 // Astrolabe (Astro)
 
 RESET.astro = {
-    unl: _=> player.planetoid.active,
+    unl: ()=> player.planetoid.active,
 
-    req: _=>player.planetoid.level>=30,
-    reqDesc: _=>`Reach Level 30.`,
+    req: ()=>player.planetoid.level>=30,
+    reqDesc: ()=>`Reach Level 30.`,
 
     resetDesc: `Reset your planetarium, planetarium upgrades, and level for astro.<br>Gain more Astro based on your level and planetarium.`,
-    resetGain: _=> `Gain <b>${tmp.astroGain.format(0)}</b> Astro`,
+    resetGain: ()=> `Gain <b>${tmp.astroGain.format(0)}</b> Astro`,
 
     title: `Astrolabe`,
     resetBtn: `Use the Astrolabe`,
@@ -669,14 +733,14 @@ RESET.astro = {
 }
 
 UPGS.astro = {
-    unl: _=> player.planetoid.active,
+    unl: ()=> player.planetoid.active,
 
     title: "Astro Upgrades",
 
-    underDesc: _=>`You have ${format(player.planetoid.astro,0)} Astro`+gainHTML(player.planetoid.astro,tmp.astroGain,tmp.aGen),
+    underDesc: ()=>`You have ${format(player.planetoid.astro,0)} Astro`+gainHTML(player.planetoid.astro,tmp.astroGain,tmp.aGen),
 
-    autoUnl: _=>hasStarTree('reserv',13),
-    noSpend: _=>hasStarTree('reserv',13),
+    autoUnl: ()=>hasStarTree('reserv',13),
+    noSpend: ()=>hasStarTree('reserv',13),
 
     ctn: [
         {
@@ -689,7 +753,7 @@ UPGS.astro = {
             icon: ['Curr/Planetoid'],
             
             cost: i => Decimal.pow(1.2,i).mul(1).ceil(),
-            bulk: i => i.div(1).max(1).log(1.2).floor().toNumber()+1,
+            bulk: i => i.div(1).max(1).log(1.2).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -707,7 +771,7 @@ UPGS.astro = {
             icon: ['Curr/Ring'],
             
             cost: i => Decimal.pow(1.3,i).mul(10).ceil(),
-            bulk: i => i.div(10).max(1).log(1.3).floor().toNumber()+1,
+            bulk: i => i.div(10).max(1).log(1.3).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.25,Math.floor(i/25)).mul(i/4+1)
@@ -725,7 +789,7 @@ UPGS.astro = {
             icon: ['Icons/Speed'],
             
             cost: i => Decimal.pow(1.3,i).mul(10).ceil(),
-            bulk: i => i.div(10).max(1).log(1.3).floor().toNumber()+1,
+            bulk: i => i.div(10).max(1).log(1.3).floor().add(1),
 
             effect(i) {
                 let x = i/5+1
@@ -743,7 +807,7 @@ UPGS.astro = {
             icon: ['Icons/XP'],
             
             cost: i => Decimal.pow(1.2,i).mul(100).ceil(),
-            bulk: i => i.div(100).max(1).log(1.2).floor().toNumber()+1,
+            bulk: i => i.div(100).max(1).log(1.2).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -761,11 +825,31 @@ UPGS.astro = {
             icon: ['Icons/Compaction'],
             
             cost: i => Decimal.pow(1.2,i).mul(1e6).ceil(),
-            bulk: i => i.div(1e6).max(1).log(1.2).floor().toNumber()+1,
+            bulk: i => i.div(1e6).max(1).log(1.2).floor().add(1),
 
             effect(i) {
                 let x = i/4+1
 
+                return x
+            },
+            effDesc: x => formatMult(x),
+        },{
+            unl: ()=>player.grassjump>=30,
+
+            max: 1000,
+
+            title: "Astro Stardust",
+            desc: `Increase stardust generated by <b class="green">+2.5%</b> compounding per level.`,
+        
+            res: "astro",
+            icon: ["Curr/Stardust"],
+                        
+            cost: i => Decimal.pow(10,i).mul('1e120'),
+            bulk: i => i.div('1e120').max(1).log(10).floor().add(1),
+        
+            effect(i) {
+                let x = Decimal.pow(1.15,i)
+        
                 return x
             },
             effDesc: x => formatMult(x),
@@ -774,13 +858,13 @@ UPGS.astro = {
 }
 
 RESET.quadrant = {
-    unl: _=> player.planetoid.active,
+    unl: ()=> player.planetoid.active,
 
-    req: _=>player.planetoid.level>=100,
-    reqDesc: _=>`Reach Level 100.`,
+    req: ()=>player.planetoid.level>=100,
+    reqDesc: ()=>`Reach Level 100.`,
 
     resetDesc: `Reset your astro, astro upgrades, and previous contents for measure.<br>Gain more Measures based on your level and astro.`,
-    resetGain: _=> `Gain <b>${tmp.measureGain.format(0)}</b> Measures`,
+    resetGain: ()=> `Gain <b>${tmp.measureGain.format(0)}</b> Measures`,
 
     title: `Quadrant`,
     resetBtn: `Use the Quadrant`,
@@ -806,14 +890,14 @@ RESET.quadrant = {
 }
 
 UPGS.measure = {
-    unl: _=> player.planetoid.active,
+    unl: ()=> player.planetoid.active,
 
     title: "Measure Upgrades",
 
-    underDesc: _=>`You have ${format(player.planetoid.measure,0)} Measure`+gainHTML(player.planetoid.measure,tmp.measureGain,tmp.measureGen),
+    underDesc: ()=>`You have ${format(player.planetoid.measure,0)} Measure`+gainHTML(player.planetoid.measure,tmp.measureGain,tmp.measureGen),
 
-    autoUnl: _=>hasStarTree('reserv',24),
-    noSpend: _=>hasStarTree('reserv',24),
+    autoUnl: ()=>hasStarTree('reserv',24),
+    noSpend: ()=>hasStarTree('reserv',24),
 
     ctn: [
         {
@@ -845,7 +929,7 @@ UPGS.measure = {
             icon: ['Curr/Planetoid'],
             
             cost: i => Decimal.pow(1.2,i).mul(10).ceil(),
-            bulk: i => i.div(10).max(1).log(1.2).floor().toNumber()+1,
+            bulk: i => i.div(10).max(1).log(1.2).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -863,7 +947,7 @@ UPGS.measure = {
             icon: ['Curr/Ring'],
             
             cost: i => Decimal.pow(1.25,i).mul(100).ceil(),
-            bulk: i => i.div(100).max(1).log(1.25).floor().toNumber()+1,
+            bulk: i => i.div(100).max(1).log(1.25).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.25,Math.floor(i/25)).mul(i/4+1)
@@ -881,14 +965,14 @@ UPGS.measure = {
             icon: ['Icons/XP',"Icons/Exponent"],
             
             cost: i => Decimal.pow(10,i**1.25).mul(1e4).ceil(),
-            bulk: i => i.div(1e4).max(1).log(10).root(1.25).floor().toNumber()+1,
+            bulk: i => i.div(1e4).max(1).log(10).root(1.25).floor().add(1),
 
             effect(i) {
                 let x = i/10+1
 
                 return x
             },
-            effDesc: x => "^"+format(x),
+            effDesc: x => formatPow(x),
         },{
             max: 1000,
 
@@ -899,11 +983,31 @@ UPGS.measure = {
             icon: ['Curr/Observatorium'],
             
             cost: i => Decimal.pow(1.25,i).mul(1e6).ceil(),
-            bulk: i => i.div(1e6).max(1).log(1.25).floor().toNumber()+1,
+            bulk: i => i.div(1e6).max(1).log(1.25).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.25,Math.floor(i/25)).mul(i/10+1)
 
+                return x
+            },
+            effDesc: x => formatMult(x),
+        },{
+            unl: ()=>player.grassjump>=30,
+
+            max: 1000,
+
+            title: "Measure Stardust",
+            desc: `Increase stardust generated by <b class="green">+2.5%</b> compounding per level.`,
+        
+            res: "measure",
+            icon: ["Curr/Stardust"],
+                        
+            cost: i => Decimal.pow(10,i).mul('1e60'),
+            bulk: i => i.div('1e60').max(1).log(10).floor().add(1),
+        
+            effect(i) {
+                let x = Decimal.pow(1.15,i)
+        
                 return x
             },
             effDesc: x => formatMult(x),
@@ -912,16 +1016,16 @@ UPGS.measure = {
 }
 
 RESET.planetary = {
-    unl: _=>player.planetoid.active&&player.lowGH<=-48,
+    unl: ()=>player.planetoid.active&&player.lowGH<=-48,
 
-    req: _=>player.planetoid.level>=200,
-    reqDesc: _=>`Reach Level 200.`,
+    req: ()=>player.planetoid.level>=200,
+    reqDesc: ()=>`Reach Level 200.`,
 
     resetDesc: `<span style="font-size:14px">
     Reset your measure, measure upgrades, and previous contents for Planets.<br>Gain more Planets based on your level and measure.<br><br>
     To reach the planetary tier, you must reach Level <b id='PTReq'>???</b>.
     </span>`,
-    resetGain: _=> `Gain <b>${tmp.planetGain.format(0)}</b> Planets`,
+    resetGain: ()=> `Gain <b>${tmp.planetGain.format(0)}</b> Planets`,
 
     title: `Planetary`,
     resetBtn: `Go Planetary`,
@@ -951,14 +1055,14 @@ RESET.planetary = {
 }
 
 UPGS.planet = {
-    unl: _=>player.planetoid.active&&player.lowGH<=-48,
+    unl: ()=>player.planetoid.active&&player.lowGH<=-48,
 
     title: "Planet Upgrades",
 
-    underDesc: _=>`You have ${format(player.planetoid.planet,0)} Planet`+gainHTML(player.planetoid.planet,tmp.planetGain,tmp.planetGen),
+    underDesc: ()=>`You have ${format(player.planetoid.planet,0)} Planet`+gainHTML(player.planetoid.planet,tmp.planetGain,tmp.planetGen),
 
-    autoUnl: _=>hasStarTree('reserv',31),
-    noSpend: _=>hasStarTree('reserv',31),
+    autoUnl: ()=>hasStarTree('reserv',31),
+    noSpend: ()=>hasStarTree('reserv',31),
 
     ctn: [
         {
@@ -971,7 +1075,7 @@ UPGS.planet = {
             icon: ['Curr/Planetoid'],
             
             cost: i => Decimal.pow(1.2,i).mul(3).ceil(),
-            bulk: i => i.div(3).max(1).log(1.2).floor().toNumber()+1,
+            bulk: i => i.div(3).max(1).log(1.2).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -989,7 +1093,7 @@ UPGS.planet = {
             icon: ['Curr/Observatorium'],
             
             cost: i => Decimal.pow(1.2,i).mul(3).ceil(),
-            bulk: i => i.div(3).max(1).log(1.2).floor().toNumber()+1,
+            bulk: i => i.div(3).max(1).log(1.2).floor().add(1),
 
             effect(i) {
                 let x = i/2+1
@@ -1007,7 +1111,7 @@ UPGS.planet = {
             icon: ['Icons/XP'],
             
             cost: i => Decimal.pow(1.2,i).mul(10).ceil(),
-            bulk: i => i.div(10).max(1).log(1.2).floor().toNumber()+1,
+            bulk: i => i.div(10).max(1).log(1.2).floor().add(1),
 
             effect(i) {
                 let x = Decimal.pow(1.5,Math.floor(i/25)).mul(i/2+1)
@@ -1015,13 +1119,31 @@ UPGS.planet = {
                 return x
             },
             effDesc: x => formatMult(x),
+        },{
+            unl: ()=>player.grassjump>=30,
+
+            max: 1000,
+
+            title: "Planetary Stardust",
+            desc: `Increase stardust generated by <b class="green">+2.5%</b> compounding per level.`,
+        
+            res: "planet",
+            icon: ["Curr/Stardust"],
+                        
+            cost: i => Decimal.pow(10,i).mul('1e30'),
+            bulk: i => i.div('1e30').max(1).log(10).floor().add(1),
+        
+            effect(i) {
+                let x = Decimal.pow(1.15,i)
+        
+                return x
+            },
+            effDesc: x => formatMult(x),
         },
     ],
 }
 
-function getPTEffect(x,def=1) { return tmp.ptEffect[x]!==undefined?tmp.ptEffect[x]:def }
-
-el.update.planetoid = _ => {
+el.update.planetoid = () => {
     if (mapID == 'gh') {
         tmp.el.PTReq.setHTML(format(tmp.planetTierReq,0))
 
